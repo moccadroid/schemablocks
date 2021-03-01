@@ -1,0 +1,26 @@
+{
+  "id": "TextBlock",
+  "type": "object",
+  "properties": {
+    "normalText": {
+      "type": "string",
+      "controls": {
+        "name": "Normal Text Field"
+      }
+    },
+    "maxLengthText": {
+      "type": "string",
+      "controls": {
+        "name": "Max Length Text",
+        "maxLength": 5
+      }
+    },
+    "richText": {
+      "type": "string",
+      "controls": {
+        "name": "Rich Text",
+        "type": "richText"
+      }
+    }
+  }
+}

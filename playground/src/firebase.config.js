@@ -12,8 +12,6 @@ const firebaseData = {
   }
 };
 
-console.log(firebaseData['dev']);
-
 const env = firebaseData['dev'];
 
 if (!firebase.apps.length) {
