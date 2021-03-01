@@ -1,4 +1,5 @@
 node_modules/
 .idea/
 dist/
+playground/node_modules/
 /playground/node_modules/
