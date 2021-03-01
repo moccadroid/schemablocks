@@ -1,7 +1,7 @@
 import React from 'react';
 import {Box, Typography} from "@material-ui/core";
-import dynamic from "next/dynamic";
-const ReactQuill = dynamic(import('react-quill'), {ssr: false});
+import ReactQuill from 'react-quill';
+import 'react-quill/dist/quill.snow.css';
 
 export default function RichTextInput({ controls, defaultValue, onChange }) {
 

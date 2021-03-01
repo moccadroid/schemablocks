@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
@@ -15,11 +15,18 @@ import {makeStyles} from "@material-ui/core/styles";
 import CloseIcon from '@material-ui/icons/Close';
 import {getFirebase} from "../../lib/firebaseConfig";
 import {green} from "@material-ui/core/colors";
-import uuidv4 from "../../lib/uuid4";
-//require('firebase/storage');
+import uuidv4 from "../../lib/uuidv4";
+import {getMediaLibraryConfig} from "../../lib/mediaLibraryConfig";
+require('firebase/storage');
 //require('firebase/firestore');
 
 export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
+
+  const config = getMediaLibraryConfig();
+  if (!config.imageMagicUrl) {
+    console.error('imageMagicUrl was not set in config');
+    return <h1>Please set imageMagicUrl in config</h1>;
+  }
 
   const baseFolder = 'mediaLibrary';
   const imageFolder = 'images';
@@ -29,12 +36,17 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
   const [selectedImages, setSelectedImages] = useState(selected);
   const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + imageFolder);
   const [currentMedia, setCurrentMedia] = useState('images');
+  const [columns, setColumns] = useState(3);
   const classes = useStyles();
 
 
 
   useEffect(() => {
     loadMedia(currentMedia).then(() => console.log(currentMedia, 'loaded'));
+
+    let cols = 5;
+    console.log(window.innerWidth);
+    setColumns(cols);
   }, []);
 
   const loadMedia = async (type) => {
@@ -72,7 +84,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
       image.processing = true;
       setLibraryImages(images => [image, ...images]);
 
-      const response = await fetch('https://us-central1-vonkoeck-dev.cloudfunctions.net/imageMagic?id=' + fileId);
+      const response = await fetch(config.imageMagicUrl + '?id=' + fileId);
       setLibraryImages(images => images.map(img => {
         // remove processing field from image
         if (img.id === fileId) {
@@ -173,7 +185,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
             </Grid>
           </Grid>
         </Box>
-        <ImageList cols={3} className={classes.imageList}>
+        <ImageList cols={columns} className={classes.imageList}>
           {libraryImages.map((image) => {
             const selected = selectedImages.find(img => img.id === image.id);
             const actionIcon = image.processing ? <CircularProgress color="secondary"/> : <Checkbox checked={!!selected} className={classes.greenCheckbox} />

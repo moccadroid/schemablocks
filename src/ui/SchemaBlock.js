@@ -2,8 +2,8 @@ import {Alert, Box, Button, Grid, Typography} from "@material-ui/core";
 import useSchemaValidator from "../hooks/useSchemaValidator";
 import React, {createRef, forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import SelectInput from "./input/SelectInput";
-// import MediaInput from "./input/MediaInput";
-// import RichTextInput from "./input/RichTextInput";
+import MediaInput from "./input/MediaInput";
+import RichTextInput from "./input/RichTextInput";
 import TextInput from "./input/TextInput";
 import SwitchInput from "./input/SwitchInput";
 import SchemaBlocks from "./SchemaBlocks";
@@ -116,14 +116,14 @@ function SchemaBlock({ block, onRemove }, ref) {
         );
       }
       else if (controls.type === "image" && type === "object") {
-        // element = <MediaInput {...propDefaults} />
+        element = <MediaInput {...propDefaults} />
       }
       else if (controls.type === "select") {
         const options = controls.enum || extData || [];
         element = <SelectInput {...propDefaults} options={options} id={id} />
       }
-      else if (type === "string" && controls.richText) {
-        // element = <RichTextInput {...propDefaults} />
+      else if (controls.type === "richText" && type === "string") {
+        element = <RichTextInput {...propDefaults} />
       }
       else if (type === "string" || type === "number") {
         element = <TextInput type={type} {...propDefaults} />
