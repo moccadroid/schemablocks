@@ -1,15 +1,12 @@
-//import useSchemaBlocksData from "./hooks/useSchemaBlocksData";
-//import useSchemaValidator from "./hooks/useSchemaValidator";
-//import {setFirebase} from './lib/firebaseConfig';
-//import LanguageWrapper from "./ui/LanguageWrapper";
-import MaterialTest from './MaterialTest';
+import useSchemaBlocksData from "./hooks/useSchemaBlocksData";
+import useSchemaValidator from "./hooks/useSchemaValidator";
+import {setFirebase} from './lib/firebaseConfig';
+import LanguageWrapper from "./ui/LanguageWrapper";
 
 export {
-  //useSchemaBlocksData,
-  //useSchemaValidator,
-  //setFirebase,
+  useSchemaBlocksData,
+  useSchemaValidator,
+  setFirebase,
 
-  MaterialTest,
-  // LanguageWrapper,
-  // ConfirmationDialog
+  LanguageWrapper,
 }

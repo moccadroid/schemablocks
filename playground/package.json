@@ -3,14 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.1.5",
+    "@material-ui/core": "^5.0.0-alpha.25",
+    "@material-ui/icons": "^4.4.3",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",
     "@testing-library/user-event": "^12.8.0",
+    "firebase": "^8.2.9",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-scripts": "4.0.3",
+    "schemablocks": "file:..",
     "web-vitals": "^1.1.0",
-    "schemablocks": "file:.."
+    "jsonschema": "^1.4.0"
   },
   "scripts": {
     "start": "react-scripts start",
