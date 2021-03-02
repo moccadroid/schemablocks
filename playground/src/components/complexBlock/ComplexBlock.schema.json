@@ -1,0 +1,62 @@
+{
+  "id": "ComplexBlock",
+  "type": "object",
+  "properties": {
+    "headline": {
+      "type": "string",
+      "name": "Block Headline"
+    },
+    "friends": {
+      "type": "array",
+      "controls": {
+        "type": "schemablocks",
+        "name": "A list of your friends",
+        "alert": "Be careful to only add your best friends!!"
+      },
+      "items": [
+        {
+          "id": "Friend",
+          "type": "object",
+          "controls": {
+            "titleDataField": "name"
+          },
+          "properties": {
+            "name": {
+              "type": "string",
+              "controls": {
+                "name": "Name",
+                "hint": "This field is only 50% wide. You can use CSS styles in the Schema",
+                "styles": { "width": "50%" }
+              }
+            },
+            "description": {
+              "type": "string",
+              "controls": {
+                "name": "Description"
+              }
+            },
+            "image": {
+              "id": "Image",
+              "type": "object",
+              "controls": { "type": "image", "name": "Image of your friend"},
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "id": {
+                  "type": "string"
+                },
+                "alt": {
+                  "type": "string"
+                },
+                "mimeType": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  }
+}

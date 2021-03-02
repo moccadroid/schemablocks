@@ -19,6 +19,7 @@ export default function LanguageWrapper({ data, schemas, onSave, onPreview, onDe
         blocks: language.ref.current.getData()
       }
     });
+    console.log(data);
     onSave(data);
   }
 

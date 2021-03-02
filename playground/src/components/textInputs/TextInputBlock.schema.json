@@ -15,6 +15,12 @@
         "maxLength": 5
       }
     },
+    "number": {
+      "type": "number",
+      "controls": {
+        "name": "Number"
+      }
+    },
     "richText": {
       "type": "string",
       "controls": {

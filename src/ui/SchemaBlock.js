@@ -115,7 +115,7 @@ function SchemaBlock({ block, onRemove }, ref) {
           </Box>
         );
       }
-      else if (controls.type === "image" && type === "object") {
+      else if (controls.type === "image") {
         element = <MediaInput {...propDefaults} />
       }
       else if (controls.type === "select") {

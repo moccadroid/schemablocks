@@ -1,0 +1,47 @@
+{
+  "id": "MediaBlock",
+  "type": "object",
+  "properties": {
+    "singleImage": {
+      "type": "object",
+      "controls": {
+        "type": "image",
+        "name": "Single Image"
+      },
+      "properties": {
+        "url": { "type": "string" },
+        "id": { "type": "string" },
+        "alt": { "type": "string" },
+        "mimeType": { "type": "string" }
+      }
+    },
+    "multipleImages": {
+      "type": "array",
+      "controls": {
+        "type": "image",
+        "name": "Multiple Images",
+        "multiSelect": true
+      },
+      "items": [
+        {
+          "id": "Image",
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "alt": {
+              "type": "string"
+            },
+            "mimeType": {
+              "type": "string"
+            }
+          }
+        }
+      ]
+    }
+  }
+}

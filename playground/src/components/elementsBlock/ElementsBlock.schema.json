@@ -1,0 +1,33 @@
+{
+  "id": "ElementsBlock",
+  "type": "object",
+  "properties": {
+    "booleanValue": {
+      "type": "boolean",
+      "controls": {
+        "name": "Boolean"
+      }
+    },
+    "color": {
+      "type": "string",
+      "controls": {
+        "type": "select",
+        "name": "Enum Select",
+        "enum": [
+          {
+            "name": "Red",
+            "value": "#ff0000"
+          },
+          {
+            "name": "Green",
+            "value": "#00ff00"
+          },
+          {
+            "name": "Blue",
+            "value": "#0000ff"
+          }
+        ]
+      }
+    }
+  }
+}

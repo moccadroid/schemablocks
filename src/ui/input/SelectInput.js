@@ -1,4 +1,4 @@
-import {FormControl, FormHelperText, InputLabel, MenuItem, Select} from "@material-ui/core";
+import {FormControl, Box, InputLabel, MenuItem, Select} from "@material-ui/core";
 import React, {useState,useEffect} from "react";
 
 export default function SelectInput({ controls, id, options, error, onChange, defaultValue }) {
@@ -19,16 +19,17 @@ export default function SelectInput({ controls, id, options, error, onChange, de
   };
 
   return (
-    <FormControl style={{ minWidth: 120 }} error={!!error}>
-      <InputLabel>{controls.name}</InputLabel>
-      <Select
-        value={value}
-        displayEmpty={!options}
-        onChange={handleChange}
-      >
-        {options.map((option, i) => <MenuItem key={'option' + id + i} value={option.value}>{option.name}</MenuItem>)}
-      </Select>
-      <FormHelperText>{controls.name}</FormHelperText>
-    </FormControl>
+    <Box mt={1} mb={1}>
+      <FormControl style={{ minWidth: 120 }} error={!!error}>
+        <InputLabel>{controls.name}</InputLabel>
+        <Select
+          value={value}
+          displayEmpty={!options}
+          onChange={handleChange}
+        >
+          {options.map((option, i) => <MenuItem key={'option' + id + i} value={option.value}>{option.name}</MenuItem>)}
+        </Select>
+      </FormControl>
+    </Box>
   )
 }
