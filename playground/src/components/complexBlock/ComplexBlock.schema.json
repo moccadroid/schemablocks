@@ -4,7 +4,8 @@
   "properties": {
     "headline": {
       "type": "string",
-      "name": "Block Headline"
+      "name": "Block Headline",
+      "defaultValue": ""
     },
     "friends": {
       "type": "array",
@@ -26,31 +27,42 @@
               "controls": {
                 "name": "Name",
                 "hint": "This field is only 50% wide. You can use CSS styles in the Schema",
-                "styles": { "width": "50%" }
+                "styles": {
+                  "width": "50%"
+                },
+                "defaultValue": ""
               }
             },
             "description": {
               "type": "string",
               "controls": {
-                "name": "Description"
+                "name": "Description",
+                "defaultValue": ""
               }
             },
             "image": {
               "id": "Image",
               "type": "object",
-              "controls": { "type": "image", "name": "Image of your friend"},
+              "controls": {
+                "type": "image",
+                "name": "Image of your friend"
+              },
               "properties": {
                 "url": {
-                  "type": "string"
+                  "type": "string",
+                  "defaultValue": ""
                 },
                 "id": {
-                  "type": "string"
+                  "type": "string",
+                  "defaultValue": ""
                 },
                 "alt": {
-                  "type": "string"
+                  "type": "string",
+                  "defaultValue": ""
                 },
                 "mimeType": {
-                  "type": "string"
+                  "type": "string",
+                  "defaultValue": ""
                 }
               }
             }

@@ -15,21 +15,34 @@ function SchemaBlock({ block, onRemove }, ref) {
   const validator = useSchemaValidator();
   const [inputBlock, setInputBlock] = useState(createInputBlock());
   const [inputState, setInputState] = useState(data);
+  const [shouldValidate, setShouldValidate] = useState(false);
+  const [inputs, setInputs] = useState([])
   const [preview, setPreview] = useState(false);
 
   useImperativeHandle(ref, () => ({
     getData: () => getFormData(),
     isValid: () => {
-      const errors = validate().errors;
-      if (errors.length) {
-        console.log(errors);
-      }
-      return errors.length === 0 },
+      return inputBlock.errors.length === 0
+    }
   }));
 
   useEffect(() => {
-    setInputBlock(createInputBlock());
+    const inputBlock = createInputBlock();
+    const inputs = createInputs(inputBlock);
+    setInputBlock(inputBlock);
+    setInputs(inputs);
+    // validate();
   }, [schema]);
+
+  useEffect(() => {
+    setInputs(createInputs(inputBlock));
+  }, [inputBlock]);
+
+  useEffect(() => {
+    if (shouldValidate) {
+      validate();
+    }
+  }, [shouldValidate]);
 
   function createInputBlock() {
     // create refs for schemablocks
@@ -51,46 +64,44 @@ function SchemaBlock({ block, onRemove }, ref) {
   }
 
   const getFormData = () => {
-
     inputBlock.refs.forEach(ref => {
       const data = ref.ref.current.getData();
       if (data) {
         inputState[ref.key] = data;
       }
     });
-
     return inputState;
   }
 
-  const validate = () => {
-    const result = validator.validate(inputState, schema);
+  function validate () {
+    const result = validator.validate(inputState, schema.schema);
     if (result.errors.length > 0) {
-      console.log(result.errors);
+      //console.error("validation errors:", result.errors);
     }
-    return {...inputState, errors: result.errors };
+    setInputBlock(inputBlock => ({...inputBlock, errors: result.errors}));
+    // return inputState;
   }
 
   const createInputs = () => {
     const { schema: { schema }, id, errors } = inputBlock;
-
-    if (schema.controls) {
-      if(schema.controls.propertyGroup) {
-        //console.log(schema.controls.propertyGroup);
-      }
-    }
 
     return Object.entries(schema.properties).map(([key, value]) => {
 
       const { type, controls, ...rest } = value;
       if (!controls) { return }
 
-      const inputError = errors.find(error => error.path.includes(key));
-      let defaultValue = inputBlock.data[key];
+      const inputError = inputBlock.errors.find(error => error.path.includes(key));
+      let defaultValue = inputBlock.data[key] || controls.defaultValue;
+
+      if (typeof inputState[key] === "undefined") {
+        setInputValue(defaultValue, key);
+      }
 
       const extData = externalData?.find(data => data[key])?.[key];
 
       const propDefaults = {
-        onChange: (value) => onChange(value, key),
+        onChange: (value) => setInputValue(value, key),
+        onBlur: () => setShouldValidate(true),
         controls,
         error: inputError,
         defaultValue,
@@ -129,7 +140,6 @@ function SchemaBlock({ block, onRemove }, ref) {
         element = <TextInput type={type} {...propDefaults} />
       }
       else if (type === "boolean") {
-        propDefaults["defaultValue"] = typeof defaultValue === 'undefined' ? true : defaultValue;
         element = <SwitchInput {...propDefaults} />
       }
 
@@ -152,7 +162,7 @@ function SchemaBlock({ block, onRemove }, ref) {
     });
   }
 
-  const onChange = (value, key) => {
+  const setInputValue = (value, key) => {
     setInputState(inputState => {
       return {
         ...inputState,
@@ -169,7 +179,7 @@ function SchemaBlock({ block, onRemove }, ref) {
 
   return (
     <Box>
-      { createInputs() }
+      { inputs }
       {schema.block &&
         <Box>
           {preview && createPreview()}

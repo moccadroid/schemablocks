@@ -5,7 +5,7 @@ import SchemaBlocks from "./SchemaBlocks";
 export default function LanguageWrapper({ data, schemas, onSave, onPreview, onDelete }) {
 
   const [tabValue, setTabValue] = useState(0);
-
+  const [showValidationError, setShowValidationError] = useState(false);
 
   const languages = [
     { value: "de", name: "Deutsch", ref: createRef() },
@@ -13,13 +13,17 @@ export default function LanguageWrapper({ data, schemas, onSave, onPreview, onDe
   ];
 
   function handleSave() {
+    if (!languages.every(lang => lang.ref.current.isValid())) {
+      return;
+    }
+
     const data = languages.map(language => {
       return {
         lang: language.value,
         blocks: language.ref.current.getData()
       }
     });
-    console.log(data);
+    // console.log(data);
     onSave(data);
   }
 

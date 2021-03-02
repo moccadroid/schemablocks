@@ -9,9 +9,14 @@ export default function Main() {
     imageMagicUrl: 'https://us-central1-vonkoeck-dev.cloudfunctions.net/imageMagic',
   });
 
-  const [data, saveData] = useSchemaBlocksData({ collection: "schemablocks", slug: "textBlocks" });
+  const [data, saveData] = useSchemaBlocksData({ collection: "demoBlocks", slug: "demoBlocks" });
+
+  function save(data) {
+    console.log(data);
+    saveData(data);
+  }
 
   return (
-    <LanguageWrapper data={data} schemas={schemas} onSave={saveData}/>
+    <LanguageWrapper data={data} schemas={schemas} onSave={save}/>
   );
 }

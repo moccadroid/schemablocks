@@ -16,7 +16,7 @@ export default function LinkInput({ onChange, defaultValue = {}, controls}) {
   }
 
   return (
-    <Box border={1} borderColor={"grey.400"} borderRadius={1} p={1}>
+    <Box mt={1} mb={1}>
       <Box mb={1}><Typography>Link</Typography></Box>
       <Grid container spacing={2}>
         <Grid item>

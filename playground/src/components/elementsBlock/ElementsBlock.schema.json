@@ -5,7 +5,8 @@
     "booleanValue": {
       "type": "boolean",
       "controls": {
-        "name": "Boolean"
+        "name": "Boolean",
+        "defaultValue": true
       }
     },
     "color": {
@@ -26,7 +27,25 @@
             "name": "Blue",
             "value": "#0000ff"
           }
-        ]
+        ],
+        "defaultValue": "#0000ff"
+      }
+    },
+    "link": {
+      "type": "object",
+      "controls": {
+        "type": "link",
+        "name": "Link"
+      },
+      "properties": {
+        "name": {
+          "type": "string",
+          "defaultValue": ""
+        },
+        "url": {
+          "type": "string",
+          "defaultValue": ""
+        }
       }
     }
   }

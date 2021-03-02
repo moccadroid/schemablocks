@@ -5,27 +5,39 @@
     "normalText": {
       "type": "string",
       "controls": {
-        "name": "Normal Text Field"
+        "name": "Normal Text Field",
+        "defaultValue": ""
+      }
+    },
+    "notEmptyText": {
+      "type": "string",
+      "pattern": "^(?!\\s*$).+",
+      "controls": {
+        "name": "Not Empty Textfield",
+        "defaultValue": ""
       }
     },
     "maxLengthText": {
       "type": "string",
       "controls": {
         "name": "Max Length Text",
-        "maxLength": 5
+        "maxLength": 5,
+        "defaultValue": ""
       }
     },
     "number": {
       "type": "number",
       "controls": {
-        "name": "Number"
+        "name": "Number",
+        "defaultValue": 0
       }
     },
     "richText": {
       "type": "string",
       "controls": {
         "name": "Rich Text",
-        "type": "richText"
+        "type": "richText",
+        "defaultValue": ""
       }
     }
   }

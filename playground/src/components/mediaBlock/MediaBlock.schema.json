@@ -6,13 +6,22 @@
       "type": "object",
       "controls": {
         "type": "image",
-        "name": "Single Image"
+        "name": "Single Image",
+        "defaultValue": ""
       },
       "properties": {
-        "url": { "type": "string" },
-        "id": { "type": "string" },
-        "alt": { "type": "string" },
-        "mimeType": { "type": "string" }
+        "url": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        },
+        "mimeType": {
+          "type": "string"
+        }
       }
     },
     "multipleImages": {
@@ -20,7 +29,8 @@
       "controls": {
         "type": "image",
         "name": "Multiple Images",
-        "multiSelect": true
+        "multiSelect": true,
+        "defaultValue": ""
       },
       "items": [
         {

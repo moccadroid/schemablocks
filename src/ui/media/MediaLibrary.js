@@ -3,20 +3,18 @@ import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
-  Button, Checkbox, CircularProgress, Grid,
+  Button, Grid,
   IconButton,
   ImageList,
-  ImageListItem,
-  ImageListItemBar,
   Toolbar,
   Typography
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import CloseIcon from '@material-ui/icons/Close';
 import {getFirebase} from "../../lib/firebaseConfig";
-import {green} from "@material-ui/core/colors";
 import uuidv4 from "../../lib/uuidv4";
 import {getMediaLibraryConfig} from "../../lib/mediaLibraryConfig";
+import ImageItem from "./ImageItem";
 require('firebase/storage');
 //require('firebase/firestore');
 
@@ -44,10 +42,18 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
   useEffect(() => {
     loadMedia(currentMedia).then(() => console.log(currentMedia, 'loaded'));
 
-    let cols = 5;
-    console.log(window.innerWidth);
-    setColumns(cols);
+    window.addEventListener("resize", handleResize);
+    handleResize();
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    }
   }, []);
+
+  const handleResize = () => {
+    const colWidth = 300;
+    let cols = Math.round(window.innerWidth / colWidth);
+    setColumns(cols);
+  }
 
   const loadMedia = async (type) => {
     const images = [];
@@ -74,7 +80,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
         id: fileId,
         url,
         alt: "",
-        mimeType: "image/",
+        mimeType: "image/" + extension,
         title: file.name,
         usedInBlocks: [],
         type: 'images'
@@ -188,20 +194,9 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
         <ImageList cols={columns} className={classes.imageList}>
           {libraryImages.map((image) => {
             const selected = selectedImages.find(img => img.id === image.id);
-            const actionIcon = image.processing ? <CircularProgress color="secondary"/> : <Checkbox checked={!!selected} className={classes.greenCheckbox} />
             return (
-              <ImageListItem className={classes.imageListItem} key={image.id} onClick={() => handleImageSelect(image)}>
-                <img
-                  src={image.url}
-                  alt={image.title}
-                />
-                <ImageListItemBar
-                  title={image.title}
-                  subtitle={image.id}
-                  actionIcon={actionIcon}
-                />
-              </ImageListItem>
-            );
+              <ImageItem key={image.id} image={image} selected={selected} onSelect={handleImageSelect} />
+            )
           })}
         </ImageList>
       </Box>
@@ -213,9 +208,6 @@ const useStyles = makeStyles((theme) => ({
   imageList: {
     padding: 24,
   },
-  imageListItem: {
-    cursor: "pointer"
-  },
   icon: {
     color: 'rgba(255, 255, 255, 0.54)',
   },
@@ -225,12 +217,6 @@ const useStyles = makeStyles((theme) => ({
   title: {
     marginLeft: theme.spacing(2),
     flex: 1,
-  },
-  greenCheckbox: {
-    color: green[400],
-    '&$checked': {
-      color: green[600],
-    },
   },
   input: {
     display: 'none'
