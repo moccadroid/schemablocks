@@ -1,32 +1,73 @@
-import {ImageListItem, ImageListItemBar, CircularProgress, Checkbox} from '@material-ui/core';
+import {ImageListItem, Grid, Box, Button, ImageListItemBar, CircularProgress, Checkbox, TextField} from '@material-ui/core';
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
 import React, {useState} from 'react';
 
-export default function ImageItem({ image, selected, onSelect }) {
+function Inputs({ image, onSave }) {
+  const [alt, setAlt] = useState(image.alt ?? "");
 
-  const [imageItem, setImageItem] = useState(image);
+  function handleSave() {
+    onSave({
+      ...image,
+      alt
+    });
+  }
+
+  function handleClick(event) {
+    event.stopPropagation();
+  }
+
+  return (
+    <Grid container spacing={1} p={1} mt={2} sx={{ backgroundColor: "white" }} onClick={handleClick}>
+      <Grid item sx={{ width: "calc(100% + 8px)"}}>
+        <TextField
+          fullWidth
+          label={"Alt Text"}
+          value={alt}
+          onChange={event => setAlt(event.target.value)}
+        />
+      </Grid>
+      <Grid item>
+        <Button variant={"contained"} onClick={handleSave}>Save</Button>
+      </Grid>
+    </Grid>
+  )
+}
+
+export default function ImageItem({ image, selected, onChange, onSelect }) {
+
   const [showEdit, setShowEdit] = useState(false);
 
   function onBarClick(event) {
     event.stopPropagation();
-    setShowEdit(showEdit => !showEdit);
+    if (!showEdit) {
+      setShowEdit(true);
+    } else {
+      setShowEdit(false);
+    }
+  }
+
+  function handleSave(image) {
+    setShowEdit(false);
+    onChange(image);
   }
 
   const classes = useStyles();
   const actionIcon = image.processing ? <CircularProgress color="secondary"/> : <Checkbox checked={!!selected} className={classes.greenCheckbox} />
+  const sx = showEdit ? { top: 0, alignItems: "flex-start", wordWrap: "break-word" } : {};
 
   return (
     <ImageListItem className={classes.imageListItem} key={image.id} onClick={() => onSelect(image)}>
       <img
         src={image.url}
-        alt={image.title}
+        alt={image.alt}
       />
       <ImageListItemBar
         title={image.title}
-        subtitle={image.id}
-        actionIcon={actionIcon}
+        subtitle={showEdit ? <Inputs image={image} onSave={handleSave}/> : image.alt}
+        actionIcon={showEdit ? null : actionIcon}
         onClick={onBarClick}
+        sx={sx}
       />
     </ImageListItem>
   )

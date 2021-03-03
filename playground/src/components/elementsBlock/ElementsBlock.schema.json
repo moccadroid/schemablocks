@@ -35,7 +35,8 @@
       "type": "object",
       "controls": {
         "type": "link",
-        "name": "Link"
+        "name": "Link",
+        "defaultValue": { "name": "", "url": "" }
       },
       "properties": {
         "name": {

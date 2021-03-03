@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import {
   AppBar,
@@ -135,13 +134,17 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
   }
 
   const handleImageDelete = async () => {
-
     await Promise.all(selectedImages.map(async image => {
       return await getFirebase().firestore().collection('mediaLibrary').doc(image.id).delete();
     }));
     setSelectedImages([]);
     loadMedia(currentMedia).then(() => console.log(currentMedia, 'loaded'));
   };
+
+  const handleImageChange = async (image) => {
+    setLibraryImages(images => images.map(img => img.id === image.id ? image : img));
+    await getFirebase().firestore().collection(baseFolder).doc(image.id).set(image);
+  }
 
   const handleClose = () => {
     onClose();
@@ -195,7 +198,13 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
           {libraryImages.map((image) => {
             const selected = selectedImages.find(img => img.id === image.id);
             return (
-              <ImageItem key={image.id} image={image} selected={selected} onSelect={handleImageSelect} />
+              <ImageItem
+                key={image.id}
+                image={image}
+                selected={selected}
+                onSelect={handleImageSelect}
+                onChange={handleImageChange}
+              />
             )
           })}
         </ImageList>
