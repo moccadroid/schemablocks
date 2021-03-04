@@ -18,6 +18,8 @@ export default function Main() {
   }
 
   return (
-    <LanguageWrapper data={data} schemas={schemas} onSave={save}/>
+    <div>
+      <LanguageWrapper data={data} schemas={schemas} onSave={save}/>
+    </div>
   );
 }

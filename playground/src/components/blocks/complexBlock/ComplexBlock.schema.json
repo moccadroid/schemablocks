@@ -4,8 +4,17 @@
   "properties": {
     "headline": {
       "type": "string",
-      "name": "Block Headline",
-      "defaultValue": ""
+      "controls": {
+        "name": "Block Headline",
+        "defaultValue": ""
+      }
+    },
+    "reverse": {
+      "type": "boolean",
+      "controls": {
+        "name": "Reverse order",
+        "defaultValue": false
+      }
     },
     "friends": {
       "type": "array",
@@ -38,6 +47,13 @@
               "controls": {
                 "name": "Description",
                 "defaultValue": ""
+              }
+            },
+            "age": {
+              "type": "number",
+              "controls": {
+                "name": "Age",
+                "defaultValue": 0
               }
             },
             "image": {

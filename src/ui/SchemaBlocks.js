@@ -2,7 +2,7 @@ import {
   Accordion,
   AccordionDetails,
   AccordionSummary,
-  //Alert,
+  Alert,
   Box,
   Button,
   Grid, Snackbar,
@@ -208,13 +208,11 @@ function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false
           <Button variant={"contained"} onClick={addSchemaBlock}>Add Block</Button>
         </Grid>
       </Grid>
-      {/*
       <Snackbar open={!!warningSnackbar} autoHideDuration={6000} onClose={() => setWarningSnackbar(null)}>
         <Alert onClose={() => setWarningSnackbar(null)} severity="warning" variant="filled">
           {warningSnackbar}
         </Alert>
       </Snackbar>
-      */}
     </Box>
   )
 }

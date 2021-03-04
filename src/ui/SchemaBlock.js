@@ -174,7 +174,14 @@ function SchemaBlock({ block, onRemove }, ref) {
   const createPreview = () => {
     const Component = schema.block;
     const block = {id: schema.schema.id, data: inputState}
-    return <Component block={block}/>
+    return (
+      <Box sx={{ marginTop: 1}}>
+        <Typography variant={"button"}>Preview:</Typography>
+        <Box sx={{ border: "1px solid #ccc", padding: 2 }}>
+          <Component block={block}/>
+        </Box>
+      </Box>
+    );
   };
 
   return (
