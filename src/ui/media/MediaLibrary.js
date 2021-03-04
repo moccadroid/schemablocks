@@ -20,9 +20,8 @@ require('firebase/storage');
 export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
 
   const config = getMediaLibraryConfig();
-  if (!config.imageMagicUrl) {
-    console.error('imageMagicUrl was not set in config');
-    return <h1>Please set imageMagicUrl in config</h1>;
+  if (!config.imageMagicUrl || !config.firestoreCollection) {
+    return <h1>Please set "imageMagicUrl" and "firestoreCollection" in config</h1>;
   }
 
   const baseFolder = 'mediaLibrary';
@@ -56,7 +55,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
 
   const loadMedia = async (type) => {
     const images = [];
-    const snapshot = await getFirebase().firestore().collection('mediaLibrary').where('type', '==', 'images').get();
+    const snapshot = await getFirebase().firestore().collection(config.firestoreCollection).where('type', '==', 'images').get();
     snapshot.forEach(doc => {
       images.push(doc.data());
     });
@@ -135,7 +134,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
 
   const handleImageDelete = async () => {
     await Promise.all(selectedImages.map(async image => {
-      return await getFirebase().firestore().collection('mediaLibrary').doc(image.id).delete();
+      return await getFirebase().firestore().collection(config.firestoreCollection).doc(image.id).delete();
     }));
     setSelectedImages([]);
     loadMedia(currentMedia).then(() => console.log(currentMedia, 'loaded'));
