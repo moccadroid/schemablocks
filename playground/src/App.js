@@ -1,6 +1,7 @@
 import {useState} from "react";
 import Main from "./Main";
 import Login from "./Login";
+import 'react-quill/dist/quill.snow.css';
 
 function App() {
 
