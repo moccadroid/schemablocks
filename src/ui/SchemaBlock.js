@@ -79,7 +79,6 @@ function SchemaBlock({ block, onRemove }, ref) {
       //console.error("validation errors:", result.errors);
     }
     setInputBlock(inputBlock => ({...inputBlock, errors: result.errors}));
-    // return inputState;
   }
 
   const createInputs = () => {
@@ -127,7 +126,7 @@ function SchemaBlock({ block, onRemove }, ref) {
         );
       }
       else if (controls.type === "image") {
-        element = <MediaInput {...propDefaults} />
+        element = <MediaInput {...propDefaults}/>
       }
       else if (controls.type === "select") {
         const options = controls.enum || extData || [];

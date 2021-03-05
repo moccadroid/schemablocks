@@ -63,7 +63,12 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
           onClose={() => setLibraryOpen(false)}
           TransitionComponent={Transition}
         >
-          <MediaLibray onClose={closeMediaLibrary} multiSelect={controls.multiSelect ?? false} selected={images}/>
+          <MediaLibray
+            onClose={closeMediaLibrary}
+            multiSelect={controls.multiSelect ?? false}
+            selected={images}
+            noEdit={controls.noEdit}
+          />
         </Dialog>
       </Box>
     );

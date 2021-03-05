@@ -1,7 +1,7 @@
 import styles from './ComplexBlock.module.scss';
 import {Media} from 'schemablocks';
 import schema from './ComplexBlock.schema.json';
-import SchemaView from "../../SchemaView";
+import SchemaView from "../../ui/SchemaView";
 import {Typography} from "@material-ui/core";
 
 function Friend({ data }) {
@@ -25,9 +25,7 @@ export default function ComplexBlock({ block }) {
       <div className={styles.friendsList}>
         {friends.map((friend, i) => <Friend key={"friend" + i} data={friend.data}/>)}
       </div>
-      <div className={styles.schema}>
-        <SchemaView schema={schema} />
-      </div>
+      <SchemaView schema={schema} />
     </div>
   )
 }

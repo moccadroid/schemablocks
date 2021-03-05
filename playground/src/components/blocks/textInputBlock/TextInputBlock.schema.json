@@ -5,7 +5,7 @@
     "normalText": {
       "type": "string",
       "controls": {
-        "name": "Normal Text Field",
+        "name": "Normal Textfield",
         "defaultValue": ""
       }
     },
@@ -20,8 +20,8 @@
     "maxLengthText": {
       "type": "string",
       "controls": {
-        "name": "Max Length Text",
-        "maxLength": 5,
+        "name": "Max Length Textfield",
+        "maxLength": 4,
         "defaultValue": ""
       }
     },

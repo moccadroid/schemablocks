@@ -7,6 +7,7 @@
       "controls": {
         "type": "image",
         "name": "Single Image",
+        "noEdit": true,
         "defaultValue": ""
       },
       "properties": {
@@ -29,8 +30,9 @@
       "controls": {
         "type": "image",
         "name": "Multiple Images",
+        "noEdit": true,
         "multiSelect": true,
-        "defaultValue": ""
+        "defaultValue": []
       },
       "items": [
         {

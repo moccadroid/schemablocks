@@ -36,16 +36,17 @@
       "controls": {
         "type": "link",
         "name": "Link",
-        "defaultValue": { "name": "", "url": "" }
+        "defaultValue": { "name": "", "url": "", "openInNew": false }
       },
       "properties": {
         "name": {
-          "type": "string",
-          "defaultValue": ""
+          "type": "string"
         },
         "url": {
-          "type": "string",
-          "defaultValue": ""
+          "type": "string"
+        },
+        "openInNew": {
+          "type": "boolean"
         }
       }
     }

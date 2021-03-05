@@ -1,0 +1,97 @@
+[
+  {
+    "blocks": [],
+    "lang": "en",
+    "slug": "demoBlocks"
+  },
+  {
+    "blocks": [
+      {
+        "data": {
+          "number": 123456,
+          "richText": "<h2>Headline</h2><ol><li><em>ordered</em></li><li><u>list</u></li></ol><ul><li><strong>unordered </strong></li><li>list</li></ul><p>And a <a href=\"https://wikipedia.org\" rel=\"noopener noreferrer\" target=\"_blank\">Link</a></p>",
+          "maxLengthText": "four",
+          "notEmptyText": "sdfasdffffff",
+          "normalText": "asdasdasdsdf"
+        },
+        "id": "TextBlock"
+      },
+      {
+        "data": {
+          "link": {
+            "openInNew": true,
+            "url": "https://wikipedia.org",
+            "name": "Wikipedia"
+          },
+          "booleanValue": true,
+          "color": "#0000ff"
+        },
+        "id": "ElementsBlock"
+      },
+      {
+        "data": {
+          "singleImage": {
+            "id": "0db70b84-19b5-4ceb-a060-0dbf4ba27417",
+            "alt": "Very attractive man, making a face",
+            "url": "https://firebasestorage.googleapis.com/v0/b/vonkoeck-dev.appspot.com/o/mediaLibrary%2Fimages%2F0db70b84-19b5-4ceb-a060-0dbf4ba27417%2FPXL_20201016_202617534.jpg?alt=media&token=7684ac01-66d6-4338-8904-2e21175fefc0",
+            "mimeType": "image/"
+          },
+          "multipleImages": [
+            {
+              "id": "66e26dbe-19f8-4abe-bcbf-5c1ecc055351",
+              "alt": "Woman holding a green tube",
+              "url": "https://firebasestorage.googleapis.com/v0/b/vonkoeck-dev.appspot.com/o/mediaLibrary%2Fimages%2F66e26dbe-19f8-4abe-bcbf-5c1ecc055351%2FIMG_20200814_182705.jpg?alt=media&token=27b780f8-34f7-4908-9ea5-5e5c97d22f5c",
+              "mimeType": "image/"
+            },
+            {
+              "id": "0db70b84-19b5-4ceb-a060-0dbf4ba27417",
+              "url": "https://firebasestorage.googleapis.com/v0/b/vonkoeck-dev.appspot.com/o/mediaLibrary%2Fimages%2F0db70b84-19b5-4ceb-a060-0dbf4ba27417%2FPXL_20201016_202617534.jpg?alt=media&token=7684ac01-66d6-4338-8904-2e21175fefc0",
+              "alt": "Very attractive man, making a face",
+              "mimeType": "image/"
+            }
+          ]
+        },
+        "id": "MediaBlock"
+      },
+      {
+        "data": {
+          "reverse": true,
+          "headline": "These are my best friends!",
+          "friends": [
+            {
+              "id": "Friend",
+              "data": {
+                "name": "Frank the Tank",
+                "age": 248,
+                "description": "This is Frank. He's a Tank.",
+                "image": {
+                  "url": "https://firebasestorage.googleapis.com/v0/b/vonkoeck-dev.appspot.com/o/mediaLibrary%2Fimages%2F0db70b84-19b5-4ceb-a060-0dbf4ba27417%2FPXL_20201016_202617534.jpg?alt=media&token=7684ac01-66d6-4338-8904-2e21175fefc0",
+                  "alt": "Very attractive man, making a face",
+                  "mimeType": "image/",
+                  "id": "0db70b84-19b5-4ceb-a060-0dbf4ba27417"
+                }
+              }
+            },
+            {
+              "data": {
+                "age": 24,
+                "image": {
+                  "url": "https://firebasestorage.googleapis.com/v0/b/vonkoeck-dev.appspot.com/o/mediaLibrary%2Fimages%2F66e26dbe-19f8-4abe-bcbf-5c1ecc055351%2FIMG_20200814_182705.jpg?alt=media&token=27b780f8-34f7-4908-9ea5-5e5c97d22f5c",
+                  "alt": "Woman holding a green tube",
+                  "mimeType": "image/",
+                  "id": "66e26dbe-19f8-4abe-bcbf-5c1ecc055351"
+                },
+                "name": "Tank Girl",
+                "description": "This is Girl. She's not a tank."
+              },
+              "id": "Friend"
+            }
+          ]
+        },
+        "id": "ComplexBlock"
+      }
+    ],
+    "lang": "de",
+    "slug": "demoBlocks"
+  }
+]

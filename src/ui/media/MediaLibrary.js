@@ -17,7 +17,7 @@ import ImageItem from "./ImageItem";
 require('firebase/storage');
 //require('firebase/firestore');
 
-export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
+export default function MediaLibray({ onClose, multiSelect, selected = [], noEdit = false}) {
 
   const config = getMediaLibraryConfig();
   if (!config.imageMagicUrl || !config.firestoreCollection) {
@@ -63,6 +63,10 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
   }
 
   const handleUpload = ({ target }) => {
+    if (noEdit) {
+      return
+    }
+
     let reader = new FileReader();
     let file = target.files[0];
 
@@ -133,6 +137,10 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
   }
 
   const handleImageDelete = async () => {
+    if (noEdit) {
+      return
+    }
+
     await Promise.all(selectedImages.map(async image => {
       return await getFirebase().firestore().collection(config.firestoreCollection).doc(image.id).delete();
     }));
@@ -166,9 +174,6 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title} component="div">Media Library</Typography>
-          <Box>
-
-          </Box>
           <Button disabled={selectedImages.length === 0} variant="contained" onClick={onSelect}>Select</Button>
         </Toolbar>
       </AppBar>
@@ -185,11 +190,16 @@ export default function MediaLibray({ onClose, multiSelect, selected = [] }) {
                 onChange={handleUpload}
               />
               <label htmlFor="contained-button-file">
-                <Button variant="contained" component="span">Upload New</Button>
+                <Button disabled={noEdit} variant="contained" component="span">Upload New</Button>
               </label>
             </Grid>
             <Grid item>
-              <Button variant="contained" disabled={selectedImages.length === 0} onClick={handleImageDelete} color={"secondary"}>Delete</Button>
+              <Button
+                variant="contained"
+                disabled={noEdit || selectedImages.length === 0}
+                onClick={handleImageDelete}
+                color={"secondary"}
+              >Delete</Button>
             </Grid>
           </Grid>
         </Box>
