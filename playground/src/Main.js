@@ -7,8 +7,8 @@ export default function Main() {
 
   setFirebase(firebase);
   setMediaLibraryConfig({
-    imageMagicUrl: 'https://us-central1-vonkoeck-dev.cloudfunctions.net/imageMagic',
-    firestoreCollection: 'mediaLibrary'
+    firestoreCollection: 'mediaLibrary',
+    imageMagicUrl: process.env.REACT_APP_IMAGE_MAGIC_URL,
   });
 
   // const [data, saveData] = useSchemaBlocksData({ collection: "demoBlocks", slug: "demoBlocks" });
