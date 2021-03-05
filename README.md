@@ -1,6 +1,9 @@
 # schemablocks
 Generate a React backend interface for firebase/firestore based on [JSON schema](http://json-schema.org/).
 
+## Disclaimer
+You shouldn't use this library yet. It's still under heavy development and mainly meant for internal use ;)
+
 ## Usage
 
 ```javascript
