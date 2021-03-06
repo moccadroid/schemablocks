@@ -73,6 +73,18 @@ export default function View() {
   )
 }
 ```
+You can then use the new Input as a type in your schema:
+```json
+{
+  "richText": {
+    "type": "string",
+    "controls": {
+      "name": "Rich Text Input",
+      "type": "richText"
+    }
+  }
+}
+```
 Every injected Component can expect the following props:
 ```javascript
 {
@@ -89,6 +101,8 @@ example in action.
 
 ## Media Library
 The media library is still quite experimental and the code is very specific to our current setup.
+It uses Firebase Storage and Fireabase Functions to store and resize the Images. The code for the necessary Firebase function
+will be released soon (when I figure out how to do this properly here).
 To enable Media Library the following setup is necessary:
 
 ```javascript
