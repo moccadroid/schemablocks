@@ -2,6 +2,7 @@ import {ImageListItem, Grid, Box, Button, ImageListItemBar, CircularProgress, Ch
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
 import React, {useState} from 'react';
+import Media from "./Media";
 
 function Inputs({ image, onSave }) {
   const [alt, setAlt] = useState(image.alt ?? "");
@@ -58,10 +59,7 @@ export default function ImageItem({ image, selected, onChange, onSelect }) {
 
   return (
     <ImageListItem className={classes.imageListItem} key={image.id} onClick={() => onSelect(image)}>
-      <img
-        src={image.url}
-        alt={image.alt}
-      />
+      <Media data={image} />
       <ImageListItemBar
         title={image.title}
         subtitle={showEdit ? <Inputs image={image} onSave={handleSave}/> : image.alt}

@@ -1,17 +1,41 @@
-import React from 'react';
+import React, {useState, useRef, useEffect} from 'react';
 
 export default function Media({ data }) {
 
-  const resolveMedia = (data) => {
-    if (data.mimeType.startsWith('image')) {
+  const ref = useRef();
+  const [media, setMedia] = useState(false);
+  const sizes = [200, 400, 800, 1200, 1600];
+
+
+  useEffect(() => {
+    setMedia(resolveMedia(data));
+  }, [])
+
+  function getImageWidth() {
+    if (ref.current) {
+      const width = ref.current.getBoundingClientRect().width;
+      for(let i = 0; i < sizes.length; i++) {
+        if (width < sizes[i]) {
+          return sizes[i];
+        }
+      }
+    }
+    return sizes[sizes.length - 1];
+  }
+
+  function resolveMedia(data) {
+    if (data?.mimeType?.startsWith('image')) {
+      const width = getImageWidth();
       const decoded = decodeURIComponent(data.url);
       const filename = decoded.split('/').pop().split('?')[0];
       const extension = filename.split('.').pop();
 
-      const webpSrc = data.url.replace(filename, data.id + '.1600.webp');
-      const stdSrc = data.url.replace(filename, data.id + '.200.' + extension);
+      const webSrcUrl = [data.id, width, 'webp'].join('.');
+      const stdSrcUrl = [data.id, width, extension].join('.');
 
-      // TODO: more magic needed to make images truly responsive... but this is already looking good :)
+      const webpSrc = data.url.replace(filename, webSrcUrl);
+      const stdSrc = data.url.replace(filename, stdSrcUrl);
+
       return (
         <picture>
           <source srcSet={webpSrc} type={'image/webp'}/>
@@ -19,11 +43,12 @@ export default function Media({ data }) {
         </picture>
       )
     }
+    return false;
   }
 
   return (
-    <div>
-      { resolveMedia(data) }
+    <div ref={ref}>
+      { media }
     </div>
   )
 }

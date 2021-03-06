@@ -1,6 +1,7 @@
-import {Button, Box, Dialog, Slide, Typography, Grid} from "@material-ui/core";
+import {Button, Dialog, Box, Slide, Typography, Grid} from "@material-ui/core";
 import React, {useState, forwardRef, useEffect} from "react";
 import MediaLibray from "../media/MediaLibrary";
+import Media from "../media/Media";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -47,8 +48,8 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
           <Grid container spacing={2}>
             {images.map(image => {
               return (
-                <Grid item key={image.id}>
-                  <img key={image.id} alt={image.alt} style={{width: 200}} src={image.url}/>
+                <Grid item key={image.id} sx={{width: 200}}>
+                  <Media key={image.id} data={image}/>
                 </Grid>
               )
             })}
