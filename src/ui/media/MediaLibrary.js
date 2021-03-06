@@ -187,6 +187,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
                 id="contained-button-file"
                 multiple
                 type="file"
+                disabled={noEdit}
                 onChange={handleUpload}
               />
               <label htmlFor="contained-button-file">
