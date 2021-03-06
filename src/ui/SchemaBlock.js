@@ -2,12 +2,10 @@ import {Alert, Box, Button, Grid, Typography} from "@material-ui/core";
 import useSchemaValidator from "../hooks/useSchemaValidator";
 import React, {createRef, forwardRef, useEffect, useImperativeHandle, useState} from "react";
 import SelectInput from "./input/SelectInput";
-import MediaInput from "./input/MediaInput";
-import RichTextInput from "./input/RichTextInput";
 import TextInput from "./input/TextInput";
 import SwitchInput from "./input/SwitchInput";
 import SchemaBlocks from "./SchemaBlocks";
-import LinkInput from "./input/LinkInput";
+import {getControlInputForType} from "../lib/controlInputs";
 
 function SchemaBlock({ block, onRemove }, ref) {
 
@@ -104,44 +102,33 @@ function SchemaBlock({ block, onRemove }, ref) {
         controls,
         error: inputError,
         defaultValue,
-        extData
+        extData,
+        id
       };
 
+      // use onboard or injected control inputs:
+      let element = getControlInputForType(controls.type, propDefaults);
+
+      if (!element) {
+        if (type === "array" && controls.type === "schemablocks") {
+          const schemas = value.items.map(item => ({name: item.id, schema: item}));
+          const ref = inputBlock.refs.find(ref => ref.key === key)?.ref;
+          defaultValue = {blocks: defaultValue}
+
+          element = (
+            <Box mt={1} mb={1}>
+              <Typography>{controls.name}</Typography>
+              <SchemaBlocks schemas={schemas} data={defaultValue} ref={ref}/>
+            </Box>
+          );
+        } else if (type === "string" || type === "number") {
+          element = <TextInput {...propDefaults} />
+        } else if (type === "boolean") {
+          element = <SwitchInput {...propDefaults} />
+        }
+      }
+
       const controlStyle = controls.styles ?? {};
-
-      let element = false;
-
-      if (controls.type === "link") {
-        element = <LinkInput {...propDefaults} />;
-      } else if (type === "array" && controls.type === "schemablocks") {
-        const schemas = value.items.map(item => ({ name: item.id, schema: item }));
-        const ref = inputBlock.refs.find(ref => ref.key === key)?.ref;
-        defaultValue = { blocks: defaultValue }
-
-        element = (
-          <Box mt={1} mb={1}>
-            <Typography>{controls.name}</Typography>
-            <SchemaBlocks schemas={schemas} data={defaultValue} ref={ref}/>
-          </Box>
-        );
-      }
-      else if (controls.type === "image") {
-        element = <MediaInput {...propDefaults}/>
-      }
-      else if (controls.type === "select") {
-        const options = controls.enum || extData || [];
-        element = <SelectInput {...propDefaults} options={options} id={id} />
-      }
-      else if (controls.type === "richText" && type === "string") {
-        element = <RichTextInput {...propDefaults} />
-      }
-      else if (type === "string" || type === "number") {
-        element = <TextInput type={type} {...propDefaults} />
-      }
-      else if (type === "boolean") {
-        element = <SwitchInput {...propDefaults} />
-      }
-
       return (
         <Box key={id + key} style={controlStyle}>
           {controls.hint &&

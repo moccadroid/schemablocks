@@ -11,10 +11,10 @@ export default function TextInput({ defaultValue, error, name, controls, type, o
     if (controls.maxLength && value.length > controls.maxLength) {
       return;
     }
-    if (type === "number") {
+    if (controls.type === "number") {
       onChange(Number(value));
     }
-    if (type === "string") {
+    if (controls.type === "string") {
       onChange(value + "");
     }
     setInputValue(value);

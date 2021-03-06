@@ -4,13 +4,14 @@ import React, {useState,useEffect} from "react";
 export default function SelectInput({ controls, id, options, error, onChange, defaultValue }) {
 
   const [value, setValue] = useState("");
+  const selectOptions = options || controls.enum || controls.extData || [];
 
   useEffect(() => {
-    if (options.length > 0) {
-      setValue(defaultValue ? defaultValue : options[0].value)
+    if (selectOptions.length > 0) {
+      setValue(defaultValue ? defaultValue : selectOptions[0].value)
     }
 
-  }, [options, defaultValue]);
+  }, [controls, options, defaultValue]);
 
 
   const handleChange = (event) => {
@@ -24,10 +25,10 @@ export default function SelectInput({ controls, id, options, error, onChange, de
         <InputLabel>{controls.name}</InputLabel>
         <Select
           value={value}
-          displayEmpty={!options}
+          displayEmpty={!selectOptions}
           onChange={handleChange}
         >
-          {options.map((option, i) => <MenuItem key={'option' + id + i} value={option.value}>{option.name}</MenuItem>)}
+          {selectOptions.map((option, i) => <MenuItem key={'option' + id + i} value={option.value}>{option.name}</MenuItem>)}
         </Select>
       </FormControl>
     </Box>

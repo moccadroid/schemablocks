@@ -2,6 +2,8 @@ import {LanguageWrapper, setMediaLibraryConfig, setFirebase, useSchemaBlocksData
 import firebase from "./firebase.config";
 import schemas from "./schemas";
 import jsonData from './data.json';
+import {addControlInput} from "schemablocks";
+import RichTextInput from "./components/inputs/RichTextInput";
 
 export default function Main() {
 
@@ -10,10 +12,9 @@ export default function Main() {
     firestoreCollection: 'mediaLibrary',
     imageMagicUrl: process.env.REACT_APP_IMAGE_MAGIC_URL,
   });
+  addControlInput("richText", RichTextInput);
 
   // const [data, saveData] = useSchemaBlocksData({ collection: "demoBlocks", slug: "demoBlocks" });
-
-
 
   function save(data) {
     console.log(data);

@@ -4,6 +4,7 @@ import {setFirebase} from './lib/firebaseConfig';
 import {setMediaLibraryConfig} from "./lib/mediaLibraryConfig";
 import LanguageWrapper from "./ui/LanguageWrapper";
 import Media from './ui/media/Media';
+import {addControlInput, getControlInputs} from "./lib/controlInputs";
 
 export {
   useSchemaBlocksData,
@@ -11,5 +12,7 @@ export {
   setFirebase,
   setMediaLibraryConfig,
   LanguageWrapper,
-  Media
+  Media,
+  addControlInput,
+  getControlInputs
 }
