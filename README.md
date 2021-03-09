@@ -93,7 +93,8 @@ Every injected Component can expect the following props:
   error, // the possible error returned by jsonSchema validation
   defaultValue, // either the defaultValue from the schema, or the value from loaded data
   extData, // externally loaded data (undocumented still)
-  id // the id of the inputBlock as uuidv4
+  id, // the id of the inputBlock as uuidv4,
+  type //either the controls.type or (if missing) the jsonschema type
 }
 ```
 Go see [RichTextInput](https://github.com/moccadroid/schemablocks/tree/master/playground/src/components/inputs) for an

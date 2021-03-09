@@ -6,18 +6,19 @@ export default function TextInput({ defaultValue, error, name, controls, type, o
   const [inputValue, setInputValue] = useState(defaultValue ?? "");
 
   const handleChange = (event) => {
-    const value = event.target.value;
+    let value = event.target.value;
 
-    if (controls.maxLength && value.length > controls.maxLength) {
+    if (controls.maxLength && controls.maxLength && value.length > controls.maxLength) {
       return;
     }
-    if (controls.type === "number") {
-      onChange(Number(value));
+    if (type === "number") {
+      value = Number(value);
     }
-    if (controls.type === "string") {
-      onChange(value + "");
+    if (type === "string") {
+      value = value + "";
     }
     setInputValue(value);
+    onChange(value);
   }
 
   return (

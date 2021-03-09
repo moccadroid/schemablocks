@@ -103,6 +103,7 @@ function SchemaBlock({ block, onRemove }, ref) {
         error: inputError,
         defaultValue,
         extData,
+        type: controls.type || type,
         id
       };
 
