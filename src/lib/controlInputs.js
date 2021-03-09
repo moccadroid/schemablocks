@@ -6,6 +6,7 @@ import SelectInput from "../ui/input/SelectInput";
 let controlInputs = {
   "link": LinkInput,
   "image": MediaInput,
+  "video": MediaInput,
   "select": SelectInput,
 };
 

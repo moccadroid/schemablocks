@@ -5,9 +5,9 @@
     "singleImage": {
       "type": "object",
       "controls": {
-        "type": "image",
+        "type": "video",
         "name": "Single Image",
-        "noEdit": true,
+        "noEdit": false,
         "defaultValue": ""
       },
       "properties": {

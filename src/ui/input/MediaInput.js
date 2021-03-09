@@ -38,6 +38,13 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
     }
   }
 
+  function resolveType() {
+    if (controls.type === "video") {
+      return "videos";
+    }
+    return "images";
+  }
+
   if (controls.type === "image") {
     return (
       <Box mt={2} mb={2}>
@@ -68,6 +75,7 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
             onClose={closeMediaLibrary}
             multiSelect={controls.multiSelect ?? false}
             selected={images}
+            type={resolveType()}
             noEdit={controls.noEdit}
           />
         </Dialog>

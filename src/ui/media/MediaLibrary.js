@@ -17,28 +17,26 @@ import ImageItem from "./ImageItem";
 require('firebase/storage');
 //require('firebase/firestore');
 
-export default function MediaLibray({ onClose, multiSelect, selected = [], noEdit = false}) {
+export default function MediaLibray({ onClose, multiSelect, selected = [], noEdit = false, type = "images"}) {
 
   const config = getMediaLibraryConfig();
   if (!config.imageMagicUrl || !config.firestoreCollection) {
     return <h1>Please set "imageMagicUrl" and "firestoreCollection" in config</h1>;
   }
+  const imageMagicUrl = config.imageMagicUrl;
+  const baseFolder = "mediaLibrary";
 
-  const baseFolder = 'mediaLibrary';
-  const imageFolder = 'images';
-  const videoFolder = 'videos';
-
+  const [libraryVideos, setLibraryVideos] = useState([]);
+  const [selectedVideos, setSelectedVideos] = useState([]);
   const [libraryImages, setLibraryImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState(selected);
-  const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + imageFolder);
-  const [currentMedia, setCurrentMedia] = useState('images');
+  const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + type);
   const [columns, setColumns] = useState(3);
   const classes = useStyles();
 
 
-
   useEffect(() => {
-    loadMedia(currentMedia).then(() => console.log(currentMedia, 'loaded'));
+    loadMedia().then(() => console.log(type, 'loaded'));
 
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -53,13 +51,17 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
     setColumns(cols);
   }
 
-  const loadMedia = async (type) => {
-    const images = [];
-    const snapshot = await getFirebase().firestore().collection(config.firestoreCollection).where('type', '==', 'images').get();
+  const loadMedia = async () => {
+    const media = [];
+    const snapshot = await getFirebase().firestore().collection(config.firestoreCollection).where('type', '==', type).get();
     snapshot.forEach(doc => {
-      images.push(doc.data());
+      media.push(doc.data());
     });
-    setLibraryImages(images);
+    if (type === "videos") {
+      setLibraryVideos(media);
+    } else {
+      setLibraryImages(media);
+    }
   }
 
   const handleUpload = ({ target }) => {
@@ -74,49 +76,76 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
       const fileId = uuidv4();
       const extension = file.name.split('.').pop();
       const storageRef = getFirebase().storage().ref(currentFolder);
-      const imageRef = storageRef.child(fileId + '/' + file.name);
-      const snapshot = await imageRef.put(file);
+      const mediaRef = storageRef.child(fileId + '/' + file.name);
+      const snapshot = await mediaRef.put(file);
       const url = await snapshot.ref.getDownloadURL();
 
-      const image = {
-        id: fileId,
-        url,
-        alt: "",
-        mimeType: "image/" + extension,
-        title: file.name,
-        usedInBlocks: [],
-        type: 'images'
-      };
-      await getFirebase().firestore().collection(baseFolder).doc(fileId).set(image);
+      let media = {};
 
-      image.processing = true;
-      setLibraryImages(images => [image, ...images]);
-
-      const response = await fetch(config.imageMagicUrl + '?id=' + fileId);
-      setLibraryImages(images => images.map(img => {
-        // remove processing field from image
-        if (img.id === fileId) {
-          const {processing, ...newImg} = img;
-          return newImg;
+      if (type === "videos") {
+        media = {
+          id: fileId,
+          url,
+          alt: "",
+          mimeType: "video/" + extension,
+          title: file.name,
+          autoplay: false,
+          usedInBlocks: []
         }
-        return img;
-      }))
-      if (response.status === 200) {
-        console.log('image was successfully processed', file.name);
       } else {
-        console.log('there was an error processing this image', file.name);
+        media = {
+          id: fileId,
+          url,
+          alt: "",
+          mimeType: "image/" + extension,
+          title: file.name,
+          usedInBlocks: []
+        }
+      }
+      await getFirebase().firestore().collection(baseFolder).doc(fileId).set(media);
+
+      if (type === "images") {
+        media.processing = true;
+        setLibraryImages(images => [image, ...images]);
+
+        const response = await fetch(config.imageMagicUrl + '?id=' + fileId);
+        setLibraryImages(images => images.map(img => {
+          // remove processing field from image
+          if (img.id === fileId) {
+            const {processing, ...newImg} = img;
+            return newImg;
+          }
+          return img;
+        }))
+        if (response.status === 200) {
+          console.log('image was successfully processed', file.name);
+        } else {
+          console.log('there was an error processing this image', file.name);
+        }
+      } else {
+        setLibraryVideos(videos => [...videos, media]);
       }
     };
 
     reader.readAsDataURL(file)
   };
 
-  const createSchemaImage = (image) => {
+  function createSchemaVideo(video) {
+    return {
+      id: video.id,
+      url: video.url,
+      alt: video.alt,
+      autoplay: video.autoplay,
+      mimeType: video.mimeType
+    }
+  }
+
+  function createSchemaImage(image) {
     return {
       id: image.id,
       url: image.url,
       alt: image.alt,
-      mimeType: "image/",
+      mimeType: image.mimeType,
     }
   }
 
