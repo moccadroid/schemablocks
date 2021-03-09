@@ -6,7 +6,7 @@
       "type": "object",
       "controls": {
         "type": "video",
-        "name": "Single Image",
+        "name": "Single Video",
         "noEdit": false,
         "defaultValue": ""
       },

@@ -43,6 +43,13 @@ export default function Media({ data }) {
         </picture>
       )
     }
+    if (data?.mimeType?.startsWith("video")) {
+      return (
+        <video style={styles.video}>
+          <source type={data.mimeType} src={data.url}/>
+        </video>
+      )
+    }
     return false;
   }
 
@@ -55,6 +62,10 @@ export default function Media({ data }) {
 
 const styles = {
   image: {
+    width: "100%",
+    objectFit: "cover"
+  },
+  video: {
     width: "100%",
     objectFit: "cover"
   }

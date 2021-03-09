@@ -4,12 +4,12 @@ import {green} from "@material-ui/core/colors";
 import React, {useState} from 'react';
 import Media from "./Media";
 
-function Inputs({ image, onSave }) {
-  const [alt, setAlt] = useState(image.alt ?? "");
+function Inputs({ media, onSave }) {
+  const [alt, setAlt] = useState(media.alt ?? "");
 
   function handleSave() {
     onSave({
-      ...image,
+      ...media,
       alt
     });
   }
@@ -35,7 +35,7 @@ function Inputs({ image, onSave }) {
   )
 }
 
-export default function ImageItem({ image, selected, onChange, onSelect }) {
+export default function MediaItem({ media, selected, onChange, onSelect }) {
 
   const [showEdit, setShowEdit] = useState(false);
 
@@ -48,21 +48,21 @@ export default function ImageItem({ image, selected, onChange, onSelect }) {
     }
   }
 
-  function handleSave(image) {
+  function handleSave(media) {
     setShowEdit(false);
-    onChange(image);
+    onChange(media);
   }
 
   const classes = useStyles();
-  const actionIcon = image.processing ? <CircularProgress color="secondary"/> : <Checkbox checked={!!selected} className={classes.greenCheckbox} />
+  const actionIcon = media.processing ? <CircularProgress color="secondary"/> : <Checkbox checked={!!selected} className={classes.greenCheckbox} />
   const sx = showEdit ? { top: 0, alignItems: "flex-start", wordWrap: "break-word" } : {};
 
   return (
-    <ImageListItem className={classes.imageListItem} key={image.id} onClick={() => onSelect(image)}>
-      <Media data={image} />
+    <ImageListItem className={classes.mediaListItem} key={media.id} onClick={() => onSelect(media)}>
+      <Media data={media} />
       <ImageListItemBar
-        title={image.title}
-        subtitle={showEdit ? <Inputs image={image} onSave={handleSave}/> : image.alt}
+        title={media.title}
+        subtitle={showEdit ? <Inputs media={media} onSave={handleSave}/> : media.alt}
         actionIcon={showEdit ? null : actionIcon}
         onClick={onBarClick}
         sx={sx}
@@ -72,7 +72,7 @@ export default function ImageItem({ image, selected, onChange, onSelect }) {
 }
 
 const useStyles = makeStyles((theme) => ({
-  imageListItem: {
+  mediaListItem: {
     cursor: "pointer"
   },
   greenCheckbox: {

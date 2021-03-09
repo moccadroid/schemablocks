@@ -10,14 +10,15 @@ const Transition = forwardRef(function Transition(props, ref) {
 export default function MediaInput({ controls, error, defaultValue, onChange }) {
 
   const [images, setImages] = useState([]);
+  const [media, setMedia] = useState([]);
   const [libraryOpen, setLibraryOpen] = useState(false);
 
   useEffect(() => {
     if (defaultValue) {
       if (Array.isArray(defaultValue)) {
-        setImages(defaultValue);
+        setMedia(defaultValue);
       } else {
-        setImages([defaultValue]);
+        setMedia([defaultValue]);
       }
     }
   }, []);
@@ -25,63 +26,53 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
   const openMediaLibrary = () => {
     setLibraryOpen(true);
   }
-  const closeMediaLibrary = (images) => {
+  const closeMediaLibrary = (media) => {
     setLibraryOpen(false);
 
-    if (images) {
-      setImages(images);
+    if (media) {
+      setMedia(media);
       if (controls.multiSelect) {
-        onChange(images);
+        onChange(media);
       } else {
-        onChange(images[0]);
+        onChange(media[0]);
       }
     }
   }
 
-  function resolveType() {
-    if (controls.type === "video") {
-      return "videos";
-    }
-    return "images";
-  }
 
-  if (controls.type === "image") {
-    return (
-      <Box mt={2} mb={2}>
-        <Box mt={1} mb={1}>
-          <Typography>{controls.name}</Typography>
-        </Box>
-        <Box sx={{ minHeight: 20 }}>
-          <Grid container spacing={2}>
-            {images.map(image => {
-              return (
-                <Grid item key={image.id} sx={{width: 200}}>
-                  <Media key={image.id} data={image}/>
-                </Grid>
-              )
-            })}
-          </Grid>
-        </Box>
-        <Box>
-          <Button variant="contained" color="primary" component="span" onClick={openMediaLibrary}>Add Image</Button>
-        </Box>
-        <Dialog
-          fullScreen
-          open={libraryOpen}
-          onClose={() => setLibraryOpen(false)}
-          TransitionComponent={Transition}
-        >
-          <MediaLibray
-            onClose={closeMediaLibrary}
-            multiSelect={controls.multiSelect ?? false}
-            selected={images}
-            type={resolveType()}
-            noEdit={controls.noEdit}
-          />
-        </Dialog>
+  return (
+    <Box mt={2} mb={2}>
+      <Box mt={1} mb={1}>
+        <Typography>{controls.name}</Typography>
       </Box>
-    );
-  }
-
-  return false;
+      <Box sx={{ minHeight: 20 }}>
+        <Grid container spacing={2}>
+          {media.map(mediaItem => {
+            return (
+              <Grid item key={mediaItem.id} sx={{width: 200}}>
+                <Media key={mediaItem.id} data={mediaItem}/>
+              </Grid>
+            )
+          })}
+        </Grid>
+      </Box>
+      <Box>
+        <Button variant="contained" color="primary" component="span" onClick={openMediaLibrary}>Add { controls.type }</Button>
+      </Box>
+      <Dialog
+        fullScreen
+        open={libraryOpen}
+        onClose={() => setLibraryOpen(false)}
+        TransitionComponent={Transition}
+      >
+        <MediaLibray
+          onClose={closeMediaLibrary}
+          multiSelect={controls.multiSelect ?? false}
+          selected={media}
+          type={controls.type}
+          noEdit={controls.noEdit}
+        />
+      </Dialog>
+    </Box>
+  );
 }

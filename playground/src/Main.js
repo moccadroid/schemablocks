@@ -14,16 +14,16 @@ export default function Main() {
   });
   addControlInput("richText", RichTextInput);
 
-  // const [data, saveData] = useSchemaBlocksData({ collection: "demoBlocks", slug: "demoBlocks" });
+  const [data, saveData] = useSchemaBlocksData({ collection: "demoBlocks", slug: "demoBlocks" });
 
   function save(data) {
     console.log(data);
-    //saveData(data);
+    saveData(data);
   }
 
   return (
     <div>
-      <LanguageWrapper data={jsonData} schemas={schemas} onSave={save}/>
+      <LanguageWrapper data={data} schemas={schemas} onSave={save}/>
     </div>
   );
 }

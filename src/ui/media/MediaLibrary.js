@@ -13,30 +13,33 @@ import CloseIcon from '@material-ui/icons/Close';
 import {getFirebase} from "../../lib/firebaseConfig";
 import uuidv4 from "../../lib/uuidv4";
 import {getMediaLibraryConfig} from "../../lib/mediaLibraryConfig";
-import ImageItem from "./ImageItem";
+import MediaItem from "./MediaItem";
 require('firebase/storage');
 //require('firebase/firestore');
 
-export default function MediaLibray({ onClose, multiSelect, selected = [], noEdit = false, type = "images"}) {
+export default function MediaLibray({ onClose, multiSelect, selected = [], noEdit = false, type = "image"}) {
 
   const config = getMediaLibraryConfig();
   if (!config.imageMagicUrl || !config.firestoreCollection) {
     return <h1>Please set "imageMagicUrl" and "firestoreCollection" in config</h1>;
   }
-  const imageMagicUrl = config.imageMagicUrl;
+
+  const mediaFolder = type === "video" ? "videos" : "images";
   const baseFolder = "mediaLibrary";
 
   const [libraryVideos, setLibraryVideos] = useState([]);
   const [selectedVideos, setSelectedVideos] = useState([]);
   const [libraryImages, setLibraryImages] = useState([]);
   const [selectedImages, setSelectedImages] = useState(selected);
-  const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + type);
+  const [libraryMedia, setLibraryMedia] = useState([]);
+  const [selectedMedia, setSelectedMedia] = useState(selected);
+  const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + mediaFolder);
   const [columns, setColumns] = useState(3);
   const classes = useStyles();
 
 
   useEffect(() => {
-    loadMedia().then(() => console.log(type, 'loaded'));
+    loadMedia().then(() => console.log(mediaFolder, 'loaded'));
 
     window.addEventListener("resize", handleResize);
     handleResize();
@@ -57,11 +60,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
     snapshot.forEach(doc => {
       media.push(doc.data());
     });
-    if (type === "videos") {
-      setLibraryVideos(media);
-    } else {
-      setLibraryImages(media);
-    }
+    setLibraryMedia(media);
   }
 
   const handleUpload = ({ target }) => {
@@ -82,7 +81,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
 
       let media = {};
 
-      if (type === "videos") {
+      if (type === "video") {
         media = {
           id: fileId,
           url,
@@ -90,7 +89,8 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           mimeType: "video/" + extension,
           title: file.name,
           autoplay: false,
-          usedInBlocks: []
+          usedInBlocks: [],
+          type,
         }
       } else {
         media = {
@@ -99,21 +99,24 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           alt: "",
           mimeType: "image/" + extension,
           title: file.name,
-          usedInBlocks: []
+          usedInBlocks: [],
+          type
         }
       }
       await getFirebase().firestore().collection(baseFolder).doc(fileId).set(media);
 
-      if (type === "images") {
+      if (type === "image") {
         media.processing = true;
-        setLibraryImages(images => [image, ...images]);
+      }
+      setLibraryMedia(mediaItems => [media, ...mediaItems]);
 
+      if (type === "image") {
         const response = await fetch(config.imageMagicUrl + '?id=' + fileId);
-        setLibraryImages(images => images.map(img => {
+        setLibraryMedia(mediaItems => mediaItems.map(m => {
           // remove processing field from image
-          if (img.id === fileId) {
-            const {processing, ...newImg} = img;
-            return newImg;
+          if (m.id === fileId) {
+            const {processing, ...newMedia} = m;
+            return newMedia;
           }
           return img;
         }))
@@ -122,8 +125,6 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
         } else {
           console.log('there was an error processing this image', file.name);
         }
-      } else {
-        setLibraryVideos(videos => [...videos, media]);
       }
     };
 
@@ -149,37 +150,38 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
     }
   }
 
-  const handleImageSelect = (image) => {
-    if (image.processing) return;
+  const handleMediaSelect = (media) => {
+    if (media.processing) return;
 
-    setSelectedImages(images => {
-      const index = images.findIndex(img => img.id === image.id);
+    setSelectedMedia(mediaItems => {
+      const index = mediaItems.findIndex(m => m.id === media.id);
       if (index === -1) {
+        const newMedia = type === "video" ? createSchemaVideo(media) : createSchemaImage(media);
         if (multiSelect) {
-          return [...selectedImages, createSchemaImage(image)];
+          return [...mediaItems, newMedia];
         }
-        return [createSchemaImage(image)];
+        return [newMedia];
       } else {
-        return images.filter(img => img.id !== image.id);
+        return mediaItems.filter(m => m.id !== media.id);
       }
     });
   }
 
-  const handleImageDelete = async () => {
+  const handleMediaDelete = async () => {
     if (noEdit) {
       return
     }
 
-    await Promise.all(selectedImages.map(async image => {
-      return await getFirebase().firestore().collection(config.firestoreCollection).doc(image.id).delete();
+    await Promise.all(selectedMedia.map(async media => {
+      return await getFirebase().firestore().collection(config.firestoreCollection).doc(media.id).delete();
     }));
-    setSelectedImages([]);
-    loadMedia(currentMedia).then(() => console.log(currentMedia, 'loaded'));
+    setSelectedMedia([]);
+    loadMedia().then(() => console.log(type, 'loaded'));
   };
 
-  const handleImageChange = async (image) => {
-    setLibraryImages(images => images.map(img => img.id === image.id ? image : img));
-    await getFirebase().firestore().collection(baseFolder).doc(image.id).set(image);
+  const handleMediaChange = async (media) => {
+    setLibraryMedia(mediaItems => mediaItems.map(m => m.id === media.id ? media : m));
+    await getFirebase().firestore().collection(baseFolder).doc(media.id).set(media);
   }
 
   const handleClose = () => {
@@ -187,7 +189,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
   }
 
   const onSelect = () => {
-    onClose(selectedImages);
+    onClose(selectedMedia);
   }
 
   return (
@@ -202,8 +204,8 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           >
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title} component="div">Media Library</Typography>
-          <Button disabled={selectedImages.length === 0} variant="contained" onClick={onSelect}>Select</Button>
+          <Typography variant="h6" className={classes.title} component="div">Media Library / { type }</Typography>
+          <Button disabled={selectedMedia.length === 0} variant="contained" onClick={onSelect}>Select</Button>
         </Toolbar>
       </AppBar>
       <Box>
@@ -211,7 +213,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           <Grid spacing={2} container>
             <Grid item>
               <input
-                accept="image/*"
+                accept={type + "/*"}
                 className={classes.input}
                 id="contained-button-file"
                 multiple
@@ -226,23 +228,23 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
             <Grid item>
               <Button
                 variant="contained"
-                disabled={noEdit || selectedImages.length === 0}
-                onClick={handleImageDelete}
+                disabled={noEdit || selectedMedia.length === 0}
+                onClick={handleMediaDelete}
                 color={"secondary"}
               >Delete</Button>
             </Grid>
           </Grid>
         </Box>
-        <ImageList cols={columns} className={classes.imageList}>
-          {libraryImages.map((image) => {
-            const selected = selectedImages.find(img => img.id === image.id);
+        <ImageList cols={columns} className={classes.mediaList}>
+          {libraryMedia.map((media) => {
+            const selected = selectedMedia.find(m => m.id === media.id);
             return (
-              <ImageItem
-                key={image.id}
-                image={image}
+              <MediaItem
+                key={media.id}
+                media={media}
                 selected={selected}
-                onSelect={handleImageSelect}
-                onChange={handleImageChange}
+                onSelect={handleMediaSelect}
+                onChange={handleMediaChange}
               />
             )
           })}
@@ -253,7 +255,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
 };
 
 const useStyles = makeStyles((theme) => ({
-  imageList: {
+  mediaList: {
     padding: 24,
   },
   icon: {
