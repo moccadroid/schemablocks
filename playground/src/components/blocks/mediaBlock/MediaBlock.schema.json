@@ -22,6 +22,9 @@
         },
         "mimeType": {
           "type": "string"
+        },
+        "title": {
+          "type": "string"
         }
       }
     },
@@ -50,10 +53,37 @@
             },
             "mimeType": {
               "type": "string"
+            },
+            "title": {
+              "type": "string"
             }
           }
         }
       ]
+    },
+    "singleSvg": {
+      "type": "object",
+      "controls": {
+        "type": "svg",
+        "name": "Single SVG"
+      },
+      "properties": {
+        "url": {
+          "type": "string"
+        },
+        "id": {
+          "type": "string"
+        },
+        "alt": {
+          "type": "string"
+        },
+        "mimeType": {
+          "type": "string"
+        },
+        "title": {
+          "type": "string"
+        }
+      }
     }
   }
 }

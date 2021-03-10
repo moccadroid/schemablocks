@@ -24,7 +24,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
     return <h1>Please set "imageMagicUrl" and "firestoreCollection" in config</h1>;
   }
 
-  const mediaFolder = type === "video" ? "videos" : "images";
+  const mediaFolder = resolveMediaFolder(type);
   const baseFolder = "mediaLibrary";
 
   const [libraryVideos, setLibraryVideos] = useState([]);
@@ -47,6 +47,18 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
       window.removeEventListener("resize", handleResize);
     }
   }, []);
+
+  function resolveMediaFolder(type) {
+    if (type === "video") return "videos";
+    if (type === "image") return "images";
+    if (type === "svg") return "svgs";
+  }
+
+  function resolveInputAccept(type) {
+    if (type === "video") return "video/*";
+    if (type === "image") return ".png,.jpg,.jpeg,.webp";
+    if (type === "svg") return ".svg";
+  }
 
   const handleResize = () => {
     const colWidth = 300;
@@ -88,9 +100,18 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           alt: "",
           mimeType: "video/" + extension,
           title: file.name,
-          autoplay: false,
           usedInBlocks: [],
           type,
+        }
+      } else if(type === "svg") {
+        media = {
+          id: fileId,
+          url,
+          alt: "",
+          mimeType: "image/" + extension,
+          title: file.name,
+          usedInBlocks: [],
+          type
         }
       } else {
         media = {
@@ -113,40 +134,33 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
       if (type === "image") {
         const response = await fetch(config.imageMagicUrl + '?id=' + fileId);
         setLibraryMedia(mediaItems => mediaItems.map(m => {
-          // remove processing field from image
+
           if (m.id === fileId) {
+            // remove processing field
             const {processing, ...newMedia} = m;
-            return newMedia;
+            if (response.status === 200) {
+              console.log('image was successfully processed', file.name);
+              return newMedia;
+            } else {
+              console.log('there was an error processing this image', file.name);
+              return {...newMedia, encodingError: true}
+            }
           }
-          return img;
+          return m;
         }))
-        if (response.status === 200) {
-          console.log('image was successfully processed', file.name);
-        } else {
-          console.log('there was an error processing this image', file.name);
-        }
       }
     };
 
     reader.readAsDataURL(file)
   };
 
-  function createSchemaVideo(video) {
+  function createSchemaMedia(media) {
     return {
-      id: video.id,
-      url: video.url,
-      alt: video.alt,
-      autoplay: video.autoplay,
-      mimeType: video.mimeType
-    }
-  }
-
-  function createSchemaImage(image) {
-    return {
-      id: image.id,
-      url: image.url,
-      alt: image.alt,
-      mimeType: image.mimeType,
+      id: media.id,
+      url: media.url,
+      alt: media.alt,
+      mimeType: media.mimeType,
+      title: media.title
     }
   }
 
@@ -156,7 +170,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
     setSelectedMedia(mediaItems => {
       const index = mediaItems.findIndex(m => m.id === media.id);
       if (index === -1) {
-        const newMedia = type === "video" ? createSchemaVideo(media) : createSchemaImage(media);
+        const newMedia = createSchemaMedia(media);
         if (multiSelect) {
           return [...mediaItems, newMedia];
         }
@@ -188,7 +202,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
     onClose();
   }
 
-  const onSelect = () => {
+  const handleSelect = () => {
     onClose(selectedMedia);
   }
 
@@ -205,7 +219,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
             <CloseIcon />
           </IconButton>
           <Typography variant="h6" className={classes.title} component="div">Media Library / { type }</Typography>
-          <Button disabled={selectedMedia.length === 0} variant="contained" onClick={onSelect}>Select</Button>
+          <Button disabled={selectedMedia.length === 0} variant="contained" onClick={handleSelect}>Select</Button>
         </Toolbar>
       </AppBar>
       <Box>
@@ -213,7 +227,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           <Grid spacing={2} container>
             <Grid item>
               <input
-                accept={type + "/*"}
+                accept={resolveInputAccept(type)}
                 className={classes.input}
                 id="contained-button-file"
                 multiple

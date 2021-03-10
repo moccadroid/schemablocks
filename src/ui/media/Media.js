@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 
-export default function Media({ data }) {
+export default function Media({ data, autoplay = false, loop = false }) {
 
   const ref = useRef();
   const [media, setMedia] = useState(false);
@@ -24,7 +24,10 @@ export default function Media({ data }) {
   }
 
   function resolveMedia(data) {
-    if (data?.mimeType?.startsWith('image')) {
+    if (data?.mimeType?.includes("svg")) {
+      return <img style={styles.svg} src={data.url} alt={data.alt} />
+    }
+    else if (data?.mimeType?.startsWith('image')) {
       const width = getImageWidth();
       const decoded = decodeURIComponent(data.url);
       const filename = decoded.split('/').pop().split('?')[0];
@@ -43,9 +46,9 @@ export default function Media({ data }) {
         </picture>
       )
     }
-    if (data?.mimeType?.startsWith("video")) {
+    else if (data?.mimeType?.startsWith("video")) {
       return (
-        <video style={styles.video}>
+        <video style={styles.video} autoPlay={autoplay} loop={loop}>
           <source type={data.mimeType} src={data.url}/>
         </video>
       )
@@ -67,6 +70,9 @@ const styles = {
   },
   video: {
     width: "100%",
-    objectFit: "cover"
+    objectFit: "contain"
+  },
+  svg: {
+    width: "100%"
   }
 }

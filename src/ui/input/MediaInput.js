@@ -9,7 +9,6 @@ const Transition = forwardRef(function Transition(props, ref) {
 
 export default function MediaInput({ controls, error, defaultValue, onChange }) {
 
-  const [images, setImages] = useState([]);
   const [media, setMedia] = useState([]);
   const [libraryOpen, setLibraryOpen] = useState(false);
 
@@ -50,7 +49,7 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
           {media.map(mediaItem => {
             return (
               <Grid item key={mediaItem.id} sx={{width: 200}}>
-                <Media key={mediaItem.id} data={mediaItem}/>
+                <Media autoplay loop key={mediaItem.id} data={mediaItem} />
               </Grid>
             )
           })}

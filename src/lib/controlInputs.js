@@ -7,6 +7,7 @@ let controlInputs = {
   "link": LinkInput,
   "image": MediaInput,
   "video": MediaInput,
+  "svg": MediaInput,
   "select": SelectInput,
 };
 
