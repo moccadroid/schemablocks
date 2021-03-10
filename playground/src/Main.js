@@ -1,8 +1,14 @@
-import {LanguageWrapper, setMediaLibraryConfig, setFirebase, useSchemaBlocksData} from "schemablocks";
+import {
+  LanguageWrapper,
+  setMediaLibraryConfig,
+  setFirebase,
+  useSchemaBlocksData,
+  addControlInput,
+  useSchemas
+} from "schemablocks";
 import firebase from "./firebase.config";
 import schemas from "./schemas";
 import jsonData from './data.json';
-import {addControlInput} from "schemablocks";
 import RichTextInput from "./components/inputs/RichTextInput";
 
 export default function Main() {
@@ -14,6 +20,8 @@ export default function Main() {
   });
   addControlInput("richText", RichTextInput);
 
+  const [schemaData, addSchema] = useSchemas(schemas);
+
   const [data, saveData] = useSchemaBlocksData({ collection: "demoBlocks", slug: "demoBlocks" });
 
   function save(data) {
@@ -23,7 +31,7 @@ export default function Main() {
 
   return (
     <div>
-      <LanguageWrapper data={data} schemas={schemas} onSave={save}/>
+      <LanguageWrapper data={data} schemas={schemaData} onSave={save}/>
     </div>
   );
 }

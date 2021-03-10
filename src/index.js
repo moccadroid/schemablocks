@@ -5,6 +5,7 @@ import {setMediaLibraryConfig} from "./lib/mediaLibraryConfig";
 import LanguageWrapper from "./ui/LanguageWrapper";
 import Media from './ui/media/Media';
 import {addControlInput, getControlInputs} from "./lib/controlInputs";
+import useSchemas from "./hooks/useSchemas";
 
 export {
   useSchemaBlocksData,
@@ -14,5 +15,6 @@ export {
   LanguageWrapper,
   Media,
   addControlInput,
-  getControlInputs
+  getControlInputs,
+  useSchemas
 }

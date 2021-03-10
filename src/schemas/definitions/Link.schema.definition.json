@@ -1,0 +1,24 @@
+{
+  "id": "Link",
+  "type": "object",
+  "controls": {
+    "type": "link",
+    "name": "Link",
+    "defaultValue": {
+      "name": "",
+      "url": "",
+      "openInNew": false
+    }
+  },
+  "properties": {
+    "name": {
+      "type": "string"
+    },
+    "url": {
+      "type": "string"
+    },
+    "openInNew": {
+      "type": "boolean"
+    }
+  }
+}

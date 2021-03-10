@@ -1,0 +1,9 @@
+{
+  "id": "Image",
+  "type": "object",
+  "controls": {
+    "type": "image",
+    "name": "Image"
+  },
+  "properties": "#ImageProperties"
+}

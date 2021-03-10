@@ -1,6 +1,7 @@
 import babel from '@rollup/plugin-babel';
 import external from 'rollup-plugin-peer-deps-external';
 import del from 'rollup-plugin-delete';
+import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
 export default {
@@ -15,6 +16,7 @@ export default {
       exclude: 'node_modules/**'
     }),
     del({ targets: ['dist/*'] }),
+    json()
   ],
   external: Object.keys(pkg.peerDependencies || {}),
 };
