@@ -31,24 +31,6 @@
         "defaultValue": "#0000ff"
       }
     },
-    "link": {
-      "type": "object",
-      "controls": {
-        "type": "link",
-        "name": "Link",
-        "defaultValue": { "name": "", "url": "", "openInNew": false }
-      },
-      "properties": {
-        "name": {
-          "type": "string"
-        },
-        "url": {
-          "type": "string"
-        },
-        "openInNew": {
-          "type": "boolean"
-        }
-      }
-    }
+    "link": "$Link"
   }
 }

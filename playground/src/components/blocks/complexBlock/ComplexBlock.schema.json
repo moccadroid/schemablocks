@@ -63,24 +63,7 @@
                 "type": "image",
                 "name": "Image of your friend"
               },
-              "properties": {
-                "url": {
-                  "type": "string",
-                  "defaultValue": ""
-                },
-                "id": {
-                  "type": "string",
-                  "defaultValue": ""
-                },
-                "alt": {
-                  "type": "string",
-                  "defaultValue": ""
-                },
-                "mimeType": {
-                  "type": "string",
-                  "defaultValue": ""
-                }
-              }
+              "properties": "#MediaProperties"
             }
           }
         }

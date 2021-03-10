@@ -1,9 +1,9 @@
 {
-  "id": "Image",
+  "id": "Video",
   "type": "object",
   "controls": {
-    "type": "image",
-    "name": "Image"
+    "type": "video",
+    "name": "Video"
   },
   "properties": "#MediaProperties"
 }

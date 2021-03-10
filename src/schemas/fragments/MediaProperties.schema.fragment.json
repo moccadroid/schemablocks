@@ -2,5 +2,6 @@
   "url": { "type": "string" },
   "id": { "type": "string" },
   "alt": { "type": "string" },
-  "mimeType": { "type": "string" }
+  "mimeType": { "type": "string" },
+  "title": { "type": "string" }
 }

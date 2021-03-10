@@ -10,15 +10,5 @@
       "openInNew": false
     }
   },
-  "properties": {
-    "name": {
-      "type": "string"
-    },
-    "url": {
-      "type": "string"
-    },
-    "openInNew": {
-      "type": "boolean"
-    }
-  }
+  "properties": "#LinkProperties"
 }

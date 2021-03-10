@@ -7,26 +7,9 @@
       "controls": {
         "type": "video",
         "name": "Single Video",
-        "noEdit": false,
         "defaultValue": ""
       },
-      "properties": {
-        "url": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "alt": {
-          "type": "string"
-        },
-        "mimeType": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        }
-      }
+      "properties": "#MediaProperties"
     },
     "multipleImages": {
       "type": "array",
@@ -41,49 +24,10 @@
         {
           "id": "Image",
           "type": "object",
-          "properties": {
-            "url": {
-              "type": "string"
-            },
-            "id": {
-              "type": "string"
-            },
-            "alt": {
-              "type": "string"
-            },
-            "mimeType": {
-              "type": "string"
-            },
-            "title": {
-              "type": "string"
-            }
-          }
+          "properties": "#MediaProperties"
         }
       ]
     },
-    "singleSvg": {
-      "type": "object",
-      "controls": {
-        "type": "svg",
-        "name": "Single SVG"
-      },
-      "properties": {
-        "url": {
-          "type": "string"
-        },
-        "id": {
-          "type": "string"
-        },
-        "alt": {
-          "type": "string"
-        },
-        "mimeType": {
-          "type": "string"
-        },
-        "title": {
-          "type": "string"
-        }
-      }
-    }
+    "singleSvg": "$Svg"
   }
 }

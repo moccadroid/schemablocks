@@ -1,9 +1,9 @@
 {
-  "id": "Image",
+  "id": "SVG",
   "type": "object",
   "controls": {
-    "type": "image",
-    "name": "Image"
+    "type": "svg",
+    "name": "SVG"
   },
   "properties": "#MediaProperties"
 }
