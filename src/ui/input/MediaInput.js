@@ -2,6 +2,7 @@ import {Button, Dialog, Box, Slide, Typography, Grid} from "@material-ui/core";
 import React, {useState, forwardRef, useEffect} from "react";
 import MediaLibray from "../media/MediaLibrary";
 import Media from "../media/Media";
+import MediaWrapper from "../media/MediaWrapper";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -49,7 +50,7 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
           {media.map(mediaItem => {
             return (
               <Grid item key={mediaItem.id} sx={{width: 200}}>
-                <Media autoplay loop key={mediaItem.id} data={mediaItem} />
+                <MediaWrapper media={mediaItem} key={mediaItem.id} />
               </Grid>
             )
           })}

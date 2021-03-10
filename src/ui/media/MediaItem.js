@@ -2,7 +2,7 @@ import {ImageListItem, Grid, Box, Button, ImageListItemBar, CircularProgress, Ch
 import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
 import React, {useState} from 'react';
-import Media from "./Media";
+import MediaWrapper from "./MediaWrapper";
 
 function Inputs({ media, onSave }) {
   const [alt, setAlt] = useState(media.alt ?? "");
@@ -53,13 +53,20 @@ export default function MediaItem({ media, selected, onChange, onSelect }) {
     onChange(media);
   }
 
+  function handleSelect(event, media) {
+    event.stopPropagation();
+    onSelect(media);
+  }
+
   const classes = useStyles();
-  const actionIcon = media.processing ? <CircularProgress color="secondary"/> : <Checkbox checked={!!selected} className={classes.greenCheckbox} />
+  const actionIcon = media.processing
+    ? <CircularProgress color="secondary"/>
+    : <Checkbox onClick={event => handleSelect(event, media)} checked={!!selected} className={classes.greenCheckbox} />
   const sx = showEdit ? { top: 0, alignItems: "flex-start", wordWrap: "break-word" } : {};
 
   return (
-    <ImageListItem className={classes.mediaListItem} key={media.id} onClick={() => onSelect(media)}>
-      <Media data={media} />
+    <ImageListItem className={classes.mediaListItem} key={media.id} onClick={event => handleSelect(event, media)}>
+      <MediaWrapper media={media} />
       <ImageListItemBar
         title={media.title}
         subtitle={showEdit ? <Inputs media={media} onSave={handleSave}/> : media.alt}

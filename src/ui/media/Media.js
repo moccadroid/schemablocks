@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 
-export default function Media({ data, autoplay = false, loop = false }) {
+export default function Media({ data, autoplay = false, loop = false, mediaRef }) {
 
   const ref = useRef();
   const [media, setMedia] = useState(false);
@@ -25,7 +25,7 @@ export default function Media({ data, autoplay = false, loop = false }) {
 
   function resolveMedia(data) {
     if (data?.mimeType?.includes("svg")) {
-      return <img style={styles.svg} src={data.url} alt={data.alt} />
+      return <img style={styles.svg} src={data.url} alt={data.alt} ref={mediaRef}/>
     }
     else if (data?.mimeType?.startsWith('image')) {
       const width = getImageWidth();
@@ -40,7 +40,7 @@ export default function Media({ data, autoplay = false, loop = false }) {
       const stdSrc = data.url.replace(filename, stdSrcUrl);
 
       return (
-        <picture>
+        <picture ref={mediaRef}>
           <source srcSet={webpSrc} type={'image/webp'}/>
           <img style={styles.image} src={stdSrc} alt={data.alt} />
         </picture>
@@ -48,7 +48,7 @@ export default function Media({ data, autoplay = false, loop = false }) {
     }
     else if (data?.mimeType?.startsWith("video")) {
       return (
-        <video style={styles.video} autoPlay={autoplay} loop={loop}>
+        <video style={styles.video} autoPlay={autoplay} loop={loop} ref={mediaRef}>
           <source type={data.mimeType} src={data.url}/>
         </video>
       )
