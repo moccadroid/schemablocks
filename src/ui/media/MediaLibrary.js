@@ -68,7 +68,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
 
   const loadMedia = async () => {
     const media = [];
-    const snapshot = await getFirebase().firestore().collection(config.firestoreCollection).where('type', '==', type).get();
+    const snapshot = await getFirebase().firestore().collection(config.firestoreCollection).where('type', '==', resolveMediaFolder(type)).get();
     snapshot.forEach(doc => {
       media.push(doc.data());
     });
@@ -101,7 +101,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           mimeType: "video/" + extension,
           title: file.name,
           usedInBlocks: [],
-          type,
+          type: resolveMediaFolder(type)
         }
       } else if(type === "svg") {
         media = {
@@ -111,7 +111,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           mimeType: "image/" + extension,
           title: file.name,
           usedInBlocks: [],
-          type
+          type: resolveMediaFolder(type)
         }
       } else {
         media = {
@@ -121,7 +121,7 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
           mimeType: "image/" + extension,
           title: file.name,
           usedInBlocks: [],
-          type
+          type: resolveMediaFolder(type)
         }
       }
       await getFirebase().firestore().collection(baseFolder).doc(fileId).set(media);
@@ -199,6 +199,9 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
   }
 
   const handleClose = () => {
+    if (libraryMedia.length === 0) {
+      onClose([]);
+    }
     onClose();
   }
 
