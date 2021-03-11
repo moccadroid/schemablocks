@@ -9,7 +9,7 @@ export default function Media({ data, autoplay = false, loop = false, mediaRef }
 /*
   useEffect(() => {
     setMedia(resolveMedia(data));
-  }, [])
+  }, [data])
 */
   useEffect(() => {
     setMedia(resolveMedia(data));

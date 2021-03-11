@@ -1,15 +1,26 @@
-import {AppBar, Button, Container, Grid, Toolbar, Typography} from "@material-ui/core";
-import React, {useState} from "react";
-import {makeStyles} from "@material-ui/core/styles";
+import {
+  AppBar,
+  Button,
+  Container,
+  Dialog, FormControl,
+  Grid,
+  InputLabel, MenuItem,
+  Select,
+  Slide,
+  Toolbar,
+  Typography
+} from "@material-ui/core";
+import React, {forwardRef, useState} from "react";
 import Slug from "./Slug";
+import MediaLibray from "./media/MediaLibrary";
+import {makeStyles} from "@material-ui/core/styles";
 
 export default function Panel({ slugs, children }) {
 
   const styles = useStyles();
   const [name, setName] = useState("");
-  const [onSlugSave, setOnSlugSave] = useState(null);
-  const [onSlugPreview, setOnSlugPreview] = useState(null);
-  const [onSlugDelete, setOnSlugDelete] = useState(null);
+  const [showMediaLibrary, setShowMediaLibrary] = useState(false);
+  const [mediaType, setMediaType] = useState("image");
 
   let slugSave = null;
   let slugPreview = null;
@@ -39,14 +50,38 @@ export default function Panel({ slugs, children }) {
     }
   }
 
+  function handleMediaTypeChange(event) {
+    setMediaType(event.target.value);
+  }
+
   return (
     <div className={styles.root}>
       <AppBar position={"fixed"}>
         <Toolbar>
-          <Grid container justifyContent={"flex-start"}>
+          <Grid container justifyContent={"flex-start"} xs={1}>
             <Typography variant={"h6"}>{name}</Typography>
           </Grid>
           <Grid container justifyContent={"flex-end"} spacing={2}>
+            <Grid item>
+              <FormControl className={styles.fromControl}>
+                <Select
+                  className={styles.select}
+                  value={mediaType}
+                  onChange={handleMediaTypeChange}
+                  label="Media Type"
+                  inputProps={{ classes: { icon: styles.icon }}}
+                >
+                  <MenuItem value={"image"}>Images</MenuItem>
+                  <MenuItem value={"video"}>Videos</MenuItem>
+                  <MenuItem value={"svg"}>SVGs</MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
+            <Grid item>
+              <Button variant={"contained"} color={"primary"} onClick={() => setShowMediaLibrary(true)}>
+                <span style={{ textTransform: "uppercase"}}>{mediaType}</span>&nbsp;MediaLibrary
+              </Button>
+            </Grid>
             <Grid item>
               <Button variant={"outlined"} color="inherit" onClick={handlePreview}>Preview</Button>
             </Grid>
@@ -59,7 +94,17 @@ export default function Panel({ slugs, children }) {
       {slugs?.map((slug, i) => {
         return <Slug slug={slug} key={"slug" + i} onInViewport={handleSlugInViewport}/>
       })}
-
+      <Dialog
+        fullScreen
+        open={showMediaLibrary}
+        onClose={() => setShowMediaLibrary(false)}
+        TransitionComponent={Transition}
+      >
+        <MediaLibray
+          type={mediaType}
+          onClose={() => setShowMediaLibrary(false)}
+        />
+      </Dialog>
       <Container className={styles.container}>
         {children}
       </Container>
@@ -74,5 +119,24 @@ const useStyles = makeStyles(theme => ({
   },
   container: {
     marginTop: 100,
-  }
+  },
+  formControl: {
+    minWidth: 200
+  },
+  select: {
+    color: "white!important",
+    '&:before': {
+      borderColor: "rgb(255,255,255)!important",
+    },
+    '&:after': {
+      borderColor: "rgb(255,255,255)!important",
+    }
+  },
+  icon: {
+    fill: "rgb(255,255,255)!important",
+  },
 }));
+
+const Transition = forwardRef(function Transition(props, ref) {
+  return <Slide direction="up" ref={ref} {...props} />;
+});

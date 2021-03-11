@@ -17,20 +17,16 @@ import MediaItem from "./MediaItem";
 require('firebase/storage');
 //require('firebase/firestore');
 
-export default function MediaLibray({ onClose, multiSelect, selected = [], noEdit = false, type = "image"}) {
+export default function MediaLibray({ onClose, multiSelect = false, selected = [], noEdit = false, type = "image"}) {
 
   const config = getMediaLibraryConfig();
   if (!config.imageMagicUrl || !config.firestoreCollection) {
     return <h1>Please set "imageMagicUrl" and "firestoreCollection" in config</h1>;
   }
 
-  const mediaFolder = resolveMediaFolder(type);
   const baseFolder = "mediaLibrary";
 
-  const [libraryVideos, setLibraryVideos] = useState([]);
-  const [selectedVideos, setSelectedVideos] = useState([]);
-  const [libraryImages, setLibraryImages] = useState([]);
-  const [selectedImages, setSelectedImages] = useState(selected);
+  const [mediaFolder, setMediaFolder] = useState(resolveMediaFolder(type));
   const [libraryMedia, setLibraryMedia] = useState([]);
   const [selectedMedia, setSelectedMedia] = useState(selected);
   const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + mediaFolder);
@@ -47,6 +43,10 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
       window.removeEventListener("resize", handleResize);
     }
   }, []);
+
+  useEffect(() => {
+    setMediaFolder(resolveMediaFolder(type));
+  }, [type]);
 
   function resolveMediaFolder(type) {
     if (type === "video") return "videos";
@@ -199,10 +199,12 @@ export default function MediaLibray({ onClose, multiSelect, selected = [], noEdi
   }
 
   const handleClose = () => {
-    if (libraryMedia.length === 0) {
-      onClose([]);
+    if (onClose) {
+      if (libraryMedia.length === 0) {
+        onClose([]);
+      }
+      onClose();
     }
-    onClose();
   }
 
   const handleSelect = () => {

@@ -1,7 +1,6 @@
 import {Button, Dialog, Box, Slide, Typography, Grid} from "@material-ui/core";
 import React, {useState, forwardRef, useEffect} from "react";
 import MediaLibray from "../media/MediaLibrary";
-import Media from "../media/Media";
 import MediaWrapper from "../media/MediaWrapper";
 
 const Transition = forwardRef(function Transition(props, ref) {
