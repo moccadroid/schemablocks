@@ -4,6 +4,8 @@ import schema from './TextInputBlock.schema.json';
 
 export default function TextInputBlock({ block }) {
 
+  // // "pattern": "^(?!\\s*$).+",
+
   const { data } = block;
 
   return (

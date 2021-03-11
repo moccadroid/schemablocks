@@ -2,44 +2,9 @@ import React, {createRef, useState} from "react";
 import {Box, Button, Container, Grid, Paper, Tab, Tabs} from "@material-ui/core";
 import SchemaBlocks from "./SchemaBlocks";
 
-export default function LanguageWrapper({ data, schemas, onSave, onPreview, onDelete }) {
+export default function LanguageWrapper({ data, schemas, languages = [] }) {
 
   const [tabValue, setTabValue] = useState(0);
-  const [showValidationError, setShowValidationError] = useState(false);
-
-  const languages = [
-    { value: "de", name: "Deutsch", ref: createRef() },
-    { value: "en", name: "English", ref: createRef() }
-  ];
-
-  function handleSave() {
-    if (!languages.every(lang => lang.ref.current.isValid())) {
-      return;
-    }
-
-    const data = languages.map(language => {
-      return {
-        lang: language.value,
-        blocks: language.ref.current.getData()
-      }
-    });
-    // console.log(data);
-    onSave(data);
-  }
-
-  function handlePreview() {
-    const data = languages.map(language => {
-      return {
-        language: language.value,
-        blocks: language.ref.current.getData()
-      }
-    });
-    onPreview(data);
-  }
-
-  function handleDelete() {
-    onDelete(data);
-  }
 
   return (
     <Container>
@@ -66,25 +31,7 @@ export default function LanguageWrapper({ data, schemas, onSave, onPreview, onDe
           )
         })}
       </Box>
-      <Box mt={2}>
-        <Grid spacing={2} container>
-          {onSave &&
-            <Grid item>
-              <Button variant={"contained"} color={"primary"} onClick={handleSave}>Save</Button>
-            </Grid>
-          }
-          {onPreview &&
-            <Grid item>
-              <Button variant={"outlined"} color={"primary"} onClick={handlePreview}>Preview</Button>
-            </Grid>
-          }
-          {onDelete &&
-            <Grid item>
-              <Button variant={"contained"} color={"secondary"} onClick={handleDelete}>Delete</Button>
-            </Grid>
-          }
-        </Grid>
-      </Box>
+
     </Container>
   )
 }

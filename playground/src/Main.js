@@ -1,10 +1,9 @@
 import {
-  LanguageWrapper,
   setMediaLibraryConfig,
   setFirebase,
   useSchemaBlocksData,
   addControlInput,
-  useSchemas
+  useSchemas, Slug, Panel
 } from "schemablocks";
 import firebase from "./firebase.config";
 import schemas from "./schemas";
@@ -20,18 +19,15 @@ export default function Main() {
   });
   addControlInput("richText", RichTextInput);
 
-  const [schemaData, addSchema] = useSchemas(schemas);
-
-  const [data, saveData] = useSchemaBlocksData({ collection: "demoBlocks", slug: "demoBlocks" });
-
-  function save(data) {
-    console.log(data);
-    saveData(data);
-  }
+  const slugs = [
+    { name: "Demo1", collection: "demoBlocks", slug: "demoBlocks1", schemas: schemas },
+    { name: "Demo2", collection: "demoBlocks", slug: "demoBlocks2", schemas: schemas },
+    { name: "Demo3", collection: "demoBlocks", slug: "demoBlocks3", schemas: schemas }
+  ]
 
   return (
     <div>
-      <LanguageWrapper data={data} schemas={schemaData} onSave={save}/>
+      <Panel slugs={slugs} />
     </div>
   );
 }

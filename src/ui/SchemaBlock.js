@@ -1,15 +1,18 @@
 import {Alert, Box, Button, Grid, Typography} from "@material-ui/core";
 import useSchemaValidator from "../hooks/useSchemaValidator";
 import React, {createRef, forwardRef, useEffect, useImperativeHandle, useState} from "react";
-import SelectInput from "./input/SelectInput";
 import TextInput from "./input/TextInput";
 import SwitchInput from "./input/SwitchInput";
 import SchemaBlocks from "./SchemaBlocks";
 import {getControlInputForType} from "../lib/controlInputs";
+import useDefaultData from "../hooks/useDefaultData";
 
 function SchemaBlock({ block, onRemove }, ref) {
 
-  const { schema, data, externalData } = block;
+  const { schema, data: dbData, externalData } = block;
+
+  const data = useDefaultData(dbData, schema);
+
   const validator = useSchemaValidator();
   const [inputBlock, setInputBlock] = useState(createInputBlock());
   const [inputState, setInputState] = useState(data);

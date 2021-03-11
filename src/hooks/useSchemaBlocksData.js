@@ -8,6 +8,10 @@ export default function useSchemaBlocksData(query) {
   const [data, setData] = useState([]);
   const [docIds, setDocIds] = useState([]);
 
+  if (!collection || !slug) {
+    return [];
+  }
+
   useEffect(() => {
     (async () => {
       const blocks = [];

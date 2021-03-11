@@ -16,7 +16,7 @@
       "controls": {
         "type": "image",
         "name": "Multiple Images",
-        "noEdit": true,
+        "noEdit": false,
         "multiSelect": true,
         "defaultValue": []
       },

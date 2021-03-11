@@ -6,6 +6,8 @@ import LanguageWrapper from "./ui/LanguageWrapper";
 import Media from './ui/media/Media';
 import {addControlInput, getControlInputs} from "./lib/controlInputs";
 import useSchemas from "./hooks/useSchemas";
+import Slug from "./ui/Slug";
+import Panel from "./ui/Panel";
 
 export {
   useSchemaBlocksData,
@@ -16,5 +18,8 @@ export {
   Media,
   addControlInput,
   getControlInputs,
-  useSchemas
+  useSchemas,
+
+  Slug,
+  Panel
 }
