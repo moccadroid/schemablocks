@@ -12,14 +12,16 @@ import Panel from "./ui/Panel";
 export {
   useSchemaBlocksData,
   useSchemaValidator,
-  setFirebase,
-  setMediaLibraryConfig,
-  LanguageWrapper,
-  Media,
-  addControlInput,
-  getControlInputs,
   useSchemas,
 
+  setFirebase,
+  setMediaLibraryConfig,
+
+  addControlInput,
+  getControlInputs,
+
+  Media,
+  LanguageWrapper,
   Slug,
   Panel
 }

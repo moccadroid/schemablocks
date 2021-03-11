@@ -1,9 +1,8 @@
 import {
   setMediaLibraryConfig,
   setFirebase,
-  useSchemaBlocksData,
   addControlInput,
-  useSchemas, Slug, Panel
+  Panel
 } from "schemablocks";
 import firebase from "./firebase.config";
 import schemas from "./schemas";
