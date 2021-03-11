@@ -32,8 +32,9 @@ export default function Slug({ slug, onInViewport }) {
       name: slug.name,
       onSave: handleSave,
       onPreview: handlePreview,
-      onDelete: () => setShowDeleteDialog(true)
+      onDelete: slugData.length > 0 ? () => setShowDeleteDialog(true) : null
     }
+
     const boxRect = boxRef.current.getBoundingClientRect();
     if (first && boxRect.top - 200 < 0) {
       onInViewport(props);

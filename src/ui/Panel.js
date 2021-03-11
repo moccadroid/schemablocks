@@ -4,13 +4,13 @@ import {
   Container,
   Dialog, FormControl,
   Grid,
-  InputLabel, MenuItem,
+  MenuItem,
   Select,
   Slide,
   Toolbar,
   Typography
 } from "@material-ui/core";
-import React, {forwardRef, useState} from "react";
+import React, {forwardRef, useState, useEffect} from "react";
 import Slug from "./Slug";
 import MediaLibray from "./media/MediaLibrary";
 import {makeStyles} from "@material-ui/core/styles";
@@ -21,6 +21,7 @@ export default function Panel({ slugs, children }) {
   const [name, setName] = useState("");
   const [showMediaLibrary, setShowMediaLibrary] = useState(false);
   const [mediaType, setMediaType] = useState("image");
+  const [canDelete, setCanDelete] = useState(false);
 
   let slugSave = null;
   let slugPreview = null;
@@ -31,10 +32,11 @@ export default function Panel({ slugs, children }) {
     slugPreview = onPreview;
     slugDelete = onDelete;
     setName(name);
+
+    setCanDelete(!!onDelete);
   }
 
   function handleSave() {
-    console.log(slugSave);
     if (slugSave) {
       slugSave();
     }
@@ -85,7 +87,7 @@ export default function Panel({ slugs, children }) {
               </Button>
             </Grid>
             <Grid item>
-              <Button variant={"contained"} color="secondary" onClick={handleDelete}>Delete</Button>
+              <Button disabled={!canDelete} variant={"contained"} color="secondary" onClick={handleDelete}>Delete</Button>
             </Grid>
             <Grid item>
               <Button variant={"outlined"} color="inherit" onClick={handlePreview}>Preview</Button>
