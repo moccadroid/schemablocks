@@ -85,18 +85,17 @@ function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false
   }, [schemaBlocksCreated]);
 
   useEffect(() => {
-    if (!schemaBlocksCreated) {
-      if (data && data.blocks) {
-        const blocks = data.blocks.map((block, i) => {
-          const schema = schemas.find(schemaData => schemaData.schema.id === block.id);
-          if (schema) {
-            return createSchemaBlock(schema, i, block.data);
-          }
-        });
-        setSchemaBlocks(blocks);
-        setSchemaBlocksCreated(true);
-      }
+    let blocks = [];
+    if (data && data.blocks) {
+      blocks = data.blocks.map((block, i) => {
+        const schema = schemas.find(schemaData => schemaData.schema.id === block.id);
+        if (schema) {
+          return createSchemaBlock(schema, i, block.data);
+        }
+      });
     }
+    setSchemaBlocks(blocks);
+    setSchemaBlocksCreated(true);
   }, [data]);
 
   useEffect(() => {

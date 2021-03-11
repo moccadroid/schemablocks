@@ -1,13 +1,17 @@
 import LanguageWrapper from "./LanguageWrapper";
 import React, {createRef, useRef, useEffect, useState} from "react";
-import {Box, Grid, Paper, Typography} from "@material-ui/core";
+import {Alert, Box, Grid, Paper, Snackbar, Typography} from "@material-ui/core";
 import useSchemaBlocksData from "../hooks/useSchemaBlocksData";
 import useSchemas from "../hooks/useSchemas";
+import ConfirmationDialog from "./alerts/ConfirmationDialog";
 
 export default function Slug({ slug, onInViewport }) {
 
   const [schemas] = useSchemas(slug.schemas);
   const [slugData, saveSlugData, deleteSlugData] = useSchemaBlocksData({ collection: slug.collection, slug: slug.slug });
+  const [saveSuccess, setSaveSuccess] = useState(false);
+  const [saveError, setSaveError] = useState(null);
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const boxRef = useRef();
 
   const languages = [
@@ -17,6 +21,7 @@ export default function Slug({ slug, onInViewport }) {
 
   useEffect(() => {
     handleScroll(true);
+
     window.addEventListener("scroll", handleScroll);
 
     return () => window.removeEventListener("scroll", handleScroll);
@@ -27,7 +32,7 @@ export default function Slug({ slug, onInViewport }) {
       name: slug.name,
       onSave: handleSave,
       onPreview: handlePreview,
-      onDelete: handleDelete
+      onDelete: () => setShowDeleteDialog(true)
     }
     const boxRect = boxRef.current.getBoundingClientRect();
     if (first && boxRect.top - 200 < 0) {
@@ -37,8 +42,9 @@ export default function Slug({ slug, onInViewport }) {
     }
   }
 
-  function handleSave() {
+  async function handleSave() {
     if (!languages.every(lang => lang.ref.current.isValid())) {
+      console.log("validation failed");
       return;
     }
 
@@ -48,7 +54,11 @@ export default function Slug({ slug, onInViewport }) {
         blocks: language.ref.current.getData()
       }
     });
-    saveSlugData(data);
+    const errors = await saveSlugData(data);
+    if (!errors) {
+      setSaveSuccess(true);
+    }
+    console.log(errors)
     console.log(slug.name, "saved", data);
   }
 
@@ -64,8 +74,11 @@ export default function Slug({ slug, onInViewport }) {
     console.log(slug.name, "preview missing still");
   }
 
-  function handleDelete() {
-    deleteSlugData(slugData);
+  function handleDelete(value) {
+    if (value) {
+      deleteSlugData();
+    }
+    setShowDeleteDialog(false);
   }
 
   return (
@@ -80,6 +93,21 @@ export default function Slug({ slug, onInViewport }) {
           schemas={schemas}
         />
       </Paper>
+      <Snackbar open={saveSuccess} autoHideDuration={6000} onClose={() => setSaveSuccess(false)}>
+        <Alert onClose={() => setSaveSuccess(false)} severity="success" variant="filled">
+          Saved successfully
+        </Alert>
+      </Snackbar>
+      <Snackbar open={saveError} autoHideDuration={6000} onClose={() => setSaveError(null)}>
+        <Alert onClose={() => setSaveError(false)} severity="error" variant="filled">
+          Error saving data.
+        </Alert>
+      </Snackbar>
+      <ConfirmationDialog
+        open={showDeleteDialog}
+        text={"Do you really want to delete this page? It can't be recovered after that."}
+        title={`Delete page ${slug.name}?`}
+        onClose={handleDelete} />
     </Box>
   )
 

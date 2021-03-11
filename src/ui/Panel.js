@@ -25,11 +25,6 @@ export default function Panel({ slugs, children }) {
   let slugSave = null;
   let slugPreview = null;
   let slugDelete = null;
-  let slugName = "";
-
-  function saveChanges() {
-    console.log("save");
-  }
 
   function handleSlugInViewport({ name, onSave, onPreview, onDelete }) {
     slugSave = onSave;
@@ -39,14 +34,21 @@ export default function Panel({ slugs, children }) {
   }
 
   function handleSave() {
+    console.log(slugSave);
     if (slugSave) {
       slugSave();
     }
   }
 
-  function handlePreview(data) {
+  function handlePreview() {
     if(slugPreview) {
       slugPreview();
+    }
+  }
+
+  function handleDelete() {
+    if (slugDelete) {
+      slugDelete();
     }
   }
 
@@ -81,6 +83,9 @@ export default function Panel({ slugs, children }) {
               <Button variant={"contained"} color={"primary"} onClick={() => setShowMediaLibrary(true)}>
                 <span style={{ textTransform: "uppercase"}}>{mediaType}</span>&nbsp;MediaLibrary
               </Button>
+            </Grid>
+            <Grid item>
+              <Button variant={"contained"} color="secondary" onClick={handleDelete}>Delete</Button>
             </Grid>
             <Grid item>
               <Button variant={"outlined"} color="inherit" onClick={handlePreview}>Preview</Button>

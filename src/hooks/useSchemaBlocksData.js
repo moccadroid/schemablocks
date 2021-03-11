@@ -30,6 +30,7 @@ export default function useSchemaBlocksData(query) {
   }, []);
 
   async function saveData(blocksData) {
+    const errors = [];
     await Promise.all(blocksData.map(async block => {
       let docId = docIds.find(docId => docId.lang === block.lang);
       if (!docId) {
@@ -38,18 +39,28 @@ export default function useSchemaBlocksData(query) {
         docId.id = firebase.firestore().collection(collection).doc().id;
         setDocIds(ids => [...ids, docId]);
       }
-      await firebase.firestore().collection(collection).doc(docId.id).set({
-        ...block,
-        slug
-      });
+      try {
+        await firebase.firestore().collection(collection).doc(docId.id).set({
+          ...block,
+          slug
+        });
+      } catch (error) {
+        errors.push(error);
+      }
     }));
+    if (errors.length > 0) {
+      return errors;
+    }
     setData(blocksData);
   }
 
   async function deleteData() {
-    return Promise.all(docIds.map(async docId => {
+    await Promise.all(docIds.map(async docId => {
       return firebase.firestore().collection(collection).doc(docId.id).delete();
     }));
+
+    setData([]);
+    setDocIds([]);
   }
 
   return [data, saveData, deleteData];

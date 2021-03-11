@@ -1,3 +1,4 @@
+import React from "react";
 import {Button, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle} from "@material-ui/core";
 
 export default function ConfirmationDialog({ open, title, text, onClose }) {
