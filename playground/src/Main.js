@@ -19,9 +19,7 @@ export default function Main() {
   addControlInput("richText", RichTextInput);
 
   const slugs = [
-    { name: "Demo1", collection: "demoBlocks", slug: "demoBlocks1", schemas: schemas },
-    { name: "Demo2", collection: "demoBlocks", slug: "demoBlocks2", schemas: schemas },
-    { name: "Demo3", collection: "demoBlocks", slug: "demoBlocks3", schemas: schemas }
+    { name: "Demo1", collection: "demoBlocks", slug: "demoBlocks1", schemas: schemas }
   ]
 
   return (

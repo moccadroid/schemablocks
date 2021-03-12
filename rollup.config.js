@@ -5,17 +5,27 @@ import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
 export default {
-  /*
+  //input: [pkg.source, "src/ui/media/Media.js"],
+
   input: {
-    index: pkg.source,
+    index: "src/index.js",
     Media: "src/ui/media/Media.js"
   },
-  */
-  input: pkg.source,
+  // input: pkg.source
   output: [
-    // { dir: "dist", format: "cjs" },
-    { file: pkg.main, format: 'cjs' },
-    { file: pkg.module, format: 'esm' }
+    //{ dir: "dist" },
+    //{ file: pkg.main, format: 'cjs' },
+    //{ file: pkg.module, format: 'esm' }
+    {
+      dir: "dist",
+      format: "cjs",
+      chunkFileNames: "_chunks/[name]-[hash].js"
+    },
+    {
+      dir: "dist/es",
+      format: "es",
+      chunkFileNames: "_chunks/[name]-[hash].js"
+    }
   ],
   plugins: [
     external(),

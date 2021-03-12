@@ -2,20 +2,16 @@ import React, {useState, useRef, useEffect} from 'react';
 
 export function Media({ data, autoplay = false, loop = false, mediaRef }) {
 
-  const ref = useRef();
-  const [media, setMedia] = useState(false);
   const sizes = [200, 400, 800, 1200, 1600];
+  const ref = useRef();
+  const [media, setMedia] = useState(resolveMedia(data, 200));
 
-/*
-  useEffect(() => {
-    setMedia(resolveMedia(data));
-  }, [data])
-*/
   useEffect(() => {
     setMedia(resolveMedia(data));
   }, [data]);
 
   function getImageWidth() {
+
     if (ref.current) {
       const width = ref.current.getBoundingClientRect().width;
       for(let i = 0; i < sizes.length; i++) {
@@ -27,14 +23,14 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
     return sizes[sizes.length - 1];
   }
 
-  function resolveMedia(data) {
+  function resolveMedia(data, width = null) {
     if (data?.mimeType?.includes("svg")) {
       return <img style={styles.svg} src={data.url} alt={data.alt} ref={mediaRef}/>
     }
     else if (data?.mimeType?.startsWith('image')) {
 
       const extension = data.mimeType.split("/").pop();
-      const width = getImageWidth();
+      const width = width ?? getImageWidth();
       const webpSrcFilename = [data.id, width, 'webp'].join('.');
       const stdSrcFilename = [data.id, width, extension].join('.');
       const decoded = decodeURIComponent(data.url);
