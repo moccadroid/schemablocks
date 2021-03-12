@@ -10,55 +10,114 @@ npm install --save schemablocks
 ```
 
 ## Usage
+Schemablocks is meant to be used by the person building and maintaning the frontend. 
+"frontend" in this case describes the actual graphical part of the website.
+Whereas "backend" is the admin interface used to enter and edit data.
+By creating schemas for the data the frontend uses, schemablocks allows the frontend developer to automatically generate 
+complex admin interfaces e.g. the backend without any extra code. 
 
+## Frontend Usage
+Every schemablocks project starts by building a frontend block with the accompanying schema.
+
+### QuoteBlock
+Here we use a simple QuoteBlock. For the sake of brevity we omit all stylings.
+Documentation for all the properties you can use in the schema can be found [here](#).
 ```javascript
-import {useSchemaBlocksData, setFirebase, LanguageWrapper} from "schemablocks";
-import firebase from './firebase.config';
+export default function QuoteBlock({ block }) {
+  const {data} = block;
+  return (
+    <div>
+      <h2>{data.quote}</h2>
+    </div>
+  )
+}
 
-const schemas = [
-  {
-    name: "Quote",
-    schema: {
-      "id": "quote",
-      "type": "object",
-      "properties": {
-        "quote": {
-          "type": "string",
-          "controls": {
-            "name": "Quote"
-          }
-        }
-      }
-    },
-    block: ({block}) => {
-      const {data} = block;
-      return (
-        <h1>{data.quote}</h1>
-      )
+export const QuoteBlockSchema = {
+  "id": "quote",
+  "type": "object",
+  "properties": {
+    "quote": {
+      "type": "string",
+      "controls": { "name": "Quote" }
     }
   }
-]
+}
+```
 
-export default function View() {
+### ContenBlocks
+ContentBlocks is a little helper (currently not part of schemablocks) that makes it easy to use your data with the blocks you created
+```javascript
+import QuoteBlock from "./QuoteBlock";
+export default function ContentBlocks({ data }) {
+  const blocks = {
+    "QuoteBlock": QuoteBlock
+  };
+  
+  const resolve = (data) => {
+    return data?.blocks?.map((block, i) => {
+      const Component = blocks[block.id];
+      if (Component) {
+        return <Component block={block} key={"block" + i} />
+      }
+      return false;
+    })
+  };
+  
+  return <div>{resolve(data)}</div>
+}
+```
 
+### Index
+Using [next.js](https://nextjs.org/) and Firebase SDK we can write a page that loads this data and uses ContentBlocks to select and display it.
+```javascript
+import ContentBlocks from "./ContentBlocks";
+export default function Index({ data }) {
+
+  return <ContentBlocks blocks={data.blocks} />
+}
+
+export async function getServerSideProps() {
+  const snapshot = await firebase.firestore().collection("schemablocks")
+    .where("slug", "==", "index")
+    .where("lang", "==", "en");
+  const data = {};
+  snapshot.forEach(doc => data = doc.data());
+  return { props: { data }}
+}
+```
+
+## Backend Usage
+Also using [next.js](https://nextjs.org/) we create pages/admin.js and wire everything together:
+```javascript
+import {useSchemaBlocksData, setFirebase, Panel} from "schemablocks";
+import firebase from "./firebase.config";
+import QuoteBlock, {QuoteBlockSchema} from "./Quoteblock"
+
+const schemas = [{
+  name: "Quote",
+  schema: QuoteBlockSchema,
+  block: QuoteBlock
+}];
+
+export default function Admin() {
   setFirebase(firebase);
   const [data, saveData, deleteData] = useSchemaBlocksData({
     collection: 'schemablocks',
     slug: 'demo'
   });
 
-  return (
-    <LanguageWrapper 
-      schemas={schemas} 
-      data={data} 
-      onSave={saveData} 
-      onDelete={deleteData}
-    />
-  )
+  const slugs = [{ name: "Index", collection: "schemablocks", slug: "index", schemas }]
+  
+  return <Panel slugs={slugs} />
 }
 ```
+That's it!
+To add more blocks to your page (and the backend), don't forget to register them in the schemas array above 
+and also register it in the ContentBlocks object so it will be found and displayed.
 
-## ControlType Injection
+## Advanced schemablocks concepts
+
+### ControlType Injection
 You can inject your own input elements to be used in the backend interface.
 
 ```javascript
@@ -100,7 +159,7 @@ Every injected Component can expect the following props:
 Go see [RichTextInput](https://github.com/moccadroid/schemablocks/tree/master/playground/src/components/inputs) for an
 example in action.
 
-## Media Library
+### Media Library
 The media library is still quite experimental and the code is very specific to our current setup.
 It uses Firebase Storage and Fireabase Functions to store and resize the Images. The code for the necessary Firebase function
 will be released soon (when I figure out how to do this properly here).
@@ -129,15 +188,9 @@ To use it, you can use the following controls:
       "type": "image",
       "name": "Single Image",
       "noEdit": true,
-      "defaultValue": "",
       "multiSelect": false
     },
-    "properties": {
-      "url": { "type": "string" },
-      "id": { "type": "string" },
-      "alt": { "type": "string" },
-      "mimeType": { "type": "string" }
-    }
+    "properties": "#MediaProperties"
   }
 }
 ```
@@ -152,3 +205,6 @@ Clone this repo and run
 ```sh
 npm run i-all && npm run dev 
 ```
+
+## Schema Documentation
+coming soon...

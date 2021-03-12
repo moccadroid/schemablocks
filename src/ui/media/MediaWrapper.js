@@ -1,6 +1,6 @@
 import React, {useRef, useState} from "react";
 import {Box} from "@material-ui/core";
-import Media from "./Media";
+import {Media} from "./Media";
 import IconButton from "@material-ui/core/IconButton";
 import PlayCircleFilledWhiteIcon from '@material-ui/icons/PlayCircleFilledWhite';
 

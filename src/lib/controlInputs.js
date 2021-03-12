@@ -3,7 +3,7 @@ import LinkInput from "../ui/input/LinkInput";
 import MediaInput from "../ui/input/MediaInput";
 import SelectInput from "../ui/input/SelectInput";
 
-let controlInputs = {
+const controlInputs = {
   "link": LinkInput,
   "image": MediaInput,
   "video": MediaInput,

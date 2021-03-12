@@ -1,6 +1,6 @@
 import React, {useState, useRef, useEffect} from 'react';
 
-export default function Media({ data, autoplay = false, loop = false, mediaRef }) {
+export function Media({ data, autoplay = false, loop = false, mediaRef }) {
 
   const ref = useRef();
   const [media, setMedia] = useState(false);

@@ -5,8 +5,15 @@ import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
 export default {
+  /*
+  input: {
+    index: pkg.source,
+    Media: "src/ui/media/Media.js"
+  },
+  */
   input: pkg.source,
   output: [
+    // { dir: "dist", format: "cjs" },
     { file: pkg.main, format: 'cjs' },
     { file: pkg.module, format: 'esm' }
   ],

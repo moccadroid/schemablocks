@@ -19,10 +19,9 @@ export default function useDefaultData(data, schema) {
       return controls?.defaultValue ?? 0;
     }
     if (type === "object") {
-      const props = Object.entries(properties).map(([key, value]) => {
+      return Object.entries(properties).map(([key, value]) => {
         return { [key]: resolveDefaultValue(value) }
       }).reduce((acc, cur) => ({...acc, ...cur}));
-      return props;
     }
     if (type === "array") {
       return controls?.defaultValue ?? [];
