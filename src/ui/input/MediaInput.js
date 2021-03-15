@@ -1,7 +1,8 @@
-import {Button, Dialog, Box, Slide, Typography, Grid} from "@material-ui/core";
+import {Button, Dialog, Box, Slide, Typography, Grid, Accordion} from "@material-ui/core";
 import React, {useState, forwardRef, useEffect} from "react";
 import MediaLibray from "../media/MediaLibrary";
 import MediaWrapper from "../media/MediaWrapper";
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
@@ -44,6 +45,19 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
     onChange(mediaItems);
   }
 
+  function onDragEnd(result) {
+    if (!result.destination) {
+      return;
+    }
+
+    let orderedList = Array.from(media);
+    const [removed] = orderedList.splice(result.source.index, 1);
+    orderedList.splice(result.destination.index, 0, removed);
+    orderedList.forEach((r, i) => r.index = i);
+    orderedList.sort((a,b) => a.index - b.index);
+    setMedia(orderedList);
+    onChange(orderedList);
+  }
 
   return (
     <Box mt={2} mb={2}>
@@ -51,15 +65,37 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
         <Typography>{controls.name}</Typography>
       </Box>
       <Box sx={{ minHeight: 20 }}>
-        <Grid container spacing={2}>
-          {media.map(mediaItem => {
-            return (
-              <Grid item key={mediaItem.id} sx={{width: 200}}>
-                <MediaWrapper media={mediaItem} key={mediaItem.id} onDelete={() => handleDelete(mediaItem)}/>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId={"droppable"} direction="horizontal">
+            {(provided) => (
+              <Grid
+                container
+                spacing={2}
+                {...provided.droppableProps}
+                ref={provided.innerRef}
+              >
+                {media.map((mediaItem, index) => {
+                  return (
+                    <Draggable key={mediaItem.id} draggableId={mediaItem.id + index} index={index}>
+                      {(provided) => (
+                        <Grid
+                          item
+                          sx={{width: 200}}
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          <MediaWrapper media={mediaItem} key={mediaItem.id} onDelete={() => handleDelete(mediaItem)}/>
+                        </Grid>
+                      )}
+                    </Draggable>
+                  )
+                })}
+                {provided.placeholder}
               </Grid>
-            )
-          })}
-        </Grid>
+            )}
+          </Droppable>
+        </DragDropContext>
       </Box>
       <Box>
         <Button variant="contained" color="primary" component="span" onClick={openMediaLibrary}>Add { controls.type }</Button>

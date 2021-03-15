@@ -10,10 +10,9 @@ import {
 } from "@material-ui/core";
 import uuidv4 from "../lib/uuidv4";
 import React, {createRef, forwardRef, useEffect, useImperativeHandle, useState} from "react";
-import SchemaBlock from "./SchemaBlock";
 import fromFirestore from "../provider/firestore";
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import SelectInput from "./input/SelectInput";
+import BlockList from "./BlockList";
 
 const providers = {
   "firestore": fromFirestore
@@ -163,37 +162,13 @@ function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false
     });
   };
 
+  function handleOrderChange(list) {
+    setSchemaBlocks(list);
+  }
+
   return (
     <Box>
-      {schemaBlocks.map((block, i) => {
-        let title = block.schema.name;
-        const titleDataField = block.schema.schema.controls?.titleDataField;
-        if (titleDataField) {
-          title = block.data[titleDataField] || title;
-        }
-        return (
-          <Accordion key={block.id}>
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon/>}
-              aria-controls={block.id}
-              id={block.id}
-            >
-              <Typography variant={"h6"} sx={{ width: "100%" }}>{title}</Typography>
-              <Grid container sx={{ justifyContent: "flex-end"}}>
-                <Grid item><Button onClick={event => moveBlock(event, block, -1)}>move up</Button></Grid>
-                <Grid item><Button onClick={event => moveBlock(event, block, 1)}>move down</Button></Grid>
-              </Grid>
-            </AccordionSummary>
-            <AccordionDetails sx={{ backgroundColor: "#fafafa"}}>
-              <SchemaBlock
-                ref={block.ref}
-                block={block}
-                onRemove={() => removeSchemaBlock(block.id)}
-              />
-            </AccordionDetails>
-          </Accordion>
-        )
-      })}
+      <BlockList blocks={schemaBlocks} onRemove={removeSchemaBlock} onOrderChange={handleOrderChange} />
       <Grid spacing={2} container direction="row" mt={2} alignItems="center" sx={{ justifyContent: "flex-end"}}>
         <Grid item>
           <SelectInput

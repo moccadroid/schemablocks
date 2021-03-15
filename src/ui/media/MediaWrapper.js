@@ -35,8 +35,6 @@ export default function MediaWrapper({ media, onDelete }) {
     }
   }
 
-  console.log(media.url);
-
   if (media.mimeType.startsWith("video")) {
     return (
       <Box sx={{ position: "relative"}}>

@@ -58,8 +58,9 @@ export default function Slug({ slug, onInViewport }) {
     const errors = await saveSlugData(data);
     if (!errors) {
       setSaveSuccess(true);
+    } else {
+      console.log(errors);
     }
-    console.log(errors)
     console.log(slug.name, "saved", data);
   }
 
