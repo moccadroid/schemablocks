@@ -9,7 +9,8 @@ export default {
 
   input: {
     index: "src/index.js",
-    Media: "src/ui/media/Media.js"
+    Media: "src/ui/media/Media.js",
+    ContentBlocks: "src/ui/contentblocks/ContentBlocks.js"
   },
   // input: pkg.source
   output: [
