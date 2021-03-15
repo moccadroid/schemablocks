@@ -7,7 +7,7 @@ function copyPackageJson() {
   json.files = ["*"];
   json.main = "main.js";
 
-  fs.writeFileSync("./dist/package.json", JSON.stringify(json));
+  fs.writeFileSync("./dist/package.json", JSON.stringify(json, null, 2));
   console.log("package.json copied to /dist")
 }
 
