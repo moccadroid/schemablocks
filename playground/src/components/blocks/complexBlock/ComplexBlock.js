@@ -1,5 +1,5 @@
 import styles from './ComplexBlock.module.scss';
-import {Media} from 'schemablocks';
+import {Media} from 'schemablocks/Media';
 import schema from './ComplexBlock.schema.json';
 import SchemaView from "../../ui/SchemaView";
 import {Typography} from "@material-ui/core";

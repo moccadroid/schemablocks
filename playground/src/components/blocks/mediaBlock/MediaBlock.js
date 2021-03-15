@@ -1,7 +1,7 @@
 import schema from './MediaBlock.schema.json';
 import SchemaView from "../../ui/SchemaView";
 import {Box, Grid} from "@material-ui/core";
-import {Media} from 'schemablocks';
+import {Media} from 'schemablocks/Media';
 
 export default function MediaBlock({ block }) {
 

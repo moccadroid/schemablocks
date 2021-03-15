@@ -32,7 +32,7 @@ export default {
     babel({
       exclude: 'node_modules/**'
     }),
-    del({ targets: ['dist/*'] }),
+    // del({ targets: ['dist/*'] }),
     json()
   ],
   external: Object.keys(pkg.peerDependencies || {}),
