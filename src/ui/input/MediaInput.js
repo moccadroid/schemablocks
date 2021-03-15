@@ -38,6 +38,12 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
     }
   }
 
+  function handleDelete(item) {
+    const mediaItems = media.filter(m => m.id !== item.id);
+    setMedia(mediaItems);
+    onChange(mediaItems);
+  }
+
 
   return (
     <Box mt={2} mb={2}>
@@ -49,7 +55,7 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
           {media.map(mediaItem => {
             return (
               <Grid item key={mediaItem.id} sx={{width: 200}}>
-                <MediaWrapper media={mediaItem} key={mediaItem.id} />
+                <MediaWrapper media={mediaItem} key={mediaItem.id} onDelete={() => handleDelete(mediaItem)}/>
               </Grid>
             )
           })}
