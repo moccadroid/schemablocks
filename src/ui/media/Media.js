@@ -23,6 +23,18 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
     return sizes[sizes.length - 1];
   }
 
+  function createImageSrcSet(id, width, extension, filename, url) {
+    const srcSet = [];
+    sizes.forEach((size, index) => {
+      if (size >= width) {
+        const x = Math.round(size / width);
+        const src = [id, size, extension].join(".");
+        srcSet.push(url.replace(filename, src) + (x > 1 ? ` ${x}x` : ""));
+      }
+    });
+    return srcSet.join(", ");
+  }
+
   function resolveMedia(data, width = null) {
     if (data?.mimeType?.includes("svg")) {
       return <img style={styles.svg} src={data.url} alt={data.alt} ref={mediaRef}/>
@@ -31,17 +43,15 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
 
       const extension = data.mimeType.split("/").pop();
       const width = width ?? getImageWidth();
-      const webpSrcFilename = [data.id, width, 'webp'].join('.');
-      const stdSrcFilename = [data.id, width, extension].join('.');
       const decoded = decodeURIComponent(data.url);
       const filename = data.title ?? decoded.split('/').pop().split("?")[0];
-      const webpSrc = data.url.replace(encodeURIComponent(filename), webpSrcFilename);
-      const stdSrc = data.url.replace(encodeURIComponent(filename), stdSrcFilename);
+      const srcSetWebp = createImageSrcSet(data.id, width,"webp", encodeURIComponent(filename), data.url);
+      const srcSetStd = createImageSrcSet(data.id, width, extension, encodeURIComponent(filename), data.url);
 
       return (
         <picture ref={mediaRef}>
-          <source srcSet={webpSrc} type={'image/webp'}/>
-          <img style={styles.image} src={stdSrc} alt={data.alt} />
+          <source srcSet={srcSetWebp} type={'image/webp'} />
+          <img style={styles.image} srcSet={srcSetStd} alt={data.alt} />
         </picture>
       )
     }
