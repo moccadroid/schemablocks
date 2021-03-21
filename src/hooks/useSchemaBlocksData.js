@@ -1,7 +1,7 @@
 import {useEffect, useState} from "react";
 import {getFirebase} from "../lib/firebaseConfig";
 
-export default function useSchemaBlocksData(query) {
+export default function useSchemaBlocksData(query, realtime = false) {
 
   const firebase = getFirebase();
   const { collection, slug } = query;
@@ -13,21 +13,33 @@ export default function useSchemaBlocksData(query) {
   }
 
   useEffect(() => {
-    (async () => {
-      const blocks = [];
-      const ids = [];
-      const snapshot = await firebase.firestore().collection(collection).where("slug", "==", slug).get();
-      snapshot.forEach(doc => {
-        const docData = doc.data();
-        const id = {id: doc.id, lang: docData.lang};
-        blocks.push(docData);
-        ids.push(id);
+    if (realtime) {
+      const unsubscribe = firebase.firestore().collection(collection).where("slug", "==", slug).onSnapshot(snapshot => {
+        console.log("new realtime data");
+        handleSnapshot(snapshot);
       });
-      setDocIds(ids);
-      setData(blocks);
-    })();
 
+      return () => unsubscribe();
+    } else {
+      firebase.firestore().collection(collection).where("slug", "==", slug).get().then(snapshot => {
+        console.log("not realtime data");
+        handleSnapshot(snapshot);
+      });
+    }
   }, []);
+
+  function handleSnapshot(snapshot) {
+    const blocks = [];
+    const ids = [];
+    snapshot.forEach(doc => {
+      const docData = doc.data();
+      const id = {id: doc.id, lang: docData.lang};
+      blocks.push(docData);
+      ids.push(id);
+    });
+    setDocIds(ids);
+    setData(blocks);
+  }
 
   async function saveData(blocksData) {
     const errors = [];

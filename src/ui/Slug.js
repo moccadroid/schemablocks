@@ -1,90 +1,79 @@
 import LanguageWrapper from "./LanguageWrapper";
-import React, {createRef, useRef, useEffect, useState} from "react";
-import {Alert, Box, Grid, Paper, Snackbar, Typography} from "@material-ui/core";
+import React, {createRef, useState, useImperativeHandle, forwardRef, useEffect} from "react";
+import {Alert, Box, Paper, Snackbar, Typography} from "@material-ui/core";
 import useSchemaBlocksData from "../hooks/useSchemaBlocksData";
 import useSchemas from "../hooks/useSchemas";
-import ConfirmationDialog from "./alerts/ConfirmationDialog";
+import useSlugLock from "../hooks/useSlugLock";
+import {getAuthUser} from "../lib/auth";
 
-export default function Slug({ slug, onInViewport }) {
+function Slug({ slug, onLockChange }, ref) {
 
   const [schemas] = useSchemas(slug.schemas);
-  const [slugData, saveSlugData, deleteSlugData] = useSchemaBlocksData({ collection: slug.collection, slug: slug.slug });
+  const [slugData, saveSlugData, deleteSlugData] = useSchemaBlocksData(slug, true);
+  const [lock] = useSlugLock(slug);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState(null);
-  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
-  const boxRef = useRef();
+
+  useImperativeHandle(ref, () => ({
+    save: handleSave,
+    preview: handlePreview,
+    delete: handleDelete
+  }));
+
+  useEffect(() => {
+    console.log("slugData", slugData);
+  }, [slugData]);
 
   const languages = [
     { name: "Deutsch", value: "de", ref: createRef() },
     { name: "English", value: "en", ref: createRef() }
   ];
 
-  useEffect(() => {
-    handleScroll(true);
-
-    window.addEventListener("scroll", handleScroll);
-
-    return () => window.removeEventListener("scroll", handleScroll);
-  });
-
-  function handleScroll(first = false) {
-    const props = {
-      name: slug.name,
-      onSave: handleSave,
-      onPreview: handlePreview,
-      onDelete: slugData.length > 0 ? () => setShowDeleteDialog(true) : null
-    }
-
-    const boxRect = boxRef.current.getBoundingClientRect();
-    if (first && boxRect.top - 200 < 0) {
-      onInViewport(props);
-    } else if (boxRect.top - 200 < 0 && boxRect.top + boxRect.height > 0) {
-      onInViewport(props);
-    }
+  function collectData() {
+    return slugData.map(data => {
+      const blocks = languages.find(lang => lang.value === data.lang)?.ref.current.getData();
+      return {
+        ...data,
+        blocks: blocks ?? data.blocks,
+        locked: true,
+        unlockedBy: null
+      }
+    });
   }
 
   async function handleSave() {
-    if (!languages.every(lang => lang.ref.current.isValid())) {
-      console.log("validation failed");
-      return;
+    if (lock && lock.email === getAuthUser().email) {
+
+      if (!languages.every(lang => lang.ref.current.isValid())) {
+        console.log("validation failed");
+        return;
+      }
+
+      const data = collectData();
+
+      const errors = await saveSlugData(data);
+      if (!errors) {
+        setSaveSuccess(true);
+      } else {
+        console.log(errors);
+      }
+      console.log(slug.name, "saved", data);
     }
 
-    const data = languages.map(language => {
-      return {
-        lang: language.value,
-        blocks: language.ref.current.getData()
-      }
-    });
-    const errors = await saveSlugData(data);
-    if (!errors) {
-      setSaveSuccess(true);
-    } else {
-      console.log(errors);
-    }
-    console.log(slug.name, "saved", data);
   }
 
   function handlePreview() {
-    /*
-    const data = languages.map(language => {
-      return {
-        language: language.value,
-        blocks: language.ref.current.getData()
-      }
-    });
-    */
+    const data = collectData();
+    console.log(data);
     console.log(slug.name, "preview missing still");
   }
 
-  function handleDelete(value) {
-    if (value) {
-      deleteSlugData();
-    }
-    setShowDeleteDialog(false);
+  function handleDelete() {
+    deleteSlugData();
   }
 
   return (
-    <Box ref={boxRef} mt={10}>
+    <Box mt={10}>
       <Paper variant={"outlined"}>
         <Box p={2}>
           <Typography variant={"h6"}>{slug.name}</Typography>
@@ -105,12 +94,9 @@ export default function Slug({ slug, onInViewport }) {
           Error saving data.
         </Alert>
       </Snackbar>
-      <ConfirmationDialog
-        open={showDeleteDialog}
-        text={"Do you really want to delete this page? It can't be recovered after that."}
-        title={`Delete page ${slug.name}?`}
-        onClose={handleDelete} />
     </Box>
   )
 
 }
+
+export default forwardRef(Slug);

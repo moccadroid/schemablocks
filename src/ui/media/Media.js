@@ -11,7 +11,6 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
   }, [data]);
 
   function getImageWidth() {
-
     if (ref.current) {
       const width = ref.current.getBoundingClientRect().width;
       for(let i = 0; i < sizes.length; i++) {
@@ -35,6 +34,11 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
     return srcSet.join(", ");
   }
 
+  function handleImageError(event) {
+    //console.log(event);
+    //console.log(getImageWidth());
+  }
+
   function resolveMedia(data, width = null) {
     if (data?.mimeType?.includes("svg")) {
       return <img style={styles.svg} src={data.url} alt={data.alt} ref={mediaRef}/>
@@ -51,7 +55,7 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
       return (
         <picture ref={mediaRef}>
           <source srcSet={srcSetWebp} type={'image/webp'} />
-          <img style={styles.image} srcSet={srcSetStd} alt={data.alt} />
+          <img style={styles.image} srcSet={srcSetStd} alt={data.alt} onError={handleImageError}/>
         </picture>
       )
     }

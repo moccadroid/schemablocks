@@ -7,6 +7,7 @@ import {addControlInput, getControlInputs} from "./lib/controlInputs";
 import useSchemas from "./hooks/useSchemas";
 import Slug from "./ui/Slug";
 import Panel from "./ui/Panel";
+import {setAuthUser} from "./lib/auth";
 
 export {
   useSchemaBlocksData,
@@ -15,6 +16,7 @@ export {
 
   setFirebase,
   setMediaLibraryConfig,
+  setAuthUser,
 
   addControlInput,
   getControlInputs,
