@@ -2,9 +2,16 @@ import React, {useState} from "react";
 import {Box, Container, Paper, Tab, Tabs} from "@material-ui/core";
 import SchemaBlocks from "./SchemaBlocks";
 
-export default function LanguageWrapper({ data, schemas, languages = [], noEdit = false }) {
+export default function LanguageWrapper({ data, schemas, languages = [], noEdit = false, onChange }) {
 
   const [tabValue, setTabValue] = useState(0);
+
+  function handleOnChange(event, newValue) {
+    setTabValue(newValue);
+    if (onChange) {
+      onChange(languages[newValue]);
+    }
+  }
 
   return (
     <Container>
@@ -12,7 +19,7 @@ export default function LanguageWrapper({ data, schemas, languages = [], noEdit 
         <Paper>
           <Tabs
             value={tabValue}
-            onChange={(event, newValue) => setTabValue(newValue)}
+            onChange={handleOnChange}
             indicatorColor="primary"
             textColor="primary"
             centered

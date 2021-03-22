@@ -11,8 +11,8 @@ import {addControlInput, getControlInputs} from "./lib/controlInputs";
 import LanguageWrapper from "./ui/LanguageWrapper";
 import Slug from "./ui/Slug";
 import Panel from "./ui/Panel";
-import EmailLogin from "./ui/auth/EmailLogin";
 import AppContainer from "./ui/AppContainer";
+import Overview from "./ui/Overview";
 
 export {
   useSchemaBlocksData,
@@ -29,6 +29,6 @@ export {
   LanguageWrapper,
   Slug,
   Panel,
-  EmailLogin,
-  AppContainer
+  AppContainer,
+  Overview
 }

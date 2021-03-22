@@ -1,6 +1,5 @@
 import babel from '@rollup/plugin-babel';
 import external from 'rollup-plugin-peer-deps-external';
-import del from 'rollup-plugin-delete';
 import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
@@ -9,14 +8,10 @@ export default {
 
   input: {
     index: "src/index.js",
-    Media: "src/ui/media/Media.js",
-    ContentBlocks: "src/ui/contentblocks/ContentBlocks.js"
+    media: "src/packages/Media.js",
+    contentblocks: "src/packages/ContentBlocks.js"
   },
-  // input: pkg.source
   output: [
-    //{ dir: "dist" },
-    //{ file: pkg.main, format: 'cjs' },
-    //{ file: pkg.module, format: 'esm' }
     {
       dir: "dist",
       format: "cjs",
@@ -33,7 +28,6 @@ export default {
     babel({
       exclude: 'node_modules/**'
     }),
-    // del({ targets: ['dist/*'] }),
     json()
   ],
   external: Object.keys(pkg.peerDependencies || {}),

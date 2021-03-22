@@ -1,9 +1,8 @@
 import 'react-quill/dist/quill.snow.css';
 import firebase from "./firebase.config";
 import RichTextInput from "./components/inputs/RichTextInput";
-import {AppContainer, setFirebase, addControlInput, setMediaLibraryConfig} from "schemablocks";
+import {AppContainer, Panel, Overview, setFirebase, addControlInput, setMediaLibraryConfig} from "schemablocks";
 import schemas from "./schemas";
-import {Panel} from "schemablocks";
 import {useState} from "react";
 import {Box, Typography} from "@material-ui/core";
 
@@ -22,6 +21,17 @@ function App() {
     { name: "Demo1", collection: "demoBlocks", slug: "demoBlocks1", schemas: schemas }
   ];
 
+  const collections = [
+    {
+      name: "DemoBlocks",
+      value: "demoBlocks"
+    },
+    {
+      name: "SchemaBlocks",
+      value: "schemablocks"
+    }
+  ];
+
   const menuItems = slugs.map(slug => {
     return (
       <Box onClick={() => setCurrentSlug(slug)}>
@@ -31,11 +41,9 @@ function App() {
   });
 
   return (
-    <AppContainer
-      menuItems={menuItems}
-      login={"email"}
-    >
-      <Panel slug={currentSlug} fixedBar={false}/>
+    <AppContainer menuItems={menuItems} login={"email"}>
+      {!currentSlug && <Overview collections={collections}/> }
+      {currentSlug && <Panel slug={currentSlug} fixedBar={false}/> }
     </AppContainer>
   );
 }
