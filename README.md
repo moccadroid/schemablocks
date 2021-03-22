@@ -135,7 +135,8 @@ Every injected Component can expect the following props:
   defaultValue, // either the defaultValue from the schema, or the value from loaded data
   extData, // externally loaded data (undocumented still)
   id, // the id of the inputBlock as uuidv4,
-  type //either the controls.type or (if missing) the jsonschema type
+  type, //either the controls.type or (if missing) the jsonschema type
+  disabled // please implement this in your custom input so slugLocks work properly
 }
 ```
 Go see [RichTextInput](https://github.com/moccadroid/schemablocks/tree/master/playground/src/components/inputs) for an
