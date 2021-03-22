@@ -1,17 +1,21 @@
+import React from "react";
 import { useEffect, useState } from 'react';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
-import firebase from "./firebase.config";
-require('firebase/auth');
+import {getFirebase} from "../../lib/firebaseConfig";
+import {Alert, Box} from "@material-ui/core";
+import {setAuthUser} from "../../lib/auth";
 
-export default function Login({ onLogin }) {
+export default function EmailLogin({ onLogin }) {
 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    firebase.auth().onAuthStateChanged(user => {
+    getFirebase().auth().onAuthStateChanged(user => {
+      setAuthUser(user);
       onLogin(user);
     });
   }, []);
@@ -21,9 +25,8 @@ export default function Login({ onLogin }) {
     event.preventDefault();
 
     if (username !== '' && password !== '') {
-      firebase.auth().signInWithEmailAndPassword(username, password).catch(error => {
-        console.log(error);
-        //setLoginError(true);
+      getFirebase().auth().signInWithEmailAndPassword(username, password).catch(error => {
+        setError(error);
       });
     }
   };
@@ -52,6 +55,11 @@ export default function Login({ onLogin }) {
         />
         <Button variant="contained" color="primary" type="submit">Login</Button>
       </form>
+      <Box mt={2}>
+        {error &&
+          <Alert severity={"error"}>{error.message}</Alert>
+        }
+      </Box>
     </Container>
   );
 }

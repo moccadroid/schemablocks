@@ -1,23 +1,43 @@
-import {useState} from "react";
-import Main from "./Main";
-import Login from "./Login";
 import 'react-quill/dist/quill.snow.css';
-import {setAuthUser} from "schemablocks";
+import firebase from "./firebase.config";
+import RichTextInput from "./components/inputs/RichTextInput";
+import {AppContainer, setFirebase, addControlInput, setMediaLibraryConfig} from "schemablocks";
+import schemas from "./schemas";
+import {Panel} from "schemablocks";
+import {useState} from "react";
+import {Box, Typography} from "@material-ui/core";
 
 function App() {
 
-  const [user, setUser] = useState(null);
+  setFirebase(firebase);
+  setMediaLibraryConfig({
+    firestoreCollection: 'mediaLibrary',
+    imageMagicUrl: process.env.REACT_APP_IMAGE_MAGIC_URL,
+  });
+  addControlInput("richText", RichTextInput);
 
-  function handleLogin(user) {
-    setAuthUser(user);
-    setUser(user);
-  }
+  const [currentSlug, setCurrentSlug] = useState(null);
 
-  if (user) {
-    return <Main />
-  }
+  const slugs = [
+    { name: "Demo1", collection: "demoBlocks", slug: "demoBlocks1", schemas: schemas }
+  ];
 
-  return <Login onLogin={handleLogin}/>
+  const menuItems = slugs.map(slug => {
+    return (
+      <Box onClick={() => setCurrentSlug(slug)}>
+        <Typography variant={"body1"}>{slug.name}</Typography>
+      </Box>
+    );
+  });
+
+  return (
+    <AppContainer
+      menuItems={menuItems}
+      login={"email"}
+    >
+      <Panel slug={currentSlug} fixedBar={false}/>
+    </AppContainer>
+  );
 }
 
 export default App;

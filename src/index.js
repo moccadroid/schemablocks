@@ -1,13 +1,18 @@
 import useSchemaBlocksData from "./hooks/useSchemaBlocksData";
 import useSchemaValidator from "./hooks/useSchemaValidator";
+import useSchemas from "./hooks/useSchemas";
+
 import {setFirebase} from './lib/firebaseConfig';
 import {setMediaLibraryConfig} from "./lib/mediaLibraryConfig";
-import LanguageWrapper from "./ui/LanguageWrapper";
+import {setAuthUser} from "./lib/auth";
+
 import {addControlInput, getControlInputs} from "./lib/controlInputs";
-import useSchemas from "./hooks/useSchemas";
+
+import LanguageWrapper from "./ui/LanguageWrapper";
 import Slug from "./ui/Slug";
 import Panel from "./ui/Panel";
-import {setAuthUser} from "./lib/auth";
+import EmailLogin from "./ui/auth/EmailLogin";
+import AppContainer from "./ui/AppContainer";
 
 export {
   useSchemaBlocksData,
@@ -23,5 +28,7 @@ export {
 
   LanguageWrapper,
   Slug,
-  Panel
+  Panel,
+  EmailLogin,
+  AppContainer
 }

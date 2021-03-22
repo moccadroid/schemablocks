@@ -1,5 +1,5 @@
 import {
-  AppBar,
+  AppBar, Box,
   Button,
   Container,
   Dialog,
@@ -23,7 +23,11 @@ import useSlugLock from "../hooks/useSlugLock";
 import ConfirmationDialog from "./alerts/ConfirmationDialog";
 import InfoDialog from "./alerts/InfoDialog";
 
-export default function Panel({ slug, children }) {
+export default function Panel({ slug, fixedBar = true, children }) {
+
+  if (!slug) {
+    return false
+  }
 
   const styles = useStyles();
   const [showMediaLibrary, setShowMediaLibrary] = useState(false);
@@ -83,22 +87,20 @@ export default function Panel({ slug, children }) {
     if (lock && lock.email !== getAuthUser()?.email) {
       return "red";
     }
-    return "white";
+    return "#000";
   }
 
   return (
     <div className={styles.root}>
-      <AppBar position={"fixed"}>
+      <AppBar position={fixedBar ? "fixed" : "static"} color={"transparent"}>
         <Toolbar>
           <Grid container justifyContent={"flex-end"} spacing={2} alignItems={"center"}>
             <Grid item>
               <FormControl className={styles.fromControl}>
                 <Select
-                  className={styles.select}
                   value={mediaType}
                   onChange={handleMediaTypeChange}
                   label="Media Type"
-                  inputProps={{ classes: { icon: styles.icon }}}
                 >
                   <MenuItem value={"image"}>Images</MenuItem>
                   <MenuItem value={"video"}>Videos</MenuItem>
@@ -142,10 +144,9 @@ export default function Panel({ slug, children }) {
           onClose={() => setShowMediaLibrary(false)}
         />
       </Dialog>
-      <Container className={styles.container}>
-        <Typography variant={"h6"}>{slug?.title}</Typography>
+      <Box mt={2}>
         {children}
-      </Container>
+      </Box>
       {slug && <Slug slug={slug} ref={slugRef} />}
       <ConfirmationDialog
         open={showDeleteDialog}
@@ -168,24 +169,9 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
     paddingBottom: 400
   },
-  container: {
-    marginTop: 80,
-  },
   formControl: {
     minWidth: 200
-  },
-  select: {
-    color: "white!important",
-    '&:before': {
-      borderColor: "rgb(255,255,255)!important",
-    },
-    '&:after': {
-      borderColor: "rgb(255,255,255)!important",
-    }
-  },
-  icon: {
-    fill: "rgb(255,255,255)!important",
-  },
+  }
 }));
 
 const Transition = forwardRef(function Transition(props, ref) {

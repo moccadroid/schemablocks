@@ -10,7 +10,7 @@ function Slug({ slug, onLockChange }, ref) {
 
   const [schemas] = useSchemas(slug.schemas);
   const [slugData, saveSlugData, deleteSlugData] = useSchemaBlocksData(slug, true);
-  const [lock] = useSlugLock(slug);
+  const [lock, addLock, releaseLock] = useSlugLock(slug);
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState(null);
 
@@ -52,6 +52,7 @@ function Slug({ slug, onLockChange }, ref) {
       const errors = await saveSlugData(data);
       if (!errors) {
         setSaveSuccess(true);
+        releaseLock();
       } else {
         console.log(errors);
       }

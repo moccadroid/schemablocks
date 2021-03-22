@@ -8,7 +8,7 @@ export default function LanguageWrapper({ data, schemas, languages = [], noEdit 
 
   return (
     <Container>
-      <Box mt={4} mb={4}>
+      <Box mt={2} mb={2}>
         <Paper>
           <Tabs
             value={tabValue}
