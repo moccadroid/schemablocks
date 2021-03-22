@@ -1,7 +1,7 @@
 import {Box, FormControlLabel, Grid, Switch, TextField, Typography} from "@material-ui/core";
 import React, {useState} from "react";
 
-export default function LinkInput({ onChange, defaultValue = {}, controls}) {
+export default function LinkInput({ onChange, defaultValue = {}, controls, disabled}) {
 
   const [name, setName] = useState(defaultValue?.name ?? "");
   const [url, setUrl] = useState(defaultValue?.url ?? "");
@@ -29,6 +29,7 @@ export default function LinkInput({ onChange, defaultValue = {}, controls}) {
           <Switch
             defaultChecked={defaultValue?.openInNew}
             onChange={event => onOpenInNewChange(event.target.checked)}
+            disabled={disabled}
           />
         } label={"Open in new tab"} />
       </Box>
@@ -38,6 +39,7 @@ export default function LinkInput({ onChange, defaultValue = {}, controls}) {
             label={"Name"}
             onChange={event => onNameChange(event.target.value)}
             defaultValue={defaultValue?.name}
+            disabled={disabled}
           />
         </Grid>
         <Grid item>
@@ -45,6 +47,7 @@ export default function LinkInput({ onChange, defaultValue = {}, controls}) {
             label={"Url"}
             onChange={event => onUrlChange(event.target.value)}
             defaultValue={defaultValue?.url}
+            disabled={disabled}
           />
         </Grid>
       </Grid>

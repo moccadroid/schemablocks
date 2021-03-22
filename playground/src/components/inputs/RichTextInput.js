@@ -2,7 +2,7 @@ import React from 'react';
 import {Box, Typography} from "@material-ui/core";
 import ReactQuill from 'react-quill';
 
-export default function RichTextInput({ controls, defaultValue, onChange }) {
+export default function RichTextInput({ controls, defaultValue, onChange, disabled }) {
 
   return (
     <Box mb={2}>
@@ -10,6 +10,7 @@ export default function RichTextInput({ controls, defaultValue, onChange }) {
       <ReactQuill
         defaultValue={defaultValue}
         onChange={onChange}
+        readOnly={disabled}
       />
     </Box>
   )

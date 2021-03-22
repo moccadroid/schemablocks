@@ -14,15 +14,13 @@ function Slug({ slug, onLockChange }, ref) {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState(null);
 
+  const myLock = lock && lock.email === getAuthUser()?.email;
+
   useImperativeHandle(ref, () => ({
     save: handleSave,
     preview: handlePreview,
     delete: handleDelete
   }));
-
-  useEffect(() => {
-    console.log("slugData", slugData);
-  }, [slugData]);
 
   const languages = [
     { name: "Deutsch", value: "de", ref: createRef() },
@@ -42,7 +40,7 @@ function Slug({ slug, onLockChange }, ref) {
   }
 
   async function handleSave() {
-    if (lock && lock.email === getAuthUser().email) {
+    if (myLock) {
 
       if (!languages.every(lang => lang.ref.current.isValid())) {
         console.log("validation failed");
@@ -73,7 +71,7 @@ function Slug({ slug, onLockChange }, ref) {
   }
 
   return (
-    <Box mt={10}>
+    <Box mt={2}>
       <Paper variant={"outlined"}>
         <Box p={2}>
           <Typography variant={"h6"}>{slug.name}</Typography>
@@ -82,6 +80,7 @@ function Slug({ slug, onLockChange }, ref) {
           languages={languages}
           data={slugData}
           schemas={schemas}
+          noEdit={(lock && lock.email !== getAuthUser()?.email) ?? false}
         />
       </Paper>
       <Snackbar open={saveSuccess} autoHideDuration={6000} onClose={() => setSaveSuccess(false)}>

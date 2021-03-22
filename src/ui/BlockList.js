@@ -4,7 +4,7 @@ import {Accordion, AccordionDetails, AccordionSummary, Box, Button, Grid, Typogr
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
 import SchemaBlock from "./SchemaBlock";
 
-export default function BlockList({ slug, blocks, onRemove, onOrderChange }) {
+export default function BlockList({ slug, blocks, onRemove, onOrderChange, noEdit = false }) {
 
   const [isExpanded, setIsExpanded] = useState({});
 
@@ -66,6 +66,7 @@ export default function BlockList({ slug, blocks, onRemove, onOrderChange }) {
                             ref={block.ref}
                             block={block}
                             onRemove={() => onRemove(block.id)}
+                            noEdit={noEdit}
                           />
                         </AccordionDetails>
                       </Accordion>

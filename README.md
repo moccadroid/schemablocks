@@ -44,36 +44,18 @@ export const QuoteBlockSchema = {
 }
 ```
 
-### ContenBlocks
-ContentBlocks is a little helper (currently not part of schemablocks) that makes it easy to use your data with the blocks you created
-```javascript
-import QuoteBlock from "./QuoteBlock";
-export default function ContentBlocks({ data }) {
-  const blocks = {
-    "QuoteBlock": QuoteBlock
-  };
-  
-  const resolve = (data) => {
-    return data?.blocks?.map((block, i) => {
-      const Component = blocks[block.id];
-      if (Component) {
-        return <Component block={block} key={"block" + i} />
-      }
-      return false;
-    })
-  };
-  
-  return <div>{resolve(data)}</div>
-}
-```
-
 ### Index
 Using [next.js](https://nextjs.org/) and Firebase SDK we can write a page that loads this data and uses ContentBlocks to select and display it.
+Notice the use of ContentBlocks to automatically select and render the appropriate blocks.
 ```javascript
-import ContentBlocks from "./ContentBlocks";
+import ContentBlocks from "schemablocks/ContentBlocks";
 export default function Index({ data }) {
 
-  return <ContentBlocks blocks={data.blocks} />
+  const blocks = {
+    "QuoteBlock": QuoteBlock
+  }
+  
+  return <ContentBlocks data={data?.[0]} blocks={data.blocks} />
 }
 
 export async function getServerSideProps() {

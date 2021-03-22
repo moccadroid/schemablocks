@@ -8,7 +8,7 @@ const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
-export default function MediaInput({ controls, error, defaultValue, onChange }) {
+export default function MediaInput({ controls, error, defaultValue, onChange, disabled }) {
 
   const [media, setMedia] = useState([]);
   const [libraryOpen, setLibraryOpen] = useState(false);
@@ -40,9 +40,11 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
   }
 
   function handleDelete(item) {
-    const mediaItems = media.filter(m => m.id !== item.id);
-    setMedia(mediaItems);
-    onChange(mediaItems);
+    if (!disabled) {
+      const mediaItems = media.filter(m => m.id !== item.id);
+      setMedia(mediaItems);
+      onChange(mediaItems);
+    }
   }
 
   function onDragEnd(result) {
@@ -98,7 +100,13 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
         </DragDropContext>
       </Box>
       <Box>
-        <Button variant="contained" color="primary" component="span" onClick={openMediaLibrary}>Add { controls.type }</Button>
+        <Button
+          disabled={disabled}
+          variant="contained"
+          color="primary"
+          component="span"
+          onClick={openMediaLibrary}
+        >Add { controls.type }</Button>
       </Box>
       <Dialog
         fullScreen
@@ -111,7 +119,7 @@ export default function MediaInput({ controls, error, defaultValue, onChange }) 
           multiSelect={controls.multiSelect ?? false}
           selected={media}
           type={controls.type}
-          noEdit={controls.noEdit}
+          noEdit={disabled || controls.noEdit}
         />
       </Dialog>
     </Box>

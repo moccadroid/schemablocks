@@ -1,7 +1,7 @@
 import {FormControl, Box, InputLabel, MenuItem, Select} from "@material-ui/core";
 import React, {useState,useEffect} from "react";
 
-export default function SelectInput({ controls, id, options, error, onChange, defaultValue }) {
+export default function SelectInput({ controls, id, options, error, onChange, defaultValue, disabled }) {
 
   const [value, setValue] = useState("");
   const selectOptions = options || controls.enum || controls.extData || [];
@@ -27,6 +27,7 @@ export default function SelectInput({ controls, id, options, error, onChange, de
           value={value}
           displayEmpty={!selectOptions}
           onChange={handleChange}
+          disabled={disabled}
         >
           {selectOptions.map((option, i) => <MenuItem key={'option' + id + i} value={option.value}>{option.name}</MenuItem>)}
         </Select>

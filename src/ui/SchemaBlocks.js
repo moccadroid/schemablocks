@@ -18,7 +18,7 @@ const providers = {
   "firestore": fromFirestore
 }
 
-function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false }, ref) {
+function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false, noEdit = false }, ref) {
 
   const [schemaBlocks, setSchemaBlocks] = useState([]);
   const [externalData, setExternalData] = useState([]);
@@ -168,7 +168,7 @@ function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false
 
   return (
     <Box>
-      <BlockList blocks={schemaBlocks} onRemove={removeSchemaBlock} onOrderChange={handleOrderChange} />
+      <BlockList noEdit={noEdit} blocks={schemaBlocks} onRemove={removeSchemaBlock} onOrderChange={handleOrderChange} />
       <Grid spacing={2} container direction="row" mt={2} alignItems="center" sx={{ justifyContent: "flex-end"}}>
         <Grid item>
           <SelectInput
@@ -179,7 +179,7 @@ function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false
           />
         </Grid>
         <Grid item>
-          <Button variant={"contained"} onClick={addSchemaBlock}>Add Block</Button>
+          <Button variant={"contained"} onClick={addSchemaBlock} disabled={noEdit}>Add Block</Button>
         </Grid>
       </Grid>
       <Snackbar open={!!warningSnackbar} autoHideDuration={6000} onClose={() => setWarningSnackbar(null)}>

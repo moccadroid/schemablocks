@@ -15,14 +15,12 @@ export default function useSchemaBlocksData(query, realtime = false) {
   useEffect(() => {
     if (realtime) {
       const unsubscribe = firebase.firestore().collection(collection).where("slug", "==", slug).onSnapshot(snapshot => {
-        console.log("new realtime data");
         handleSnapshot(snapshot);
       });
 
       return () => unsubscribe();
     } else {
       firebase.firestore().collection(collection).where("slug", "==", slug).get().then(snapshot => {
-        console.log("not realtime data");
         handleSnapshot(snapshot);
       });
     }

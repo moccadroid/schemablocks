@@ -22,7 +22,7 @@ export default function Main() {
   addControlInput("richText", RichTextInput);
 
   const [showPreview, setShowPreview] = useState(false);
-  const slug = { name: "Demo1", collection: "demoBlocks", slug: "demoBlocks1", schemas: schemas };
+  const slug = { title: "Demo1", collection: "demoBlocks", slug: "demoBlocks1", schemas: schemas };
 
   useEffect(() => {
     if (window.location.pathname === "/preview") {

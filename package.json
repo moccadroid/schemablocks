@@ -5,10 +5,10 @@
   ],
   "repository": "https://github.com/moccadroid/schemablocks",
   "license": "ISC",
-  "version": "1.0.19",
+  "version": "1.0.20",
   "main": "dist/index.js",
   "scripts": {
-    "build": "rimraf /dist && node copyPackageJson.js && rollup -c",
+    "build": "rimraf /dist && cpx \"README.md\" \"dist\" -C && node copyPackageJson.js && rollup -c",
     "build-watch": "rimraf /dist && node copyPackageJson.js && rollup -c -w",
     "start-playground": "cd playground && npm run start",
     "i-all": "npm i && cd playground && npm i",

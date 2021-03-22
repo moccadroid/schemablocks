@@ -34,6 +34,10 @@ export default function Panel({ slug, children }) {
   const slugRef = useRef();
 
   function handleSave() {
+    if (lock && lock.email !== getAuthUser()?.email) {
+      setShowLockAlert(true);
+      return;
+    }
     if(slugRef.current) {
       slugRef.current.save();
     }
@@ -55,14 +59,11 @@ export default function Panel({ slug, children }) {
   function toggleSlugLock() {
     const email = getAuthUser()?.email;
     if (lock && lock.email === email) {
-      console.log("lock on slug released");
       releaseLock();
     } else if (lock && lock.email !== email) {
-      console.log("slug currently in use by", lock.email);
       setShowLockAlert(true);
     } else {
       addLock();
-      console.log("slug is now locked by", email);
     }
   }
 
@@ -70,7 +71,7 @@ export default function Panel({ slug, children }) {
     if (!lock) {
       setShowDeleteDialog(true);
     } else {
-      console.log("can't delete, slug in use by", lock.email);
+      setShowLockAlert(true);
     }
   }
 
@@ -78,13 +79,17 @@ export default function Panel({ slug, children }) {
     setMediaType(event.target.value);
   }
 
+  function resolveLockColor() {
+    if (lock && lock.email !== getAuthUser()?.email) {
+      return "red";
+    }
+    return "white";
+  }
+
   return (
     <div className={styles.root}>
       <AppBar position={"fixed"}>
         <Toolbar>
-          <Grid container justifyContent={"flex-start"} xs={1}>
-            <Typography variant={"h6"}>{slug?.title}</Typography>
-          </Grid>
           <Grid container justifyContent={"flex-end"} spacing={2} alignItems={"center"}>
             <Grid item>
               <FormControl className={styles.fromControl}>
@@ -117,7 +122,10 @@ export default function Panel({ slug, children }) {
             </Grid>
             <Grid item>
               <IconButton onClick={toggleSlugLock}>
-                {lock ? <LockIcon style={{ color: "white"}}/> : <LockOpenIcon style={{color: "white"}} /> }
+                {lock
+                  ? <LockIcon style={{ color: resolveLockColor()}}/>
+                  : <LockOpenIcon style={{color: resolveLockColor()}} />
+                }
               </IconButton>
             </Grid>
           </Grid>
@@ -135,6 +143,7 @@ export default function Panel({ slug, children }) {
         />
       </Dialog>
       <Container className={styles.container}>
+        <Typography variant={"h6"}>{slug?.title}</Typography>
         {children}
       </Container>
       {slug && <Slug slug={slug} ref={slugRef} />}
@@ -160,7 +169,7 @@ const useStyles = makeStyles(theme => ({
     paddingBottom: 400
   },
   container: {
-    marginTop: 100,
+    marginTop: 80,
   },
   formControl: {
     minWidth: 200

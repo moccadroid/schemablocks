@@ -1,8 +1,8 @@
-import React, {createRef, useState} from "react";
-import {Box, Button, Container, Grid, Paper, Tab, Tabs} from "@material-ui/core";
+import React, {useState} from "react";
+import {Box, Container, Paper, Tab, Tabs} from "@material-ui/core";
 import SchemaBlocks from "./SchemaBlocks";
 
-export default function LanguageWrapper({ data, schemas, languages = [] }) {
+export default function LanguageWrapper({ data, schemas, languages = [], noEdit = false }) {
 
   const [tabValue, setTabValue] = useState(0);
 
@@ -26,7 +26,7 @@ export default function LanguageWrapper({ data, schemas, languages = [] }) {
           const blockData = data?.find(d => d.lang === language.value);
           return (
             <Box key={'schemaBlock' + i} sx={{display: tabValue === i ? 'block' : 'none'}}>
-              <SchemaBlocks loadExternal={true} schemas={schemas} data={blockData} ref={language.ref}/>
+              <SchemaBlocks noEdit={noEdit} loadExternal={true} schemas={schemas} data={blockData} ref={language.ref}/>
             </Box>
           )
         })}

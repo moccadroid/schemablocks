@@ -7,7 +7,7 @@ import SchemaBlocks from "./SchemaBlocks";
 import {getControlInputForType} from "../lib/controlInputs";
 import useDefaultData from "../hooks/useDefaultData";
 
-function SchemaBlock({ block, onRemove }, ref) {
+function SchemaBlock({ block, onRemove, noEdit = false }, ref) {
 
   const { schema, data: dbData, externalData } = block;
 
@@ -19,6 +19,7 @@ function SchemaBlock({ block, onRemove }, ref) {
   const [shouldValidate, setShouldValidate] = useState(false);
   const [inputs, setInputs] = useState([])
   const [preview, setPreview] = useState(false);
+  const [disabled, setDisabled] = useState(noEdit);
 
   useImperativeHandle(ref, () => ({
     getData: () => getFormData(),
@@ -28,12 +29,15 @@ function SchemaBlock({ block, onRemove }, ref) {
   }));
 
   useEffect(() => {
-    const inputBlock = createInputBlock();
-    const inputs = createInputs(inputBlock);
-    setInputBlock(inputBlock);
-    setInputs(inputs);
+    if (noEdit !== disabled) {
+      const inputBlock = createInputBlock();
+      const inputs = createInputs(inputBlock);
+      setInputBlock(inputBlock);
+      setInputs(inputs);
+    }
+    setDisabled(noEdit);
     // validate();
-  }, [schema]);
+  }, [schema, noEdit]);
 
   useEffect(() => {
     setInputs(createInputs(inputBlock));
@@ -107,7 +111,8 @@ function SchemaBlock({ block, onRemove }, ref) {
         defaultValue,
         extData,
         type: controls.type || type,
-        id
+        id,
+        disabled: noEdit
       };
 
       // use onboard or injected control inputs:
@@ -153,6 +158,10 @@ function SchemaBlock({ block, onRemove }, ref) {
   }
 
   const setInputValue = (value, key) => {
+    if (noEdit) {
+      return
+    }
+
     setInputState(inputState => {
       return {
         ...inputState,
@@ -189,7 +198,7 @@ function SchemaBlock({ block, onRemove }, ref) {
           </Grid>
         }
         <Grid item>
-          <Button variant={"outlined"} color={"secondary"} onClick={onRemove}>Remove</Button>
+          <Button disabled={noEdit} variant={"outlined"} color={"secondary"} onClick={onRemove}>Remove</Button>
         </Grid>
       </Grid>
     </Box>

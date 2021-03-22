@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {TextField} from "@material-ui/core";
 
-export default function TextInput({ defaultValue, error, name, controls, type, onChange, onBlur }) {
+export default function TextInput({ defaultValue, error, name, controls, type, onChange, onBlur, disabled }) {
 
   const [inputValue, setInputValue] = useState(defaultValue ?? "");
 
@@ -34,6 +34,7 @@ export default function TextInput({ defaultValue, error, name, controls, type, o
       fullWidth
       onChange={handleChange}
       onBlur={onBlur}
+      disabled={disabled}
     />
   );
 }

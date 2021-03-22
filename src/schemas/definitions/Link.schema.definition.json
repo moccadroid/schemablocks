@@ -3,12 +3,7 @@
   "type": "object",
   "controls": {
     "type": "link",
-    "name": "Link",
-    "defaultValue": {
-      "name": "",
-      "url": "",
-      "openInNew": false
-    }
+    "name": "Link"
   },
   "properties": "#LinkProperties"
 }
