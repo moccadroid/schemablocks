@@ -18,11 +18,6 @@ function App() {
       name: "DemoBlocks",
       value: "demoBlocks",
       schemas: schemas
-    },
-    {
-      name: "SchemaBlocks",
-      value: "schemablocks",
-      schemas: schemas
     }
   ];
 

@@ -51,7 +51,7 @@ export default function CollectionOverview({ collections }) {
             {segment.slugs.map((slug, j) => {
               return (
                 <Box key={"slug" + i + "_" + j} mt={2}>
-                  <Link to={`/slug/${segment.value}/${slug}`}>
+                  <Link to={`/slug/${segment.value}/${slug}`} style={{ textDecoration: 'none' }}>
                     <Paper>
                       <Box p={2}>
                         <Typography variant={"body1"}>{slug}</Typography>

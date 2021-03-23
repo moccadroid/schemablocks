@@ -8,8 +8,8 @@ export default {
 
   input: {
     index: "src/index.js",
-    media: "src/packages/Media.js",
-    contentblocks: "src/packages/ContentBlocks.js"
+    Media: "src/packages/Media.js",
+    ContentBlocks: "src/packages/ContentBlocks.js"
   },
   output: [
     {

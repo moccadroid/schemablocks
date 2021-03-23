@@ -98,12 +98,16 @@ export default function AppContainer({ collections, title, login, routes = [], p
             <Box sx={{ width: 250 }}>
               <List>
                 <ListItem button onClick={() => setMenuOpen(false)}>
-                  <Link to={"/"}>Overview</Link>
+                  <Link to={"/"} style={{ textDecoration: 'none', color: "black" }}>
+                    <Typography variant={"h6"}>Overview</Typography>
+                  </Link>
                 </ListItem>
                 {routes.map((item, i) => {
                   return (
                     <ListItem button key={'menuItem' + i} onClick={() => setMenuOpen(false)}>
-                      <Link to={item.path}>{item.name}</Link>
+                      <Link to={item.path} style={{ textDecoration: 'none', color: "black" }}>
+                        <Typography variant={"h6"}>{item.name}</Typography>
+                      </Link>
                     </ListItem>
                   )
                 })}

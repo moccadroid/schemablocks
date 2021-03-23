@@ -25,8 +25,6 @@ import InfoDialog from "./alerts/InfoDialog";
 
 export default function Panel({ slug, fixedHeader = true, children }) {
 
-  console.log(slug);
-
   if (!slug) {
     return false
   }
