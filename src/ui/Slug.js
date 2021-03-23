@@ -31,12 +31,12 @@ function Slug({ slug, onLockChange }, ref) {
   }));
 
   function collectData() {
-    return slugData.map(data => {
-      const blocks = languages.find(lang => lang.value === data.lang)?.ref.current.getData();
+    return languages.map(language => {
       return {
-        ...data,
-        blocks: blocks ?? data.blocks
-      }
+        blocks: language.ref.current.getData(),
+        lang: language.value,
+        slug: slug.slug
+      };
     });
   }
 
@@ -49,7 +49,6 @@ function Slug({ slug, onLockChange }, ref) {
       }
 
       const data = collectData();
-
       const errors = await saveSlugData(data);
       if (!errors) {
         setSaveSuccess(true);

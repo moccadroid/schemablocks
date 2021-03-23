@@ -23,7 +23,9 @@ import useSlugLock from "../hooks/useSlugLock";
 import ConfirmationDialog from "./alerts/ConfirmationDialog";
 import InfoDialog from "./alerts/InfoDialog";
 
-export default function Panel({ slug, fixedBar = true, children }) {
+export default function Panel({ slug, fixedHeader = true, children }) {
+
+  console.log(slug);
 
   if (!slug) {
     return false
@@ -92,7 +94,7 @@ export default function Panel({ slug, fixedBar = true, children }) {
 
   return (
     <div className={styles.root}>
-      <AppBar position={fixedBar ? "fixed" : "static"} color={"transparent"}>
+      <AppBar position={fixedHeader ? "fixed" : "static"} color={"transparent"}>
         <Toolbar>
           <Grid container justifyContent={"flex-end"} spacing={2} alignItems={"center"}>
             <Grid item>

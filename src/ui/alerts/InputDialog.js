@@ -7,7 +7,7 @@ import {
   DialogTitle,
   TextField
 } from "@material-ui/core";
-import {useState} from "react";
+import React, {useState} from "react";
 
 export default function InputDialog({ open, title, text, onClose }) {
 
@@ -30,11 +30,11 @@ export default function InputDialog({ open, title, text, onClose }) {
           fullWidth
           onChange={event => setInputValue(event.target.value)}
         />
+        <DialogActions>
+          <Button onClick={() => handleClose(false)} variant={"contained"} color="secondary">I changed my mind</Button>
+          <Button onClick={() => handleClose(true)} variant={"contained"} color="primary" autoFocus>Let's go</Button>
+        </DialogActions>
       </DialogContent>
-      <DialogActions>
-        <Button onClick={() => handleClose(false)} variant={"contained"} color="secondary">I changed my mind</Button>
-        <Button onClick={() => handleClose(true)} variant={"contained"} color="primary" autoFocus>Let's go</Button>
-      </DialogActions>
     </Dialog>
   )
 }

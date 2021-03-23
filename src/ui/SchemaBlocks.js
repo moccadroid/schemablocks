@@ -1,12 +1,8 @@
 import {
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
   Alert,
   Box,
   Button,
   Grid, Snackbar,
-  Typography
 } from "@material-ui/core";
 import uuidv4 from "../lib/uuidv4";
 import React, {createRef, forwardRef, useEffect, useImperativeHandle, useState} from "react";
@@ -138,18 +134,6 @@ function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false
 
   const selectSchemaOption = (option) => {
     setSelectedSchemaOption(option);
-  }
-
-  const moveBlock = (event, block, distance) => {
-    event.stopPropagation();
-    const newIndex = block.index + distance;
-    if (newIndex >= 0 && newIndex < schemaBlocks.length) {
-      const newList = Array.from(schemaBlocks);
-      newList.splice(block.index, 1);
-      newList.splice(newIndex, 0, block);
-      newList.forEach((b, i) => b.index = i);
-      setSchemaBlocks(newList);
-    }
   }
 
   const getFormData = () => {

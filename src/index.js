@@ -12,7 +12,6 @@ import LanguageWrapper from "./ui/LanguageWrapper";
 import Slug from "./ui/Slug";
 import Panel from "./ui/Panel";
 import AppContainer from "./ui/AppContainer";
-import Overview from "./ui/Overview";
 
 export {
   useSchemaBlocksData,
@@ -29,6 +28,5 @@ export {
   LanguageWrapper,
   Slug,
   Panel,
-  AppContainer,
-  Overview
+  AppContainer
 }
