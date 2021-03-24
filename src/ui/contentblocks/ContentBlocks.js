@@ -10,7 +10,7 @@ export function ContentBlocks({ blocks = {}, data, Container }) {
         </Container>
       )
     }
-    return <Component block={block}/>
+    return <Component block={block} key={"block" + i}/>
   }
 
   function resolveBlocks(data) {
