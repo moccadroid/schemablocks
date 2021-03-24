@@ -4,7 +4,7 @@ import {getFirebase} from "../lib/firebaseConfig";
 import {Link, useHistory} from "react-router-dom";
 import InputDialog from "./alerts/InputDialog";
 
-export default function CollectionOverview({ collections }) {
+export default function CollectionOverview({ collections, pathPrefix }) {
   const [segments, setSegments] = useState([]);
   const [showDialog, setShowDialog] = useState(false);
   const [currentCollection, setCurrentCollection] = useState(null);
@@ -51,7 +51,7 @@ export default function CollectionOverview({ collections }) {
             {segment.slugs.map((slug, j) => {
               return (
                 <Box key={"slug" + i + "_" + j} mt={2}>
-                  <Link to={`/slug/${segment.value}/${slug}`} style={{ textDecoration: 'none' }}>
+                  <Link to={`${pathPrefix}/slug/${segment.value}/${slug}`} style={{ textDecoration: 'none' }}>
                     <Paper>
                       <Box p={2}>
                         <Typography variant={"body1"}>{slug}</Typography>

@@ -15,7 +15,7 @@ import {
 import CollectionOverview from "./CollectionOverview";
 import Panel from "./Panel";
 
-export default function AppContainer({ collections, title, login, routes = [], profileMenuItems = [], children }) {
+export default function AppContainer({ collections, title, login, routes = [], profileMenuItems = [], pathPrefix, children }) {
 
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -98,14 +98,14 @@ export default function AppContainer({ collections, title, login, routes = [], p
             <Box sx={{ width: 250 }}>
               <List>
                 <ListItem button onClick={() => setMenuOpen(false)}>
-                  <Link to={"/"} style={{ textDecoration: 'none', color: "black" }}>
+                  <Link to={pathPrefix + "/"} style={{ textDecoration: 'none', color: "black" }}>
                     <Typography variant={"h6"}>Overview</Typography>
                   </Link>
                 </ListItem>
                 {routes.map((item, i) => {
                   return (
                     <ListItem button key={'menuItem' + i} onClick={() => setMenuOpen(false)}>
-                      <Link to={item.path} style={{ textDecoration: 'none', color: "black" }}>
+                      <Link to={pathPrefix + item.path} style={{ textDecoration: 'none', color: "black" }}>
                         <Typography variant={"h6"}>{item.name}</Typography>
                       </Link>
                     </ListItem>
@@ -117,16 +117,16 @@ export default function AppContainer({ collections, title, login, routes = [], p
         </Box>
         <Box mt={1}>
           <Switch>
-            <Route exact path={"/"}>
-              <CollectionOverview collections={collections} />
+            <Route exact path={pathPrefix + "/"}>
+              <CollectionOverview collections={collections} pathPrefix={pathPrefix}/>
             </Route>
-            <Route path={"/slug/:col/:slug"}>
+            <Route path={pathPrefix + "/slug/:col/:slug"}>
               <Page collections={collections}/>
             </Route>
             {routes.map((route, i) => {
               const Component = route.component;
               return (
-                <Route exact path={route.path} key={"route" + i}>
+                <Route exact path={pathPrefix + route.path} key={"route" + i}>
                   <Component />
                 </Route>
               )

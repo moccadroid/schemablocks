@@ -26,7 +26,7 @@ function App() {
   ];
 
   return (
-    <AppContainer routes={routes} collections={collections} login={"email"} />
+    <AppContainer routes={routes} collections={collections} login={"email"} pathPrefix={"/admin"}/>
   )
 }
 

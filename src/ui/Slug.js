@@ -65,8 +65,9 @@ function Slug({ slug, onLockChange }, ref) {
     const data = collectData();
     const preview = data.find(d => d.lang === currentLanguage.value);
     setPreviewData(slug.slug, preview);
-    console.log("previewData", preview);
-    window.open(slug.slug);
+    console.log("previewData set to localStorage", preview);
+    const url = window.location.host + "/p/" + slug.slug + "?preview=local";
+    window.open(url);
   }
 
   function handleDelete() {
