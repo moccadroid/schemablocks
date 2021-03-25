@@ -127,7 +127,7 @@ function SchemaBlock({ block, onRemove, noEdit = false }, ref) {
           element = (
             <Box mt={1} mb={1}>
               <Typography>{controls.name}</Typography>
-              <SchemaBlocks schemas={schemas} data={defaultValue} ref={ref}/>
+              <SchemaBlocks schemas={schemas} data={defaultValue} ref={ref} noEdit={noEdit}/>
             </Box>
           );
         } else if (type === "string" || type === "number") {

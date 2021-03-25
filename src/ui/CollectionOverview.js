@@ -31,10 +31,11 @@ export default function CollectionOverview({ collections, pathPrefix }) {
   function createNewSlug(newSlugName) {
     if (newSlugName) {
       setCurrentCollection(null);
-      const target = `/slug/${currentCollection}/${newSlugName}`;
+      const target = `${pathPrefix}/slug/${currentCollection}/${newSlugName}`;
       console.log(target);
       router.push(target);
     }
+    setShowDialog(false);
   }
 
   function setupDialog(collection) {
