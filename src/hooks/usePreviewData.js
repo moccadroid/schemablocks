@@ -11,7 +11,7 @@ export default function usePreviewData(data, query) {
 
     const { preview } = query;
     if (preview === 'local') {
-      const d = localStorage.getItem(data.name);
+      const d = localStorage.getItem(data.slug);
       if (d) {
         setPreviewData(JSON.parse(d));
         console.log("using preview data", d);
