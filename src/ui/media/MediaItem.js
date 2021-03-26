@@ -81,7 +81,8 @@ export default function MediaItem({ media, selected, onChange, onSelect }) {
 const useStyles = makeStyles((theme) => ({
   mediaListItem: {
     cursor: "pointer",
-    minHeight: 200
+    minHeight: 200,
+    justifyContent: "center"
   },
   greenCheckbox: {
     color: green[400],

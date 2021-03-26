@@ -61,7 +61,7 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
     }
     else if (data?.mimeType?.startsWith("video")) {
       return (
-        <video style={styles.video} autoPlay={autoplay} loop={loop} ref={mediaRef}>
+        <video style={styles.video} autoPlay={autoplay} loop={loop} ref={mediaRef} muted={autoplay}>
           <source type={data.mimeType} src={data.url}/>
         </video>
       )

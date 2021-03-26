@@ -41,8 +41,10 @@ export default function BlockList({ slug, blocks, onRemove, onOrderChange, noEdi
             >
               {blocks.map((block, index) => {
                 let title = block.schema.name;
+                let blockName = "";
                 const titleDataField = block.schema.schema.controls?.titleDataField;
                 if (titleDataField) {
+                  blockName = title;
                   title = block.data[titleDataField] || title;
                 }
                 return (
@@ -59,7 +61,10 @@ export default function BlockList({ slug, blocks, onRemove, onOrderChange, noEdi
                           aria-controls={block.id}
                           id={block.id}
                         >
-                          <Typography variant={"h6"} sx={{width: "100%"}}>{title}</Typography>
+                          <Box>
+                            <Typography variant={"h6"} sx={{width: "100%"}}>{title}</Typography>
+                            <Typography variant={"caption"}>{blockName}</Typography>
+                          </Box>
                         </AccordionSummary>
                         <AccordionDetails sx={{backgroundColor: "#fafafa"}}>
                           <SchemaBlock
