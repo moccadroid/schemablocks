@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {Box, Button, Grid, Paper, TextField, Typography} from "@material-ui/core";
-import {getFirebase} from "../lib/firebaseConfig";
+import {getConfiguration} from "../lib/configuration";
 import {Link, useHistory} from "react-router-dom";
 import InputDialog from "./alerts/InputDialog";
 
@@ -10,10 +10,12 @@ export default function CollectionOverview({ collections, pathPrefix }) {
   const [currentCollection, setCurrentCollection] = useState(null);
   const router = useHistory();
 
+  const firebase = getConfiguration().firebase;
+
   useEffect(() => {
     (async () => {
       const collectionData = await Promise.all(collections.map(async collection => {
-        const snapshot = await getFirebase().firestore().collection(collection.value).get();
+        const snapshot = await firebase.firestore().collection(collection.value).get();
         const slugs = new Set();
         snapshot.forEach(doc => {
           const data = doc.data();
@@ -32,7 +34,6 @@ export default function CollectionOverview({ collections, pathPrefix }) {
     if (newSlugName) {
       setCurrentCollection(null);
       const target = `${pathPrefix}/slug/${currentCollection}/${newSlugName}`;
-      console.log(target);
       router.push(target);
     }
     setShowDialog(false);

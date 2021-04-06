@@ -10,21 +10,20 @@ import {
 } from "@material-ui/core";
 import {makeStyles} from "@material-ui/core/styles";
 import CloseIcon from '@material-ui/icons/Close';
-import {getFirebase} from "../../lib/firebaseConfig";
 import uuidv4 from "../../lib/uuidv4";
-import {getMediaLibraryConfig} from "../../lib/mediaLibraryConfig";
 import MediaItem from "./MediaItem";
+import {getConfiguration} from "../../lib/configuration";
 require('firebase/storage');
-//require('firebase/firestore');
 
 export default function MediaLibray({ onClose, multiSelect = false, selected = [], noEdit = false, type = "image"}) {
 
-  const config = getMediaLibraryConfig();
-  if (!config.imageMagicUrl || !config.firestoreCollection) {
+  const config = getConfiguration().mediaLibrary;
+  if (!config.imageMagicUrl || !config.collection) {
     return <h1>Please set "imageMagicUrl" and "firestoreCollection" in config</h1>;
   }
 
-  const baseFolder = "mediaLibrary";
+  const baseFolder = config.storageFolder;
+  const firebase = getConfiguration().firebase;
 
   const [mediaFolder, setMediaFolder] = useState(resolveMediaFolder(type));
   const [libraryMedia, setLibraryMedia] = useState([]);
@@ -68,7 +67,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
 
   const loadMedia = async () => {
     const media = [];
-    const snapshot = await getFirebase().firestore().collection(config.firestoreCollection).where('type', '==', resolveMediaFolder(type)).get();
+    const snapshot = await firebase.firestore().collection(config.collection).where('type', '==', resolveMediaFolder(type)).get();
     snapshot.forEach(doc => {
       media.push(doc.data());
     });
@@ -86,7 +85,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
     reader.onloadend = async () => {
       const fileId = uuidv4();
       const extension = file.name.split('.').pop();
-      const storageRef = getFirebase().storage().ref(currentFolder);
+      const storageRef = firebase.storage().ref(currentFolder);
       const mediaRef = storageRef.child(fileId + '/' + file.name);
       const snapshot = await mediaRef.put(file);
       const url = await snapshot.ref.getDownloadURL();
@@ -124,7 +123,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
           type: resolveMediaFolder(type)
         }
       }
-      await getFirebase().firestore().collection(baseFolder).doc(fileId).set(media);
+      await firebase.firestore().collection(config.collection).doc(fileId).set(media);
 
       if (type === "image") {
         media.processing = true;
@@ -187,7 +186,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
     }
 
     await Promise.all(selectedMedia.map(async media => {
-      return await getFirebase().firestore().collection(config.firestoreCollection).doc(media.id).delete();
+      return await firebase.firestore().collection(config.collection).doc(media.id).delete();
     }));
     setSelectedMedia([]);
     loadMedia().then(() => console.log(type, 'loaded'));
@@ -195,7 +194,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
 
   const handleMediaChange = async (media) => {
     setLibraryMedia(mediaItems => mediaItems.map(m => m.id === media.id ? media : m));
-    await getFirebase().firestore().collection(baseFolder).doc(media.id).set(media);
+    await firebase.firestore().collection(config.collection).doc(media.id).set(media);
   }
 
   const handleClose = () => {

@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import Container from "@material-ui/core/Container";
-import {getFirebase} from "../../lib/firebaseConfig";
+import {getConfiguration} from "../../lib/configuration";
 import {Alert, Box} from "@material-ui/core";
 import {setAuthUser} from "../../lib/auth";
 
@@ -12,9 +12,10 @@ export default function EmailLogin({ onLogin }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState(null);
+  const firebase = getConfiguration().firebase;
 
   useEffect(() => {
-    getFirebase().auth().onAuthStateChanged(user => {
+    firebase.auth().onAuthStateChanged(user => {
       setAuthUser(user);
       onLogin(user);
     });
@@ -25,7 +26,7 @@ export default function EmailLogin({ onLogin }) {
     event.preventDefault();
 
     if (username !== '' && password !== '') {
-      getFirebase().auth().signInWithEmailAndPassword(username, password).catch(error => {
+      firebase.auth().signInWithEmailAndPassword(username, password).catch(error => {
         setError(error);
       });
     }

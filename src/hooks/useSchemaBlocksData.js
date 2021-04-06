@@ -1,9 +1,9 @@
 import {useEffect, useState} from "react";
-import {getFirebase} from "../lib/firebaseConfig";
+import {getConfiguration} from "../lib/configuration";
 
 export default function useSchemaBlocksData(query, realtime = false) {
 
-  const firebase = getFirebase();
+  const firebase = getConfiguration().firebase;
   const { collection, slug } = query;
   const [data, setData] = useState([]);
   const [docIds, setDocIds] = useState([]);

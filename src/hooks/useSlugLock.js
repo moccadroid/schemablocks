@@ -1,17 +1,18 @@
-import {getFirebase} from "../lib/firebaseConfig";
+import {getConfiguration} from "../lib/configuration";
 import {useState, useEffect} from "react";
 import {getAuthUser} from "../lib/auth";
 
 export default function useSlugLock({ collection, slug }) {
   const [slugLocks, setSlugLocks] = useState({});
+  const firebase = getConfiguration().firebase;
 
   useEffect(() => {
-    const unsubscribe = getFirebase().firestore().collection(collection).doc("slugLocks").onSnapshot(doc => {
+    const unsubscribe = firebase.firestore().collection(collection).doc("slugLocks").onSnapshot(doc => {
       const data = doc.data();
       if (data) {
         setSlugLocks(data);
       } else {
-        getFirebase().firestore().collection(collection).doc("slugLocks").set({ [slug]: null });
+        firebase.firestore().collection(collection).doc("slugLocks").set({ [slug]: null });
       }
     });
 
@@ -21,7 +22,7 @@ export default function useSlugLock({ collection, slug }) {
   function lockSlug() {
     const email = getAuthUser().email;
     if (!slugLocks[slug]) {
-      getFirebase().firestore().collection(collection).doc("slugLocks").update({
+      firebase.firestore().collection(collection).doc("slugLocks").update({
         [slug]: {
           email,
           lockedAt: new Date()
@@ -33,7 +34,7 @@ export default function useSlugLock({ collection, slug }) {
   function releaseLock() {
     const email = getAuthUser().email;
     if (slugLocks[slug]?.email === email) {
-      getFirebase().firestore().collection(collection).doc("slugLocks").update({
+      firebase.firestore().collection(collection).doc("slugLocks").update({
         [slug]: null
       })
     }

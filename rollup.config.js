@@ -4,12 +4,11 @@ import json from '@rollup/plugin-json';
 import pkg from './package.json';
 
 export default {
-  //input: [pkg.source, "src/ui/media/Media.js"],
-
   input: {
     index: "src/index.js",
     Media: "src/packages/Media.js",
-    ContentBlocks: "src/packages/ContentBlocks.js"
+    ContentBlocks: "src/packages/ContentBlocks.js",
+    Functions: "src/packages/Functions"
   },
   output: [
     {

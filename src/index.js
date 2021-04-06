@@ -2,10 +2,8 @@ import useSchemaBlocksData from "./hooks/useSchemaBlocksData";
 import useSchemaValidator from "./hooks/useSchemaValidator";
 import useSchemas from "./hooks/useSchemas";
 
-import {setFirebase} from './lib/firebaseConfig';
-import {setMediaLibraryConfig} from "./lib/mediaLibraryConfig";
 import {setAuthUser} from "./lib/auth";
-
+import {setConfiguration} from "./lib/configuration";
 import {addControlInput, getControlInputs} from "./lib/controlInputs";
 
 import LanguageWrapper from "./ui/LanguageWrapper";
@@ -17,11 +15,10 @@ export {
   useSchemaBlocksData,
   useSchemaValidator,
   useSchemas,
+  // create useFragments
 
-  setFirebase,
-  setMediaLibraryConfig,
   setAuthUser,
-
+  setConfiguration,
   addControlInput,
   getControlInputs,
 

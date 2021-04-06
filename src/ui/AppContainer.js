@@ -2,7 +2,7 @@ import {AppBar, Box, Drawer, IconButton, List, ListItem, Menu, MenuItem, Toolbar
 import MenuIcon from '@material-ui/icons/Menu';
 import React, {useState} from "react";
 import {AccountCircle} from "@material-ui/icons";
-import {getFirebase} from "../lib/firebaseConfig";
+import {getConfiguration} from "../lib/configuration";
 import {setAuthUser} from "../lib/auth";
 import {logins} from "../provider/login";
 import {
@@ -15,11 +15,12 @@ import {
 import CollectionOverview from "./CollectionOverview";
 import Panel from "./Panel";
 
-export default function AppContainer({ collections, title, login, routes = [], profileMenuItems = [], pathPrefix, children }) {
+export default function AppContainer({ collections = [], title, login, routes = [], profileMenuItems = [], pathPrefix, children }) {
 
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileAnchor, setProfileAnchor] = useState(null);
+  const firebase = getConfiguration().firebase;
 
   function openProfileMenu(event) {
     setProfileAnchor(event.currentTarget);
@@ -30,7 +31,7 @@ export default function AppContainer({ collections, title, login, routes = [], p
   }
 
   function handleLogout() {
-    getFirebase()?.auth().signOut().then(() => {
+    firebase?.auth()?.signOut().then(() => {
       setAuthUser(null);
       setUser(null);
     });
@@ -39,7 +40,7 @@ export default function AppContainer({ collections, title, login, routes = [], p
   if (!user && login) {
     const Component = logins[login];
     if (Component) {
-      return <Component onLogin={user => setUser(user)}/>
+      return <Component onLogin={user => setUser(user)} />
     }
   }
 

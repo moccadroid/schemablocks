@@ -1,17 +1,12 @@
 import 'react-quill/dist/quill.snow.css';
-import firebase from "./firebase.config";
 import RichTextInput from "./components/inputs/RichTextInput";
-import {AppContainer, setFirebase, addControlInput, setMediaLibraryConfig} from "schemablocks";
+import {AppContainer, addControlInput, setConfiguration } from "schemablocks";
 import schemas from "./schemas";
+import configuration from "./schemablocks.config";
 
 function App() {
-
-  setFirebase(firebase);
-  setMediaLibraryConfig({
-    firestoreCollection: 'mediaLibrary',
-    imageMagicUrl: process.env.REACT_APP_IMAGE_MAGIC_URL,
-  });
   addControlInput("richText", RichTextInput);
+  setConfiguration(configuration);
 
   const collections = [
     {
