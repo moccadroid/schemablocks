@@ -15,7 +15,16 @@ import {
 import CollectionOverview from "./CollectionOverview";
 import Panel from "./Panel";
 
-export default function AppContainer({ collections = [], title, login, routes = [], profileMenuItems = [], pathPrefix, children }) {
+export default function AppContainer({
+    collections = [],
+    title = "",
+    login = "email",
+    routes = [],
+    profileMenuItems = [],
+    pathPrefix = "/admin",
+    children
+  })
+{
 
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);

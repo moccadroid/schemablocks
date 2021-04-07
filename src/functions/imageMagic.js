@@ -1,14 +1,15 @@
-const functions = require("firebase-functions");
-const cors = require("cors")({ origin: true });
-const { tmpdir } = require('os');
-const sharp = require('sharp');
-const fs = require('fs-extra');
-const admin = require('firebase-admin');
+import functions from "firebase-functions";
+import Cors from "cors";
+const cors = Cors({ origin: true });
+import { tmpdir } from 'os';
+import sharp from 'sharp';
+import fs from 'fs-extra';
+import admin from 'firebase-admin';
 if (!admin.apps.length) {
   admin.initializeApp();
 }
 
-export default function imageMagic({ config }) {
+export default function imageMagic(config) {
   return functions.runWith({ memory: "512MB" }).https.onRequest(async (req, res) => {
 
     const baseFolder = config?.mediaLibrary?.storageFolder ?? "mediaLibrary";

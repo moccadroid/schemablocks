@@ -1,10 +1,10 @@
-const functions = require("firebase-functions");
-const admin = require('firebase-admin');
+import functions from "firebase-functions";
+import admin from 'firebase-admin';
 if (!admin.apps.length) {
   admin.initializeApp();
 }
 
-export default function removeMedia({ config }) {
+export default function removeMedia(config) {
   const storageFolder = config?.mediaLibrary?.storageFolder ?? "mediaLibrary";
   return functions.firestore.document(storageFolder + "/{mediaId}").onDelete(async(snap) => {
 

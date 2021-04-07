@@ -25,7 +25,13 @@ export default {
   plugins: [
     external(),
     babel({
-      exclude: 'node_modules/**'
+      exclude: 'node_modules/**',
+      babelHelpers: "runtime",
+      plugins: [
+        ["@babel/plugin-transform-runtime", {
+          "regenerator": true
+        }]
+      ]
     }),
     json()
   ],
