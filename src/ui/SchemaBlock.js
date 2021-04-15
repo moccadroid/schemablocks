@@ -6,12 +6,15 @@ import SwitchInput from "./input/SwitchInput";
 import SchemaBlocks from "./SchemaBlocks";
 import {getControlInputForType} from "../lib/controlInputs";
 import useDefaultData from "../hooks/useDefaultData";
+import {getConfiguration} from "../lib/configuration";
 
 function SchemaBlock({ block, onRemove, noEdit = false }, ref) {
 
   const { schema, data: dbData, externalData } = block;
 
   const data = useDefaultData(dbData, schema);
+
+  const configuration = getConfiguration();
 
   const validator = useSchemaValidator();
   const [inputBlock, setInputBlock] = useState(createInputBlock());
@@ -24,6 +27,9 @@ function SchemaBlock({ block, onRemove, noEdit = false }, ref) {
   useImperativeHandle(ref, () => ({
     getData: () => getFormData(),
     isValid: () => {
+      if (inputBlock.errors.length > 0 && configuration.debug) {
+        console.log(`validation debug ${inputBlock.id}:`, inputBlock.errors);
+      }
       return inputBlock.errors.length === 0
     }
   }));
@@ -80,8 +86,8 @@ function SchemaBlock({ block, onRemove, noEdit = false }, ref) {
 
   function validate () {
     const result = validator.validate(inputState, schema.schema);
-    if (result.errors.length > 0) {
-      //console.error("validation errors:", result.errors);
+    if (result.errors.length > 0 && configuration.debug) {
+      console.error("validation errors:", result.errors);
     }
     setInputBlock(inputBlock => ({...inputBlock, errors: result.errors}));
   }

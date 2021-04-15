@@ -14,7 +14,12 @@ const providers = {
   "firestore": fromFirestore
 }
 
-function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false, noEdit = false }, ref) {
+function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = false, noEdit = false }, ref) {
+
+  if (!schemas.length) {
+    console.warn("Schemas empty! Please add at last a single schema.");
+    return false;
+  }
 
   const [schemaBlocks, setSchemaBlocks] = useState([]);
   const [externalData, setExternalData] = useState([]);
@@ -87,7 +92,8 @@ function SchemaBlocks({ schemas, data, onSubmit, onPreview, loadExternal = false
         if (schema) {
           return createSchemaBlock(schema, i, block.data);
         }
-      });
+        return false;
+      }).filter(block => block);
     }
     setSchemaBlocks(blocks);
     setSchemaBlocksCreated(true);
