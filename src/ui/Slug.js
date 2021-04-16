@@ -1,19 +1,17 @@
 import LanguageWrapper from "./LanguageWrapper";
 import React, {createRef, useState, useImperativeHandle, forwardRef, useEffect} from "react";
-import {Alert, Box, Paper, Snackbar, Typography} from "@material-ui/core";
+import {Alert, Box, Container, Paper, Snackbar, Typography} from "@material-ui/core";
 import useSchemaBlocksData from "../hooks/useSchemaBlocksData";
 import useSchemas from "../hooks/useSchemas";
 import useSlugLock from "../hooks/useSlugLock";
 import {getAuthUser} from "../lib/auth";
 import usePreviewData from "../hooks/usePreviewData";
+import {getConfiguration} from "../lib/configuration";
 
 function Slug({ slug, onLockChange }, ref) {
 
-  const languages = [
-    { name: "Deutsch", value: "de", ref: createRef() },
-    { name: "English", value: "en", ref: createRef() }
-  ];
-
+  const configuration = getConfiguration();
+  const languages = configuration.languages.map(lang => ({...lang, ref: createRef()}));
   const [schemas] = useSchemas(slug.schemas);
   const [previewData, setPreviewData] = usePreviewData();
   const [slugData, saveSlugData, deleteSlugData] = useSchemaBlocksData(slug, true);
@@ -81,9 +79,11 @@ function Slug({ slug, onLockChange }, ref) {
   return (
     <Box mt={2}>
       <Paper variant={"outlined"}>
-        <Box p={2}>
-          <Typography variant={"h6"}>{slug.name}</Typography>
-        </Box>
+        <Container>
+          <Box mt={2}>
+            <Typography variant={"h6"}>{slug.name}</Typography>
+          </Box>
+        </Container>
         <LanguageWrapper
           languages={languages}
           data={slugData}

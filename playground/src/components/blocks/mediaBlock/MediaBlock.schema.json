@@ -5,9 +5,8 @@
     "singleImage": {
       "type": "object",
       "controls": {
-        "type": "video",
-        "name": "Single Video",
-        "defaultValue": ""
+        "type": "image",
+        "name": "Single Image"
       },
       "properties": "#MediaProperties"
     },
@@ -17,8 +16,7 @@
         "type": "image",
         "name": "Multiple Images",
         "noEdit": false,
-        "multiSelect": true,
-        "defaultValue": []
+        "multiSelect": true
       },
       "items": [
         {
@@ -27,6 +25,14 @@
           "properties": "#MediaProperties"
         }
       ]
+    },
+    "singleVideo": {
+      "type": "array",
+      "controls": {
+        "type": "video",
+        "name": "Single Video"
+      },
+      "properties": "#MediaProperties"
     },
     "singleSvg": "$Svg"
   }

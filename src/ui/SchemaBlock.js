@@ -12,7 +12,7 @@ function SchemaBlock({ block, onRemove, noEdit = false }, ref) {
 
   const { schema, data: dbData, externalData } = block;
 
-  const data = useDefaultData(dbData, schema);
+  const data = useDefaultData(dbData, schema.schema);
 
   const configuration = getConfiguration();
 

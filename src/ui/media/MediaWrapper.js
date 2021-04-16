@@ -35,9 +35,11 @@ export default function MediaWrapper({ media, onDelete }) {
     }
   }
 
-  if (media.mimeType.startsWith("video")) {
+  const itemStyle = { position: "relative", backgroundColor: "#f8f8f8"};
+
+  if (media?.mimeType?.startsWith("video")) {
     return (
-      <Box sx={{ position: "relative"}}>
+      <Box sx={itemStyle}>
         <Box onClick={togglePlay}>
           <Media data={media} loop mediaRef={videoRef}/>
         </Box>
@@ -46,11 +48,16 @@ export default function MediaWrapper({ media, onDelete }) {
             <PlayCircleFilledWhiteIcon style={{ color: "white"}} fontSize={"large"}/>
           </IconButton>
         }
+        {media?.url && !!onDelete &&
+        <IconButton onClick={onDelete} sx={style.delete}>
+          <CancelIcon style={{ color: "red"}} />
+        </IconButton>
+        }
       </Box>
     )
   }
   return (
-    <Box sx={{ position: "relative"}}>
+    <Box sx={itemStyle}>
       <Media data={media} />
       {media?.url && !!onDelete &&
         <IconButton onClick={onDelete} sx={style.delete}>

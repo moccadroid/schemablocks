@@ -29,13 +29,11 @@ export default function MediaInput({ controls, error, defaultValue, onChange, di
   const closeMediaLibrary = (media) => {
     setLibraryOpen(false);
 
+    console.log(media);
+
     if (media) {
       setMedia(media);
-      if (controls.multiSelect) {
-        onChange(media);
-      } else {
-        onChange(media[0]);
-      }
+      handleChange(media);
     }
   }
 
@@ -43,7 +41,19 @@ export default function MediaInput({ controls, error, defaultValue, onChange, di
     if (!disabled) {
       const mediaItems = media.filter(m => m.id !== item.id);
       setMedia(mediaItems);
-      onChange(mediaItems);
+      handleChange(mediaItems);
+    }
+  }
+
+  function handleChange(media) {
+    if (controls.multiSelect) {
+      onChange(media);
+    } else {
+      if (media.length === 0) {
+        onChange({})
+      } else {
+        onChange(media[0]);
+      }
     }
   }
 
@@ -58,7 +68,7 @@ export default function MediaInput({ controls, error, defaultValue, onChange, di
     orderedList.forEach((r, i) => r.index = i);
     orderedList.sort((a,b) => a.index - b.index);
     setMedia(orderedList);
-    onChange(orderedList);
+    handleChange(orderedList);
   }
 
   return (
@@ -66,7 +76,7 @@ export default function MediaInput({ controls, error, defaultValue, onChange, di
       <Box mt={1} mb={1}>
         <Typography>{controls.name}</Typography>
       </Box>
-      <Box sx={{ minHeight: 20 }}>
+      <Box sx={{minHeight: 20}}>
         <DragDropContext onDragEnd={onDragEnd}>
           <Droppable droppableId={"droppable"} direction="horizontal">
             {(provided) => (
@@ -77,21 +87,25 @@ export default function MediaInput({ controls, error, defaultValue, onChange, di
                 ref={provided.innerRef}
               >
                 {media.map((mediaItem, index) => {
-                  return (
-                    <Draggable key={mediaItem.id} draggableId={mediaItem.id + index} index={index}>
-                      {(provided) => (
-                        <Grid
-                          item
-                          sx={{width: 200}}
-                          ref={provided.innerRef}
-                          {...provided.draggableProps}
-                          {...provided.dragHandleProps}
-                        >
-                          <MediaWrapper media={mediaItem} key={mediaItem.id} onDelete={() => handleDelete(mediaItem)}/>
-                        </Grid>
-                      )}
-                    </Draggable>
-                  )
+                  if (mediaItem.hasOwnProperty("id")) {
+                    return (
+                      <Draggable key={mediaItem.id} draggableId={mediaItem.id + index} index={index}>
+                        {(provided) => (
+                          <Grid
+                            item
+                            sx={{width: 200}}
+                            ref={provided.innerRef}
+                            {...provided.draggableProps}
+                            {...provided.dragHandleProps}
+                          >
+                            <MediaWrapper media={mediaItem} key={mediaItem.id}
+                                          onDelete={() => handleDelete(mediaItem)}/>
+                          </Grid>
+                        )}
+                      </Draggable>
+                    )
+                  }
+                  return false;
                 })}
                 {provided.placeholder}
               </Grid>

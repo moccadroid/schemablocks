@@ -6,14 +6,12 @@ export function setConfiguration(config) {
     const mediaLibrary = {
       ...configuration.mediaLibrary,
       ...config.mediaLibrary
-    }
+    };
     configuration = {
       ...configuration,
       ...config,
       mediaLibrary
     };
-
-    console.log(configuration);
   }
 }
 

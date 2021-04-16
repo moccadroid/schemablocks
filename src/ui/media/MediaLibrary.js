@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
-  Button, Grid,
+  Button, FormControl, Grid,
   IconButton,
-  ImageList,
+  ImageList, InputLabel, MenuItem, Select,
   Toolbar,
   Typography
 } from "@material-ui/core";
@@ -13,6 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import uuidv4 from "../../lib/uuidv4";
 import MediaItem from "./MediaItem";
 import {getConfiguration} from "../../lib/configuration";
+import {sortByDateField, sortByNumberField, sortByStringField} from "../../lib/utils";
 require('firebase/storage');
 
 export default function MediaLibray({ onClose, multiSelect = false, selected = [], noEdit = false, type = "image"}) {
@@ -30,6 +31,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
   const [selectedMedia, setSelectedMedia] = useState(selected);
   const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + mediaFolder);
   const [columns, setColumns] = useState(3);
+  const [sortBy, setSortBy] = useState("createdAt");
   const classes = useStyles();
 
 
@@ -74,83 +76,68 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
     setLibraryMedia(media);
   }
 
-  const handleUpload = ({ target }) => {
+  const handleUpload = async ({ target }) => {
     if (noEdit) {
       return
     }
 
-    let reader = new FileReader();
-    let file = target.files[0];
+    let files = [...target.files];
 
-    reader.onloadend = async () => {
-      const fileId = uuidv4();
-      const extension = file.name.split('.').pop();
-      const storageRef = firebase.storage().ref(currentFolder);
-      const mediaRef = storageRef.child(fileId + '/' + file.name);
-      const snapshot = await mediaRef.put(file);
-      const url = await snapshot.ref.getDownloadURL();
+    await Promise.all(files.map(async file => {
+      let reader = new FileReader();
+      reader.readAsDataURL(file);
 
-      let media = {};
+      reader.onloadend = async () => {
+        const fileId = uuidv4();
+        const extension = file.name.split('.').pop();
+        const storageRef = firebase.storage().ref(currentFolder);
+        const mediaRef = storageRef.child(fileId + '/' + file.name);
+        const snapshot = await mediaRef.put(file);
+        const url = await snapshot.ref.getDownloadURL();
 
-      if (type === "video") {
-        media = {
+        let mimeType = "image/" + extension;
+        if (type === "video") {
+          mimeType = "video/" + extension;
+        }
+        const media = {
           id: fileId,
           url,
           alt: "",
-          mimeType: "video/" + extension,
+          mimeType,
           title: file.name,
           usedInBlocks: [],
-          type: resolveMediaFolder(type)
+          type: resolveMediaFolder(type),
+          createdAt: new Date(),
+          size: file.size
         }
-      } else if(type === "svg") {
-        media = {
-          id: fileId,
-          url,
-          alt: "",
-          mimeType: "image/" + extension,
-          title: file.name,
-          usedInBlocks: [],
-          type: resolveMediaFolder(type)
+
+        await firebase.firestore().collection(config.collection).doc(fileId).set(media);
+
+        if (type === "image") {
+          media.processing = true;
         }
-      } else {
-        media = {
-          id: fileId,
-          url,
-          alt: "",
-          mimeType: "image/" + extension,
-          title: file.name,
-          usedInBlocks: [],
-          type: resolveMediaFolder(type)
-        }
-      }
-      await firebase.firestore().collection(config.collection).doc(fileId).set(media);
+        setLibraryMedia(mediaItems => [media, ...mediaItems]);
 
-      if (type === "image") {
-        media.processing = true;
-      }
-      setLibraryMedia(mediaItems => [media, ...mediaItems]);
+        if (type === "image") {
+          const response = await fetch(config.imageMagicUrl + '?id=' + fileId);
+          setLibraryMedia(mediaItems => mediaItems.map(m => {
 
-      if (type === "image") {
-        const response = await fetch(config.imageMagicUrl + '?id=' + fileId);
-        setLibraryMedia(mediaItems => mediaItems.map(m => {
-
-          if (m.id === fileId) {
-            // remove processing field
-            const {processing, ...newMedia} = m;
-            if (response.status === 200) {
-              console.log('image was successfully processed', file.name);
-              return newMedia;
-            } else {
-              console.log('there was an error processing this image', file.name);
-              return {...newMedia, encodingError: true}
+            if (m.id === fileId) {
+              // remove processing field
+              const {processing, ...newMedia} = m;
+              if (response.status === 200) {
+                console.log('image was successfully processed', file.name);
+                return newMedia;
+              } else {
+                console.log('there was an error processing this image', file.name);
+                return {...newMedia, encodingError: true}
+              }
             }
-          }
-          return m;
-        }))
+            return m;
+          }))
+        }
       }
-    };
-
-    reader.readAsDataURL(file)
+    }));
   };
 
   function createSchemaMedia(media) {
@@ -206,6 +193,22 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
     }
   }
 
+  const handleSort = (event) => {
+    const value = event?.target?.value ?? "title";
+    setLibraryMedia(libraryMedia => {
+      let list = [...libraryMedia];
+      if (value === "title") {
+        list = sortByStringField(list, value);
+      } else if (value === "createdAt") {
+        list = sortByDateField(list, value, "DESC");
+      } else if (value === "size") {
+        list = sortByNumberField(list, value);
+      }
+      return list;
+    });
+    setSortBy(value);
+  }
+
   const handleSelect = () => {
     onClose(selectedMedia);
   }
@@ -229,6 +232,13 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
       <Box>
         <Box padding={3}>
           <Grid spacing={2} container>
+            <Grid item>
+              <Select value={sortBy} onChange={handleSort}>
+                <MenuItem value={"title"}>Title</MenuItem>
+                <MenuItem value={"createdAt"}>Date</MenuItem>
+                <MenuItem value={"size"}>Size</MenuItem>
+              </Select>
+            </Grid>
             <Grid item>
               <input
                 accept={resolveInputAccept(type)}

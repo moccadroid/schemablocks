@@ -1,6 +1,6 @@
 export default function useDefaultData(data, schema) {
 
-  const { properties } = schema.schema;
+  const { properties } = schema;
 
   Object.entries(properties).map(([key, value]) => {
     if (typeof data[key] === "undefined") {

@@ -35,8 +35,13 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
   }
 
   function handleImageError(event) {
-    //console.log(event);
-    //console.log(getImageWidth());
+    if (data?.mimeType?.startsWith("image")) {
+      setMedia(
+        <picture ref={mediaRef}>
+          <img style={styles.image} src={data.url} alt={data.alt}/>
+        </picture>
+      )
+    }
   }
 
   function resolveMedia(data, width = null) {
