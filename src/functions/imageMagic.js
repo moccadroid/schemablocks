@@ -1,7 +1,8 @@
 import functions from "firebase-functions";
+import { join } from "path";
 import Cors from "cors";
 const cors = Cors({ origin: true });
-import { tmpdir } from 'os';
+import { tmpdir } from "os";
 import sharp from 'sharp';
 import fs from 'fs-extra';
 import admin from 'firebase-admin';
@@ -11,11 +12,11 @@ if (!admin.apps.length) {
 
 export default function imageMagic(config) {
   return functions.runWith({ memory: "512MB" }).https.onRequest(async (req, res) => {
-
-    const baseFolder = config?.mediaLibrary?.storageFolder ?? "mediaLibrary";
-    const sizes = config?.mediaLibrary?.imageMagicSizes ?? [200, 400, 800, 1200, 1600, 2000];
-
     cors(req, res, async () => {
+
+      const baseFolder = config?.mediaLibrary?.storageFolder ?? "mediaLibrary";
+      const sizes = config?.mediaLibrary?.imageMagicSizes ?? [200, 400, 800, 1200, 1600, 2000];
+
       if (!req.query.id) {
         return res.status(400).send('id missing');
       }
