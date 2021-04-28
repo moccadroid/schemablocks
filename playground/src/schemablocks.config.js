@@ -14,6 +14,6 @@ export default {
   ],
   copyCollection: {
     collection: "demoBlocks",
-    slug: "TestTest"
+    slug: "demoBlocks1"
   }
 }

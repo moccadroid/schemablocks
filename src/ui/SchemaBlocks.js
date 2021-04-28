@@ -164,19 +164,20 @@ function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false
         setCopyData(slug);
         const options = slug.blocks.map(block => ({ value: block.id, name: block.id}));
         setCopyOptions(() => options);
-        setSelectedCopyOption(options?.[0]);
+        setSelectedCopyOption(options[0]?.value);
       }
     }
   }
 
   const selectBlockToCopy = (option) => {
+    console.log(option);
     setSelectedCopyOption(option);
   }
 
   const handleCopyBlock = () => {
-    const schema = schemas.find(schemaData => schemaData.schema.id === selectedCopyOption.value);
+    const schema = schemas.find(schemaData => schemaData.schema.id === selectedCopyOption);
     if (schema) {
-      const copyBlock = copyData.blocks.find(b => b.id === selectedCopyOption.value);
+      const copyBlock = copyData.blocks.find(b => b.id === selectedCopyOption);
       const block = createSchemaBlock(schema, schemaBlocks.length, copyBlock.data);
       setSchemaBlocks(blocks => [...blocks, block]);
     }
@@ -206,7 +207,7 @@ function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false
               <SelectInput
                 options={copyOptions}
                 onChange={selectBlockToCopy}
-                defaultValue={""}
+                defaultValue={selectedCopyOption}
                 controls={{name: ""}}
               />
             </Grid>
