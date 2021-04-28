@@ -11,5 +11,9 @@ export default {
   languages: [
     { name: "Deutsch", value: "de" },
     { name: "English", value: "en" },
-  ]
+  ],
+  copyCollection: {
+    collection: "demoBlocks",
+    slug: "TestTest"
+  }
 }

@@ -7,6 +7,7 @@ import useSlugLock from "../hooks/useSlugLock";
 import {getAuthUser} from "../lib/auth";
 import usePreviewData from "../hooks/usePreviewData";
 import {getConfiguration} from "../lib/configuration";
+// import useSlugStore from "../hooks/useSlugStore";
 
 function Slug({ slug, onLockChange }, ref) {
 
@@ -21,6 +22,15 @@ function Slug({ slug, onLockChange }, ref) {
   const [currentLanguage, setCurrentLanguage] = useState(languages[0]);
 
   const myLock = lock && lock.email === getAuthUser()?.email;
+
+  /*
+  const test = useSlugStore(state => state.slug);
+  const dirty = useSlugStore(state => state.dirty);
+  const setSlug = useSlugStore(state => state.setSlug);
+  setSlug(slugData);
+  console.log("test", test);
+  console.log("dirty", dirty);
+  */
 
   useImperativeHandle(ref, () => ({
     save: handleSave,

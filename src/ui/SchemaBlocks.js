@@ -9,17 +9,23 @@ import React, {createRef, forwardRef, useEffect, useImperativeHandle, useState} 
 import fromFirestore from "../provider/firestore";
 import SelectInput from "./input/SelectInput";
 import BlockList from "./BlockList";
+import {getConfiguration} from "../lib/configuration";
 
 const providers = {
   "firestore": fromFirestore
 }
 
-function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = false, noEdit = false }, ref) {
+function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false, lang }, ref) {
 
   if (!schemas.length) {
     console.warn("Schemas empty! Please add at last a single schema.");
     return false;
   }
+  const configuration = getConfiguration();
+
+  const [copyOptions, setCopyOptions] = useState([]);
+  const [copyData, setCopyData] = useState(null);
+  const [selectedCopyOption, setSelectedCopyOption] = useState(null);
 
   const [schemaBlocks, setSchemaBlocks] = useState([]);
   const [externalData, setExternalData] = useState([]);
@@ -85,16 +91,7 @@ function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = 
   }, [schemaBlocksCreated]);
 
   useEffect(() => {
-    let blocks = [];
-    if (data && data.blocks) {
-      blocks = data.blocks.map((block, i) => {
-        const schema = schemas.find(schemaData => schemaData.schema.id === block.id);
-        if (schema) {
-          return createSchemaBlock(schema, i, block.data);
-        }
-        return false;
-      }).filter(block => block);
-    }
+    const blocks = createSchemaBlocksFromData(data);
     setSchemaBlocks(blocks);
     setSchemaBlocksCreated(true);
   }, [data]);
@@ -103,6 +100,8 @@ function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = 
     const schemaOptions = schemas.map(s => ({ name: s.name, value: s.name }));
     setSchemaOptions(schemaOptions);
     setSelectedSchemaOption(schemaOptions[0].name);
+
+    loadCopyOptions();
   }, []);
 
   const createSchemaBlock = (schema, index, data = {}) => {
@@ -115,6 +114,20 @@ function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = 
       id: 'id' + uuidv4(),
       externalData: extData?.data
     }
+  }
+
+  const createSchemaBlocksFromData = (data) => {
+    let blocks = [];
+    if (data && data.blocks) {
+      blocks = data.blocks.map((block, i) => {
+        const schema = schemas.find(schemaData => schemaData.schema.id === block.id);
+        if (schema) {
+          return createSchemaBlock(schema, i, block.data);
+        }
+        return false;
+      }).filter(block => block);
+    }
+    return blocks;
   }
 
   const removeSchemaBlock = (id) => {
@@ -142,6 +155,33 @@ function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = 
     setSelectedSchemaOption(option);
   }
 
+  const loadCopyOptions = async () => {
+    if (configuration.copyCollection) {
+      const query = { ...configuration.copyCollection, lang };
+      const slugs = await fromFirestore(query);
+      const slug = slugs.find(s => s.lang === lang);
+      if (slug) {
+        setCopyData(slug);
+        const options = slug.blocks.map(block => ({ value: block.id, name: block.id}));
+        setCopyOptions(() => options);
+        setSelectedCopyOption(options?.[0]);
+      }
+    }
+  }
+
+  const selectBlockToCopy = (option) => {
+    setSelectedCopyOption(option);
+  }
+
+  const handleCopyBlock = () => {
+    const schema = schemas.find(schemaData => schemaData.schema.id === selectedCopyOption.value);
+    if (schema) {
+      const copyBlock = copyData.blocks.find(b => b.id === selectedCopyOption.value);
+      const block = createSchemaBlock(schema, schemaBlocks.length, copyBlock.data);
+      setSchemaBlocks(blocks => [...blocks, block]);
+    }
+  }
+
   const getFormData = () => {
     return schemaBlocks.map(block => {
       const data = block.ref.current.getData();
@@ -160,6 +200,21 @@ function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = 
     <Box>
       <BlockList noEdit={noEdit} blocks={schemaBlocks} onRemove={removeSchemaBlock} onOrderChange={handleOrderChange} />
       <Grid spacing={2} container direction="row" mt={2} alignItems="center" sx={{ justifyContent: "flex-end"}}>
+        {copyOptions.length > 0 &&
+          <>
+            <Grid item>
+              <SelectInput
+                options={copyOptions}
+                onChange={selectBlockToCopy}
+                defaultValue={""}
+                controls={{name: ""}}
+              />
+            </Grid>
+              <Grid item>
+              <Button variant={"contained"} onClick={handleCopyBlock} disabled={noEdit}>Copy Block</Button>
+            </Grid>
+          </>
+        }
         <Grid item>
           <SelectInput
             options={schemaOptions}
@@ -169,7 +224,7 @@ function SchemaBlocks({ schemas = [], data, onSubmit, onPreview, loadExternal = 
           />
         </Grid>
         <Grid item>
-          <Button variant={"contained"} onClick={addSchemaBlock} disabled={noEdit}>Add Block</Button>
+          <Button variant={"contained"} onClick={addSchemaBlock} disabled={noEdit}>Add New Block</Button>
         </Grid>
       </Grid>
       <Snackbar open={!!warningSnackbar} autoHideDuration={6000} onClose={() => setWarningSnackbar(null)}>

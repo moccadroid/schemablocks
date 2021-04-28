@@ -33,7 +33,7 @@ export default function LanguageWrapper({ data, schemas, languages = [], noEdit 
           const blockData = data?.find(d => d.lang === language.value);
           return (
             <Box key={'schemaBlock' + i} sx={{display: tabValue === i ? 'block' : 'none'}}>
-              <SchemaBlocks noEdit={noEdit} loadExternal={true} schemas={schemas} data={blockData} ref={language.ref}/>
+              <SchemaBlocks lang={language.value} noEdit={noEdit} loadExternal={true} schemas={schemas} data={blockData} ref={language.ref}/>
             </Box>
           )
         })}

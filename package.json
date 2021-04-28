@@ -5,7 +5,7 @@
   ],
   "repository": "https://github.com/moccadroid/schemablocks",
   "license": "ISC",
-  "version": "1.0.33",
+  "version": "1.0.34",
   "main": "dist/index.js",
   "scripts": {
     "build": "rimraf /dist && cpx \"README.md\" \"dist\" -C && node copyPackageJson.js && rollup -c",
@@ -25,7 +25,8 @@
     "jsonschema": "^1.4.0",
     "react-beautiful-dnd": "^13.0.0",
     "react-router-dom": "^5.2.0",
-    "sharp": "^0.28.1"
+    "sharp": "^0.28.1",
+    "zustand": "^3.4.1"
   },
   "peerDependencies": {
     "firebase": "^8.3.2",

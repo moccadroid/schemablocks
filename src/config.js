@@ -10,5 +10,6 @@ export default {
   languages: [
     { name: "English", value: "en" },
     { name: "Deutsch", value: "de" },
-  ]
+  ],
+  copyCollection: null
 }

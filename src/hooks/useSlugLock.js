@@ -21,14 +21,14 @@ export default function useSlugLock({ collection, slug }) {
 
   function lockSlug() {
     const email = getAuthUser().email;
+    const lock = {
+      email,
+      lockedAt: new Date()
+    };
     if (!slugLocks[slug]) {
-      firebase.firestore().collection(collection).doc("slugLocks").update({
-        [slug]: {
-          email,
-          lockedAt: new Date()
-        }
-      });
+      firebase.firestore().collection(collection).doc("slugLocks").update({ [slug]: lock });
     }
+    return lock;
   }
 
   function releaseLock() {
