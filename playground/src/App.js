@@ -12,7 +12,8 @@ function App() {
     {
       name: "DemoBlocks",
       value: "demoBlocks",
-      schemas: schemas
+      schemas: schemas,
+      publish: true
     }
   ];
 

@@ -152,7 +152,13 @@ function Page({ collections }) {
   const { col, slug } = useParams();
   const collection = collections.find(c => c.value === col);
   if (collection) {
-    const slugData = { schemas: collection.schemas, collection: collection.value, slug: slug, name: slug }
+    const slugData = {
+      schemas: collection.schemas,
+      collection: collection.value,
+      slug: slug,
+      name: slug,
+      publish: collection.publish,
+    }
     return (
       <Panel fixedHeader={false} slug={slugData} />
     )

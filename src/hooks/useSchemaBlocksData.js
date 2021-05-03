@@ -50,10 +50,11 @@ export default function useSchemaBlocksData(query, realtime = false) {
         setDocIds(ids => [...ids, docId]);
       }
       try {
-        await firebase.firestore().collection(collection).doc(docId.id).set({
+        const doc = {
           ...block,
           slug
-        });
+        }
+        await firebase.firestore().collection(collection).doc(docId.id).set(doc);
       } catch (error) {
         errors.push(error);
       }

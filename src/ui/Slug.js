@@ -1,12 +1,27 @@
 import LanguageWrapper from "./LanguageWrapper";
 import React, {createRef, useState, useImperativeHandle, forwardRef, useEffect} from "react";
-import {Alert, Box, Container, Paper, Snackbar, Typography} from "@material-ui/core";
+import {
+  Alert,
+  Box,
+  Container,
+  FormControlLabel,
+  Grid,
+  Paper,
+  Snackbar,
+  Switch,
+  TextField,
+  Typography
+} from "@material-ui/core";
 import useSchemaBlocksData from "../hooks/useSchemaBlocksData";
 import useSchemas from "../hooks/useSchemas";
 import useSlugLock from "../hooks/useSlugLock";
 import {getAuthUser} from "../lib/auth";
 import usePreviewData from "../hooks/usePreviewData";
 import {getConfiguration} from "../lib/configuration";
+import AdapterDateFns from '@material-ui/lab/AdapterDayjs';
+import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
+import DatePicker from '@material-ui/lab/DatePicker';
+import dayjs from "dayjs";
 // import useSlugStore from "../hooks/useSlugStore";
 
 function Slug({ slug, onLockChange }, ref) {
@@ -23,14 +38,25 @@ function Slug({ slug, onLockChange }, ref) {
 
   const myLock = lock && lock.email === getAuthUser()?.email;
 
-  /*
-  const test = useSlugStore(state => state.slug);
-  const dirty = useSlugStore(state => state.dirty);
-  const setSlug = useSlugStore(state => state.setSlug);
-  setSlug(slugData);
-  console.log("test", test);
-  console.log("dirty", dirty);
-  */
+  const [publishAt, setPublishAt] = useState(dayjs());
+  const [publish, setPublish] = useState(true);
+
+  useEffect(() => {
+    console.log(slug);
+    if (slug.publish) {
+      let pubDate = slugData[0]?.publishAt;
+
+      if (pubDate) {
+        if (typeof pubDate["toDate"] === "function") {
+          pubDate = dayjs(pubDate.toDate());
+        }
+        setPublish(true);
+      } else {
+        setPublish(false);
+      }
+      setPublishAt(pubDate || null);
+    }
+  }, [slugData]);
 
   useImperativeHandle(ref, () => ({
     save: handleSave,
@@ -43,7 +69,8 @@ function Slug({ slug, onLockChange }, ref) {
       return {
         blocks: language.ref.current.getData(),
         lang: language.value,
-        slug: slug.slug
+        slug: slug.slug,
+        publishAt: !!publishAt ? publishAt.toDate() : null
       };
     });
   }
@@ -86,13 +113,55 @@ function Slug({ slug, onLockChange }, ref) {
     setCurrentLanguage(language);
   }
 
+  function handlePublishSwitch(event) {
+    const pub = event.target.checked;
+
+    if (!pub) {
+      setPublishAt(null);
+    } else {
+      setPublishAt(dayjs());
+    }
+    setPublish(pub);
+  }
+
   return (
     <Box mt={2}>
       <Paper variant={"outlined"}>
         <Container>
-          <Box mt={2}>
-            <Typography variant={"h6"}>{slug.name}</Typography>
-          </Box>
+          <Grid container spacing={2} alignItems="center">
+            <Grid item>
+              <Typography variant={"h6"}>{slug.name}</Typography>
+            </Grid>
+            {slug.publish &&
+            <>
+              <Grid item>
+                <FormControlLabel label={"Publish"} control={
+                  <Switch checked={publish} onChange={handlePublishSwitch}/>
+                }/>
+              </Grid>
+              <Grid item>
+                <LocalizationProvider dateAdapter={AdapterDateFns}>
+                  <DatePicker
+                    label="Publish on"
+                    value={publishAt}
+                    disabled={!publishAt}
+                    onChange={(newValue) => {
+                      setPublishAt(newValue);
+                    }}
+                    renderInput={(params) => (
+                      <TextField
+                        {...params}
+                        margin="normal"
+                        helperText={null}
+                        variant="standard"
+                      />
+                    )}
+                  />
+                </LocalizationProvider>
+              </Grid>
+            </>
+            }
+          </Grid>
         </Container>
         <LanguageWrapper
           languages={languages}

@@ -20,7 +20,7 @@ export default function useSlugLock({ collection, slug }) {
   }, []);
 
   function lockSlug() {
-    const email = getAuthUser().email;
+    const email = getAuthUser()?.email;
     const lock = {
       email,
       lockedAt: new Date()
