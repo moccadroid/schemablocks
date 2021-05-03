@@ -1,6 +1,6 @@
 import {AppBar, Box, Drawer, IconButton, List, ListItem, Menu, MenuItem, Toolbar, Typography} from "@material-ui/core";
 import MenuIcon from '@material-ui/icons/Menu';
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {AccountCircle} from "@material-ui/icons";
 import {getConfiguration} from "../lib/configuration";
 import {setAuthUser} from "../lib/auth";
@@ -14,6 +14,7 @@ import {
 } from "react-router-dom";
 import CollectionOverview from "./CollectionOverview";
 import Panel from "./Panel";
+import packageJson from "../../package.json";
 
 export default function AppContainer({
     collections = [],
@@ -25,11 +26,17 @@ export default function AppContainer({
     children
   })
 {
-
   const [user, setUser] = useState(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const [profileAnchor, setProfileAnchor] = useState(null);
-  const firebase = getConfiguration().firebase;
+  const {firebase, debug} = getConfiguration();
+
+
+  useEffect(() => {
+    if (debug) {
+      console.log("schemablocks", packageJson.version);
+    }
+  }, []);
 
   function openProfileMenu(event) {
     setProfileAnchor(event.currentTarget);

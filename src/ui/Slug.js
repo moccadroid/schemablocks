@@ -42,10 +42,8 @@ function Slug({ slug, onLockChange }, ref) {
   const [publish, setPublish] = useState(true);
 
   useEffect(() => {
-    console.log(slug);
     if (slug.publish) {
       let pubDate = slugData[0]?.publishAt;
-
       if (pubDate) {
         if (typeof pubDate["toDate"] === "function") {
           pubDate = dayjs(pubDate.toDate());
