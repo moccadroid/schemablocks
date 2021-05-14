@@ -1,7 +1,7 @@
 import {
   Alert,
   Box,
-  Button,
+  Button, Checkbox, FormControlLabel,
   Grid, Snackbar,
 } from "@material-ui/core";
 import uuidv4 from "../lib/uuidv4";
@@ -26,7 +26,7 @@ function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false
   const [copyOptions, setCopyOptions] = useState([]);
   const [copyData, setCopyData] = useState(null);
   const [selectedCopyOption, setSelectedCopyOption] = useState(null);
-
+  const [addToAll, setAddToAll] = useState(true);
   const [schemaBlocks, setSchemaBlocks] = useState([]);
   const [externalData, setExternalData] = useState([]);
   const [schemaBlocksCreated, setSchemaBlocksCreated] = useState(false);
@@ -197,6 +197,10 @@ function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false
     setSchemaBlocks(list);
   }
 
+  function handleAddToAll(event) {
+    setAddToAll(event.target.checked);
+  }
+
   return (
     <Box>
       <BlockList noEdit={noEdit} blocks={schemaBlocks} onRemove={removeSchemaBlock} onOrderChange={handleOrderChange} />
@@ -228,6 +232,15 @@ function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false
           <Button variant={"contained"} onClick={addSchemaBlock} disabled={noEdit}>Add New Block</Button>
         </Grid>
       </Grid>
+      {/*
+      <Grid container direction="row" alignItems="center" sx={{ justifyContent: "flex-end"}}>
+        <Grid item>
+          <FormControlLabel labelPlacement="start" control={
+            <Checkbox defaultChecked onChange={handleAddToAll}/>
+          } label="Add to all languages" />
+        </Grid>
+      </Grid>
+      */}
       <Snackbar open={!!warningSnackbar} autoHideDuration={6000} onClose={() => setWarningSnackbar(null)}>
         <Alert onClose={() => setWarningSnackbar(null)} severity="warning" variant="filled">
           {warningSnackbar}

@@ -24,6 +24,7 @@ export default function SelectInput({ controls, id, options, error, onChange, de
       <FormControl style={{ minWidth: 120 }} error={!!error}>
         <InputLabel>{controls.name}</InputLabel>
         <Select
+          variant={"standard"}
           value={value}
           displayEmpty={!selectOptions}
           onChange={handleChange}
