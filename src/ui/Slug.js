@@ -65,7 +65,7 @@ function Slug({ slug, onLockChange }, ref) {
   function collectData() {
     return languages.map(language => {
       return {
-        blocks: language.ref.current.getData(),
+        blocks: language.ref.current?.getData() ?? [],
         lang: language.value,
         slug: slug.slug,
         publishAt: !!publishAt ? publishAt.toDate() : null
@@ -76,8 +76,9 @@ function Slug({ slug, onLockChange }, ref) {
   async function handleSave() {
     if (myLock) {
 
-      if (!languages.every(lang => lang.ref.current.isValid())) {
+      if (!languages.every(lang => lang.ref.current ? lang.ref.current?.isValid() : true)) {
         console.log("validation failed");
+        languages.forEach(lang => console.log(lang));
         return;
       }
 

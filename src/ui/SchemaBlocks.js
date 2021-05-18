@@ -36,7 +36,7 @@ function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false
 
   useImperativeHandle(ref, () => ({
     getData: () => getFormData(),
-    isValid: () => schemaBlocks.every(block => block.ref.current.isValid())
+    isValid: () => schemaBlocks.every(block => block.ref.current?.isValid())
   }));
 
   const loadExternalData = async () => {
