@@ -1,14 +1,49 @@
 import React, {useState, useRef, useEffect} from 'react';
 
-export function Media({ data, autoplay = false, loop = false, mediaRef }) {
+export function Media({ data,
+                        autoplay = false,
+                        loop = false,
+                        controls = false,
+                        controlsList = "",
+                        muted = true,
+                        preloadMargin = "100%",
+                        preload = false,
+                        mediaRef }) {
 
-  const sizes = [200, 400, 800, 1200, 1600];
+  const sizes = [200, 400, 800, 1200, 1600, 2000];
   const ref = useRef();
-  const [media, setMedia] = useState(resolveMedia(data, 200));
+  const [media, setMedia] = useState(null);
+  const [opacity, setOpacity] = useState(preload ? 1 : 0);
 
   useEffect(() => {
-    setMedia(resolveMedia(data));
-  }, [data]);
+    if (!preload) {
+      const options = {
+        root: null,
+        rootMargin: preloadMargin,
+        threshold: 0
+      }
+      const observer = new IntersectionObserver(loadMedia, options);
+      observer.observe(ref.current);
+
+      return () => {
+        if (ref.current) observer.unobserve(ref.current);
+      }
+    } else {
+      setMedia(resolveMedia(data));
+    }
+
+  }, [ref]);
+
+  function onLoad() {
+    setOpacity(1);
+  }
+
+  function loadMedia(entries) {
+    const [entry] = entries;
+    if (entry.isIntersecting) {
+      setMedia(resolveMedia(data));
+    }
+  }
 
   function getImageWidth() {
     if (ref.current) {
@@ -60,13 +95,20 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
       return (
         <picture ref={mediaRef}>
           <source srcSet={srcSetWebp} type={'image/webp'} />
-          <img style={styles.image} srcSet={srcSetStd} alt={data.alt} onError={handleImageError}/>
+          <img style={styles.image} srcSet={srcSetStd} alt={data.alt} onError={handleImageError} onLoad={onLoad}/>
         </picture>
       )
     }
     else if (data?.mimeType?.startsWith("video")) {
       return (
-        <video style={styles.video} autoPlay={autoplay} loop={loop} ref={mediaRef} muted={autoplay}>
+        <video controls={controls}
+               controlsList={controlsList}
+               style={styles.video}
+               autoPlay={autoplay}
+               loop={loop}
+               ref={mediaRef}
+               muted={muted || autoplay}
+        >
           <source type={data.mimeType} src={data.url}/>
         </video>
       )
@@ -74,8 +116,12 @@ export function Media({ data, autoplay = false, loop = false, mediaRef }) {
     return false;
   }
 
+  const containerStyle = {
+    opacity,
+    transition: "opacity 0.2s ease-in"
+  }
   return (
-    <div ref={ref}>
+    <div ref={ref} style={containerStyle}>
       { media }
     </div>
   )

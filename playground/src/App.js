@@ -3,6 +3,7 @@ import RichTextInput from "./components/inputs/RichTextInput";
 import {AppContainer, addControlInput, setConfiguration } from "schemablocks";
 import schemas from "./schemas";
 import configuration from "./schemablocks.config";
+import Demo from "./components/pages/Demo";
 
 function App() {
   addControlInput("richText", RichTextInput);
@@ -18,11 +19,13 @@ function App() {
   ];
 
   const routes = [
-
+    { name: "Demo", path: "/demo", component: Demo }
   ];
 
   return (
-    <AppContainer routes={routes} collections={collections} login={"email"} pathPrefix={"/admin"}/>
+    <div>
+      <AppContainer routes={routes} collections={collections} login={"email"} pathPrefix={"/admin"}/>
+    </div>
   )
 }
 

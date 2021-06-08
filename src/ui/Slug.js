@@ -127,12 +127,13 @@ function Slug({ slug, onLockChange }, ref) {
     <Box mt={2}>
       <Paper variant={"outlined"}>
         <Container>
-          <Grid container spacing={2} alignItems="center">
+          <Grid container spacing={2} alignItems="center" mt={1}>
             <Grid item>
               <Typography variant={"h6"}>{slug.name}</Typography>
             </Grid>
-            {slug.publish &&
-            <>
+          </Grid>
+          {slug.publish &&
+            <Grid container spacing={2} alignItems="center">
               <Grid item>
                 <FormControlLabel label={"Publish"} control={
                   <Switch checked={publish} onChange={handlePublishSwitch}/>
@@ -158,9 +159,8 @@ function Slug({ slug, onLockChange }, ref) {
                   />
                 </LocalizationProvider>
               </Grid>
-            </>
-            }
-          </Grid>
+            </Grid>
+          }
         </Container>
         <LanguageWrapper
           languages={languages}

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import {
   AppBar,
   Box,
-  Button, FormControl, Grid,
+  Button, CircularProgress, FormControl, Grid,
   IconButton,
   ImageList, InputLabel, MenuItem, Select,
   Toolbar,
@@ -32,6 +32,8 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
   const [currentFolder, setCurrentFolder] = useState(baseFolder + '/' + mediaFolder);
   const [columns, setColumns] = useState(3);
   const [sortBy, setSortBy] = useState("createdAt");
+  const [uploadingMedia, setUploadingMedia] = useState(true);
+
   const classes = useStyles();
 
 
@@ -48,6 +50,10 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
   useEffect(() => {
     setMediaFolder(resolveMediaFolder(type));
   }, [type]);
+
+  useEffect(() => {
+    setUploadingMedia(false);
+  }, [libraryMedia]);
 
   function resolveMediaFolder(type) {
     if (type === "video") return "videos";
@@ -74,7 +80,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
       media.push(doc.data());
     });
     setLibraryMedia(media);
-  }
+  };
 
   const handleUpload = async ({ target }) => {
     if (noEdit) {
@@ -83,10 +89,13 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
 
     let files = [...target.files];
 
+    setUploadingMedia(true);
+    console.log("uploading start");
+
     await Promise.all(files.map(async file => {
+
       let reader = new FileReader();
       reader.readAsDataURL(file);
-
       reader.onloadend = async () => {
         const fileId = uuidv4();
         const extension = file.name.split('.').pop();
@@ -261,6 +270,16 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
                 color={"secondary"}
               >Delete</Button>
             </Grid>
+            {uploadingMedia &&
+              <Grid item sx={{ display: "flex", alignItems: "center"}}>
+                <Box sx={{ marginRight: 1 }}>
+                  <CircularProgress size={20}/>
+                </Box>
+                <Box>
+                  <Typography variant={"h6"}>Uploading...</Typography>
+                </Box>
+              </Grid>
+            }
           </Grid>
         </Box>
         <ImageList cols={columns} className={classes.mediaList}>
