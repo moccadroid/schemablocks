@@ -81,7 +81,7 @@ export function Media({ data,
 
   function resolveMedia(data, width = null) {
     if (data?.mimeType?.includes("svg")) {
-      return <img style={styles.svg} src={data.url} alt={data.alt} ref={mediaRef}/>
+      return <img style={styles.svg} src={data.url} alt={data.alt} ref={mediaRef} onLoad={onLoad}/>
     }
     else if (data?.mimeType?.startsWith('image')) {
 
@@ -108,6 +108,7 @@ export function Media({ data,
                loop={loop}
                ref={mediaRef}
                muted={muted || autoplay}
+               onCanPlay={onLoad}
         >
           <source type={data.mimeType} src={data.url}/>
         </video>
