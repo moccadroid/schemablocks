@@ -31,8 +31,7 @@ export function Media({ data,
     } else {
       setMedia(resolveMedia(data));
     }
-
-  }, [ref]);
+  }, [data, ref]);
 
   function onLoad() {
     setOpacity(1);

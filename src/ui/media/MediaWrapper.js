@@ -41,7 +41,7 @@ export default function MediaWrapper({ media, onDelete }) {
     return (
       <Box sx={itemStyle}>
         <Box onClick={togglePlay}>
-          <Media data={media} loop mediaRef={videoRef}/>
+          <Media data={media} loop preload mediaRef={videoRef}/>
         </Box>
         {!playing &&
           <IconButton sx={style.play} onClick={togglePlay}>
@@ -58,7 +58,7 @@ export default function MediaWrapper({ media, onDelete }) {
   }
   return (
     <Box sx={itemStyle}>
-      <Media data={media} />
+      <Media data={media} preload/>
       {media?.url && !!onDelete &&
         <IconButton onClick={onDelete} sx={style.delete}>
           <CancelIcon style={{ color: "red"}} />
