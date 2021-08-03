@@ -6,7 +6,7 @@ export function Media({ data,
                         controls = false,
                         controlsList = "",
                         muted = true,
-                        preloadMargin = "100%",
+                        preloadMargin = "500px",
                         preload = false,
                         mediaRef }) {
 
@@ -117,6 +117,7 @@ export function Media({ data,
   }
 
   const containerStyle = {
+    height: "100%",
     opacity,
     transition: "opacity 0.2s ease-in"
   }

@@ -1,15 +1,13 @@
 import {
   AppBar, Box,
   Button,
-  Container,
   Dialog,
   FormControl,
   Grid,
   MenuItem,
   Select,
   Slide,
-  Toolbar,
-  Typography
+  Toolbar
 } from "@material-ui/core";
 import React, {forwardRef, useState, useEffect, useRef} from "react";
 import Slug from "./Slug";
@@ -37,6 +35,7 @@ export default function Panel({ slug, fixedHeader = true, children }) {
   const [showLockAlert, setShowLockAlert] = useState(false);
   const slugRef = useRef();
 
+
   function handleSave() {
     if (lock && lock.email !== getAuthUser()?.email) {
       setShowLockAlert(true);
@@ -51,6 +50,14 @@ export default function Panel({ slug, fixedHeader = true, children }) {
     if (slugRef.current) {
       slugRef.current.preview();
     }
+  }
+
+  function handleLockAlertClick(value) {
+    if (value) {
+      releaseLock(true);
+      addLock();
+    }
+    setShowLockAlert(false);
   }
 
   function handleDelete(value) {
@@ -116,9 +123,11 @@ export default function Panel({ slug, fixedHeader = true, children }) {
             <Grid item>
               <Button variant={"contained"} color="secondary" onClick={createDeleteDialog}>Delete</Button>
             </Grid>
+            {/*
             <Grid item>
               <Button variant={"outlined"} color="inherit" onClick={handlePreview}>Preview</Button>
             </Grid>
+            */}
             <Grid item>
               <Button variant={"outlined"} color="inherit" onClick={handleSave}>Save Changes</Button>
             </Grid>
@@ -154,11 +163,11 @@ export default function Panel({ slug, fixedHeader = true, children }) {
         title={`Delete page ${slug.name}?`}
         onClose={handleDelete}
       />
-      <InfoDialog
+      <ConfirmationDialog
         open={showLockAlert}
         title={"This slug is locked"}
-        text={`This slug is currently locked by ${lock?.email}. Please ask them to remove the lock.`}
-        onClose={() => setShowLockAlert(false)}
+        text={`This slug is currently locked by ${lock?.email}. Do you want to release this lock? (Not recommended)`}
+        onClose={handleLockAlertClick}
       />
     </div>
   )

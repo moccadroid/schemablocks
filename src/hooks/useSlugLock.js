@@ -31,9 +31,9 @@ export default function useSlugLock({ collection, slug }) {
     return lock;
   }
 
-  function releaseLock() {
-    const email = getAuthUser().email;
-    if (slugLocks[slug]?.email === email) {
+  function releaseLock(force = false) {
+    const email = getAuthUser()?.email;
+    if (force || slugLocks[slug]?.email === email) {
       firebase.firestore().collection(collection).doc("slugLocks").update({
         [slug]: null
       })
