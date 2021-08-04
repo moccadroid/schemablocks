@@ -78,7 +78,7 @@ export default function MediaItem({ media, selected, onChange, onSelect }) {
   )
 }
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = () => ({
   mediaListItem: {
     cursor: "pointer",
     minHeight: 200,
@@ -90,4 +90,4 @@ const useStyles = makeStyles((theme) => ({
       color: green[600],
     },
   }
-}));
+});

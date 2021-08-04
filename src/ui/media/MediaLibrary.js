@@ -8,7 +8,6 @@ import {
   Toolbar,
   Typography
 } from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
 import CloseIcon from '@material-ui/icons/Close';
 import uuidv4 from "../../lib/uuidv4";
 import MediaItem from "./MediaItem";
@@ -301,7 +300,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
   )
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = () => ({
   mediaList: {
     padding: 24,
   },
@@ -312,10 +311,10 @@ const useStyles = makeStyles((theme) => ({
     position: 'relative',
   },
   title: {
-    marginLeft: theme.spacing(2),
+    marginLeft: 10,
     flex: 1,
   },
   input: {
     display: 'none'
   }
-}));
+});

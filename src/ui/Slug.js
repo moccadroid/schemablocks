@@ -123,6 +123,10 @@ function Slug({ slug, onLockChange }, ref) {
     setPublish(pub);
   }
 
+  function handlePublishChange(value) {
+    console.log(value);
+  }
+
   return (
     <Box mt={2}>
       <Paper variant={"outlined"}>
@@ -158,6 +162,11 @@ function Slug({ slug, onLockChange }, ref) {
                     )}
                   />
                 </LocalizationProvider>
+                {/*
+                <MuiPickersUtilsProvider utils={DayJsUtils}>
+                  <DatePicker value={publishAt} onChange={handlePublishChange} />
+                </MuiPickersUtilsProvider>
+                */}
               </Grid>
             </Grid>
           }

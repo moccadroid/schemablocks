@@ -173,7 +173,7 @@ export default function Panel({ slug, fixedHeader = true, children }) {
   )
 }
 
-const useStyles = makeStyles(theme => ({
+const useStyles = () => ({
   root: {
     flexGrow: 1,
     paddingBottom: 400
@@ -181,7 +181,7 @@ const useStyles = makeStyles(theme => ({
   formControl: {
     minWidth: 200
   }
-}));
+});
 
 const Transition = forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
