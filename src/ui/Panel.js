@@ -12,7 +12,6 @@ import {
 import React, {forwardRef, useState, useEffect, useRef} from "react";
 import Slug from "./Slug";
 import MediaLibray from "./media/MediaLibrary";
-import {makeStyles} from "@material-ui/core/styles";
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import IconButton from "@material-ui/core/IconButton";
@@ -98,12 +97,12 @@ export default function Panel({ slug, fixedHeader = true, children }) {
   }
 
   return (
-    <div className={styles.root}>
+    <div style={styles.root}>
       <AppBar position={fixedHeader ? "fixed" : "static"} color={"transparent"}>
         <Toolbar>
           <Grid container justifyContent={"flex-end"} spacing={2} alignItems={"center"}>
             <Grid item>
-              <FormControl className={styles.fromControl}>
+              <FormControl style={styles.formControl} variant={"standard"}>
                 <Select
                   value={mediaType}
                   onChange={handleMediaTypeChange}

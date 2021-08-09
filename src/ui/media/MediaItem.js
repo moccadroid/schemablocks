@@ -1,5 +1,4 @@
 import {ImageListItem, Grid, Box, Button, ImageListItemBar, CircularProgress, Checkbox, TextField} from '@material-ui/core';
-import {makeStyles} from "@material-ui/core/styles";
 import {green} from "@material-ui/core/colors";
 import React, {useState} from 'react';
 import MediaWrapper from "./MediaWrapper";
@@ -61,11 +60,11 @@ export default function MediaItem({ media, selected, onChange, onSelect }) {
   const classes = useStyles();
   const actionIcon = media.processing
     ? <CircularProgress color="secondary"/>
-    : <Checkbox onClick={event => handleSelect(event, media)} checked={!!selected} className={classes.greenCheckbox} />
+    : <Checkbox onClick={event => handleSelect(event, media)} checked={!!selected} style={classes.greenCheckbox} />
   const sx = showEdit ? { top: 0, alignItems: "flex-start", wordWrap: "break-word" } : {};
 
   return (
-    <ImageListItem className={classes.mediaListItem} key={media.id} onClick={event => handleSelect(event, media)}>
+    <ImageListItem style={classes.mediaListItem} key={media.id} onClick={event => handleSelect(event, media)}>
       <MediaWrapper media={media} />
       <ImageListItemBar
         title={media.title}

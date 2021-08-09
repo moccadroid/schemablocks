@@ -223,7 +223,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
 
   return (
     <Box>
-      <AppBar className={classes.appBar}>
+      <AppBar style={classes.appBar}>
         <Toolbar>
           <IconButton
             edge="start"
@@ -233,7 +233,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
           >
             <CloseIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title} component="div">Media Library / { type }</Typography>
+          <Typography variant="h6" style={classes.title} component="div">Media Library / { type }</Typography>
           <Button disabled={selectedMedia.length === 0} variant="contained" onClick={handleSelect}>Select</Button>
         </Toolbar>
       </AppBar>
@@ -241,16 +241,18 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
         <Box padding={3}>
           <Grid spacing={2} container>
             <Grid item>
-              <Select value={sortBy} onChange={handleSort}>
-                <MenuItem value={"title"}>Title</MenuItem>
-                <MenuItem value={"createdAt"}>Date</MenuItem>
-                <MenuItem value={"size"}>Size</MenuItem>
-              </Select>
+              <FormControl variant={"standard"}>
+                <Select value={sortBy} onChange={handleSort}>
+                  <MenuItem value={"title"}>Title</MenuItem>
+                  <MenuItem value={"createdAt"}>Date</MenuItem>
+                  <MenuItem value={"size"}>Size</MenuItem>
+                </Select>
+              </FormControl>
             </Grid>
             <Grid item>
               <input
                 accept={resolveInputAccept(type)}
-                className={classes.input}
+                style={classes.input}
                 id="contained-button-file"
                 multiple
                 type="file"
@@ -281,7 +283,7 @@ export default function MediaLibray({ onClose, multiSelect = false, selected = [
             }
           </Grid>
         </Box>
-        <ImageList cols={columns} className={classes.mediaList}>
+        <ImageList cols={columns} style={classes.mediaList}>
           {libraryMedia.map((media) => {
             const selected = selectedMedia.find(m => m.id === media.id);
             return (
