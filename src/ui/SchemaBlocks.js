@@ -170,7 +170,6 @@ function SchemaBlocks({ schemas = [], data, loadExternal = false, noEdit = false
   }
 
   const selectBlockToCopy = (option) => {
-    console.log(option);
     setSelectedCopyOption(option);
   }
 

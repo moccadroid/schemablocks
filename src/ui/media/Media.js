@@ -5,7 +5,7 @@ export function Media({ data,
                         loop = false,
                         controls = false,
                         controlsList = "",
-                        muted = true,
+                        muted = false,
                         preloadMargin = "500px",
                         preload = false,
                         mediaRef }) {
@@ -107,6 +107,7 @@ export function Media({ data,
                loop={loop}
                ref={mediaRef}
                muted={muted || autoplay}
+               playsInline
                onCanPlay={onLoad}
         >
           <source type={data.mimeType} src={data.url}/>

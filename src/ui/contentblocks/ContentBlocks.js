@@ -1,6 +1,9 @@
 import React from "react";
+import {getConfiguration} from "../../lib/configuration";
 
 export function ContentBlocks({ blocks = {}, data, Container }) {
+
+  const configuration = getConfiguration();
 
   function ContentBlock(Component, block, i) {
     if (Container) {
@@ -18,7 +21,7 @@ export function ContentBlocks({ blocks = {}, data, Container }) {
       const component = blocks[block.id];
       if (component) {
         return ContentBlock(component, block, i);
-      } else {
+      } else if (configuration.debug) {
         console.log(block.id, "not found");
       }
     });
