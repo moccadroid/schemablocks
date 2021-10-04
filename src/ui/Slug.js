@@ -63,12 +63,17 @@ function Slug({ slug, onLockChange }, ref) {
   }));
 
   function collectData() {
+    let pub = publishAt;
+    if (publishAt && typeof publishAt["toDate"] === "function") {
+      pub = publishAt.toDate();
+    }
+
     return languages.map(language => {
       return {
         blocks: language.ref.current?.getData() ?? [],
         lang: language.value,
         slug: slug.slug,
-        publishAt: !!publishAt ? publishAt.toDate() : null
+        publishAt: pub
       };
     });
   }
