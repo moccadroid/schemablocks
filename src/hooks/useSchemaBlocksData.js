@@ -39,8 +39,17 @@ export default function useSchemaBlocksData(query, realtime = false) {
     setData(blocks);
   }
 
-  async function saveData(blocksData) {
+  async function saveData(blocksData, newSlugName = false) {
     const errors = [];
+    let slugName = slug;
+
+    if (newSlugName) {
+      const snapshot = await firebase.firestore().collection(collection).where("slug", "==", newSlugName).get();
+      if (snapshot.empty) {
+        slugName = newSlugName;
+      }
+    }
+
     await Promise.all(blocksData.map(async block => {
       let docId = docIds.find(docId => docId.lang === block.lang);
       if (!docId) {
@@ -52,7 +61,7 @@ export default function useSchemaBlocksData(query, realtime = false) {
       try {
         const doc = {
           ...block,
-          slug
+          slug: slugName
         }
         await firebase.firestore().collection(collection).doc(docId.id).set(doc);
       } catch (error) {

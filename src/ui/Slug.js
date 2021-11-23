@@ -2,7 +2,7 @@ import LanguageWrapper from "./LanguageWrapper";
 import React, {createRef, useState, useImperativeHandle, forwardRef, useEffect} from "react";
 import {
   Alert,
-  Box,
+  Box, Button,
   Container,
   FormControlLabel,
   Grid,
@@ -22,6 +22,9 @@ import AdapterDateFns from '@material-ui/lab/AdapterDayjs';
 import LocalizationProvider from '@material-ui/lab/LocalizationProvider';
 import DatePicker from '@material-ui/lab/DatePicker';
 import dayjs from "dayjs";
+import InputDialog from "./alerts/InputDialog";
+import IconButton from "@material-ui/core/IconButton";
+import EditIcon from '@material-ui/icons/Edit';
 // import useSlugStore from "../hooks/useSlugStore";
 
 function Slug({ slug, onLockChange }, ref) {
@@ -35,6 +38,9 @@ function Slug({ slug, onLockChange }, ref) {
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [saveError, setSaveError] = useState(null);
   const [currentLanguage, setCurrentLanguage] = useState(languages[0]);
+
+  const [slugName, setSlugName] = useState(slug.name);
+  const [showNameChangeDialog, setShowNameChangeDialog] = useState(false);
 
   const myLock = lock && lock.email === getAuthUser()?.email;
 
@@ -87,8 +93,8 @@ function Slug({ slug, onLockChange }, ref) {
         return;
       }
 
-      const data = collectData();
-      const errors = await saveSlugData(data);
+      let data = collectData();
+      const errors = await saveSlugData(data, slugName);
       if (!errors) {
         setSaveSuccess(true);
         releaseLock();
@@ -128,8 +134,11 @@ function Slug({ slug, onLockChange }, ref) {
     setPublish(pub);
   }
 
-  function handlePublishChange(value) {
-    console.log(value);
+  function changeSlugName(name) {
+    if (name && name !== "") {
+      setSlugName(name);
+    }
+    setShowNameChangeDialog(false);
   }
 
   return (
@@ -138,7 +147,12 @@ function Slug({ slug, onLockChange }, ref) {
         <Container>
           <Grid container spacing={2} alignItems="center" mt={1}>
             <Grid item>
-              <Typography variant={"h6"}>{slug.name}</Typography>
+              <Typography variant={"h6"}>{slugName}</Typography>
+            </Grid>
+            <Grid item>
+              <IconButton onClick={() => setShowNameChangeDialog(true)}>
+                <EditIcon />
+              </IconButton>
             </Grid>
           </Grid>
           {slug.publish &&
@@ -182,6 +196,13 @@ function Slug({ slug, onLockChange }, ref) {
           schemas={schemas}
           noEdit={(lock && lock.email !== getAuthUser()?.email) ?? false}
           onChange={handleLanguageChange}
+        />
+        <InputDialog
+          open={showNameChangeDialog}
+          title={"New Slug Name"}
+          errorText={"Be careful, this is still experimental."}
+          text={"Please enter the new name of this page"}
+          onClose={changeSlugName}
         />
       </Paper>
       <Snackbar open={saveSuccess} autoHideDuration={6000} onClose={() => setSaveSuccess(false)}>

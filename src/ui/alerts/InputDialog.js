@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   Dialog,
   DialogActions,
@@ -9,7 +10,7 @@ import {
 } from "@material-ui/core";
 import React, {useState} from "react";
 
-export default function InputDialog({ open, title, text, onClose }) {
+export default function InputDialog({ open, title, text, errorText, onClose }) {
 
   const [inputValue, setInputValue] = useState("");
 
@@ -21,6 +22,7 @@ export default function InputDialog({ open, title, text, onClose }) {
     <Dialog open={open} onClose={() => handleClose(false)} aria-labelledby="form-dialog-title">
       <DialogTitle id="form-dialog-title">{title}</DialogTitle>
       <DialogContent>
+        {errorText && <Alert severity="error">{errorText}</Alert> }
         <DialogContentText>{text}</DialogContentText>
         <TextField
           autoFocus

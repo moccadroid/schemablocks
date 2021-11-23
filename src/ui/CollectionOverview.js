@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {Box, Button, Grid, Paper, TextField, Typography} from "@material-ui/core";
+import {Box, Button, Paper, Typography} from "@material-ui/core";
 import {getConfiguration} from "../lib/configuration";
 import {Link, useHistory} from "react-router-dom";
 import InputDialog from "./alerts/InputDialog";
