@@ -22,9 +22,18 @@ function App() {
     { name: "Demo", path: "/demo", component: Demo }
   ];
 
+  async function authGate(user) {
+    const db = configuration.firebase.firestore();
+    const doc = await db.collection("roles").doc("admin").get();
+    const data = doc.data();
+    if (!data.userIds.includes(user.uid)) {
+      configuration.firebase.auth().signOut();
+    }
+  }
+
   return (
     <div>
-      <AppContainer routes={routes} collections={collections} login={"email"} pathPrefix={"/admin"}/>
+      <AppContainer routes={routes} collections={collections} login={"email"} pathPrefix={"/admin"} authGate={authGate}/>
     </div>
   )
 }
